@@ -1,0 +1,34 @@
+language: "en-US"
+early_access: false
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+  path_instructions:
+    - path: "src/**/*.ts"
+      instructions: >
+        Review for TypeScript best practices, proper error handling,
+        and consistency with the Director/Actor/Critic pattern.
+        Check that ADVOCATE and SKEPTIC roles are clearly separated.
+    - path: "templates/**"
+      instructions: >
+        These are prompt templates for the SDLC workflow.
+        Check for clarity, completeness, and that they follow
+        the validation-criteria pattern.
+    - path: "hooks/**"
+      instructions: >
+        Claude Code hooks. Verify they follow the hookwise pattern:
+        guards → context → side effects. Check for proper error handling.
+    - path: "**/*.md"
+      instructions: >
+        Documentation files. Check for accuracy, broken links,
+        and consistency with the SDLC methodology described in README.
+
+chat:
+  auto_reply: true
