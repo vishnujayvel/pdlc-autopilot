@@ -1,4 +1,4 @@
-# Contributing to SDLC Autopilot
+# Contributing to PDLC Autopilot
 
 ## Pre-Publish Review Checklist
 
@@ -8,7 +8,7 @@ Before publishing a new version to npm, verify the following:
 
 - [ ] Grep all shipped files for personal project names, usernames, or private references
 - [ ] Grep for email addresses, home directory paths, API keys
-- [ ] Verify `templates/skills/sdlc-autopilot/SKILL.md` line count is under 2,000 lines
+- [ ] Verify `templates/skills/pdlc-autopilot/SKILL.md` line count is under 2,000 lines
 - [ ] Verify no hardcoded user-specific paths in any shipped file
 
 ### Build Verification
@@ -28,12 +28,12 @@ Before publishing a new version to npm, verify the following:
 
 ### Post-Publish Verification
 
-- [ ] `npx sdlc-autopilot@latest --version` prints new version
-- [ ] `npx sdlc-autopilot@latest --dry-run` works from a clean directory
+- [ ] `npx pdlc-autopilot@latest --version` prints new version
+- [ ] `npx pdlc-autopilot@latest --dry-run` works from a clean directory
 
 ## Reporting Issues
 
-Please report bugs and feature requests via [GitHub Issues](https://github.com/vishnujayvel/sdlc-autopilot/issues).
+Please report bugs and feature requests via [GitHub Issues](https://github.com/vishnujayvel/pdlc-autopilot/issues).
 
 ## License
 

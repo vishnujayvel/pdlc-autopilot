@@ -7,17 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned for v2.0.0
-- Reserved for breaking changes
-- cc-sdd 3.x compatibility (if spec format changes)
-- Skill format changes (if Claude Code skill system evolves)
+### Planned
+- Hooks installer (`npx pdlc-autopilot --hooks`) with `.claude/settings.json` integration
+- Hooks removal (`npx pdlc-autopilot --hooks --remove`)
 
-### Planned for v1.1.0
-- Stop hook (`sdlc-stop-check.sh`) - prevents Claude from exiting when SDLC tasks are incomplete
-- Post-edit lint hook (`post-edit-lint.sh`) - auto-formats files after writes using project's configured formatter
-- Post-edit test hook (`post-edit-test.sh`) - runs related tests after source file modifications
-- Hooks installer (`npx sdlc-autopilot --hooks`) with `.claude/settings.json` integration
-- Hooks removal (`npx sdlc-autopilot --hooks --remove`)
+## [1.1.0] - 2026-02-23
+
+### Added
+
+#### Package Rename
+- **Renamed from `sdlc-autopilot` to `pdlc-autopilot`** — reflects the product development lifecycle focus (not just software development). GitHub repo, npm package, CLI command, skill directory, and all internal references updated.
+
+#### Hooks (3 standalone bash scripts)
+- **Stop guard** (`pdlc-stop-check.sh`) — prevents Claude from exiting when tasks are still pending. Counts `- [ ]` items in tasks.md and blocks exit until all complete. Safety valve at 50 continues max.
+- **Post-edit lint** (`post-edit-lint.sh`) — auto-formats files after Claude edits them. Detects project formatter (prettier, ruff, black, gofmt, rustfmt) by walking the directory tree. Silent if no formatter found.
+- **Post-edit test** (`post-edit-test.sh`) — runs related tests after source file modifications. Detects test framework (vitest, jest, pytest, go test, cargo test), finds the corresponding test file, runs only that test. Truncates output to 30 lines.
+- All hooks exit 0 on failure — informational quality gates, never blocking.
+
+#### Product Development Lifecycle
+- **Product Context (Phase P0)** — every run generates `product-context.md` if missing; captures tier, target users, success criteria, constraints
+- **Product Skeptic** — adversarial alignment review with APPROVE/SCOPE/KILL verdicts
+- **Three workflow paths** — Full PDLC, Bug Fix (lightweight), Iteration (medium)
+- **Context health checks** — freshness validation, decision logging, drift detection
+- **Phase visualization** — progress rendering during execution
+
+#### Documentation
+- Architecture deep dive (`docs/architecture.md`)
+- Agentic principles reference (`docs/agentic-principles.md`)
+- PDLC lifecycle guide (`docs/pdlc-lifecycle.md`)
+- T-Mode strategies reference (`docs/t-mode-strategies.md`)
 
 ## [1.0.0] - 2026-02-06
 
@@ -46,8 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **File ownership enforcement** - No two teammates touch the same file in S1/S4; shared files (index.ts, barrels) reserved for Lead
 
 #### CLI Installer
-- `npx sdlc-autopilot` installs SKILL.md to `~/.claude/skills/sdlc-autopilot/` (global)
-- `npx sdlc-autopilot --project` installs to `.claude/skills/sdlc-autopilot/` (project-level)
+- `npx pdlc-autopilot` installs SKILL.md to `~/.claude/skills/pdlc-autopilot/` (global)
+- `npx pdlc-autopilot --project` installs to `.claude/skills/pdlc-autopilot/` (project-level)
 - `--dry-run` flag shows what would be installed without writing files
 - `--yes` flag skips overwrite confirmation prompts
 - `--version` and `--help` flags

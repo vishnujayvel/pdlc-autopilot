@@ -1,285 +1,116 @@
 <div align="center">
 
-# SDLC Autopilot
+# PDLC Autopilot
 
-**Autonomous spec-driven development for Claude Code**
+**Autonomous product development lifecycle for Claude Code**
 
-[![npm version](https://img.shields.io/npm/v/sdlc-autopilot.svg)](https://www.npmjs.com/package/sdlc-autopilot)
+[![npm version](https://img.shields.io/npm/v/pdlc-autopilot.svg)](https://www.npmjs.com/package/pdlc-autopilot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![cc-sdd: >= 2.0.0](https://img.shields.io/badge/cc--sdd-%3E%3D%202.0.0-blue.svg)](https://github.com/gotalab/cc-sdd)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-CLI-purple.svg)](https://docs.anthropic.com/en/docs/claude-code)
 
-*One word. Full SDLC. Walk away.*
+*You set the direction. The machine handles the rest.*
+
+<img src="docs/assets/hero.png" alt="PDLC Autopilot — Autonomous Product Development Lifecycle" width="100%">
 
 </div>
 
 ---
 
-## Why This Exists
+## The Philosophy
 
-Most AI coding tools give you a chat window and say "go." You prompt, review, prompt again, review again. You are the orchestrator, the quality gate, and the project manager -- all at once.
+We are handing more and more control to AI. That's not going to slow down. And the more autonomy we give these systems, the more critical it becomes to have **structure** — not less.
 
-SDLC Autopilot removes you from the loop. It is not a smarter chat. It is a **self-driving development pipeline** that:
+I'm obsessed with creating structure under chaos. Specs before code. Requirements before design. Product context before requirements. Validation at every gate. The boring, disciplined stuff that separates systems that work from systems that happened to work once.
 
-- **Generates its own specs** if you don't have them -- requirements, design, tasks, all in one pass
-- **Validates before building** -- dual critics (ADVOCATE + SKEPTIC) catch issues before a single line of code is written
-- **Batches work intelligently** -- groups tasks by file to minimize agent overhead (83-87% fewer agents than per-task approaches)
-- **Fixes its own mistakes** -- when the SKEPTIC catches a bug, the Actor fixes it automatically, up to 2 cycles
-- **Survives context loss** -- persists state to disk, resumes after Claude's context window compresses
-- **Scales with Agent Teams** -- 5 parallelization strategies turn sequential work into concurrent execution
+PDLC Autopilot is my opinionated take on what autonomous AI-assisted development should look like. It's my stab at building a self-driving product development agent on top of [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — not by removing process, but by automating it. The human stays in the loop. The human sets direction, defines what "done" looks like, and can intervene at any point. But the orchestration, the quality gates, the fix cycles — that's the machine's job now.
 
-The key insight: **the agent that writes the code should never be the one that reviews it.** This is why humans do code reviews. SDLC Autopilot encodes this as architecture -- separate Director, Actor, and Critic agents with separate contexts and opposing incentives.
+The spec-driven part isn't new — [cc-sdd](https://github.com/gotalab/cc-sdd) already handles structured requirements, design, and task generation. What's missing is the **product development** wrapper: product context before specs, dual-perspective validation, a Product Skeptic that can kill misaligned features, autonomous batched execution with self-correction, and session persistence that survives context loss. That's what PDLC Autopilot adds.
 
----
-
-## 3 Steps to Autopilot
-
-**1. Install cc-sdd** (spec-driven development commands)
-```bash
-npx cc-sdd@latest --claude
-```
-
-**2. Install SDLC Autopilot** (the autonomous orchestrator)
-```bash
-npx sdlc-autopilot
-```
-
-**3. Say "SDLC" in Claude Code**
-```
-You: SDLC
-```
-
-That's it. The autopilot takes over -- generates missing specs, validates with dual critics, batches tasks by file, implements, reviews, fixes, and reports back when done.
+The key insight: **the agent that writes the code should never be the one that reviews it.** Separate Director, Actor, and Critic agents with opposing incentives eliminate self-evaluation bias — the same reason humans do code reviews.
 
 ---
 
 ## What It Does
 
-- **Autonomous SDLC loop** -- generates requirements, design, and tasks if missing; validates everything; implements in batches; reviews with dual critics; auto-fixes issues; repeats until done
-- **Director/Actor/Critic pattern** -- role separation prevents self-evaluation bias. The Director orchestrates, Actors implement, Critics validate
-- **Dual-perspective validation** -- every artifact is reviewed by both an ADVOCATE ("can this work?") and a SKEPTIC ("what could fail?") with consensus rules
-- **Intelligent task batching** -- groups tasks by file ownership to minimize agent count. 4 tasks touching the same file = 1 Actor + 1 Critic, not 12 agents
-- **Context compaction survival** -- persists validation criteria and state to disk so the workflow recovers automatically when Claude's context window compresses
-- **T-Mode parallel execution** -- 5 team strategies using Claude Code's native Agent Teams for parallel implementation within batches
-- **Auto-fix cycles** -- up to 2 automatic fix cycles per batch before escalating to you
-- **Session recovery** -- resumes from `spec.json` state after session loss or context compaction
+PDLC Autopilot is a **self-driving product development pipeline** that covers the entire lifecycle — from product context through implementation to documentation:
+
+- **Starts with product context** — understands *what* to build and *why* before writing a line of code
+- **Generates specs automatically** — requirements, design, and tasks in one pass
+- **Validates before building** — dual critics (ADVOCATE + SKEPTIC) plus a Product Skeptic catch issues early
+- **Batches work intelligently** — groups tasks by file, reducing agent overhead by 77-87%
+- **Fixes its own mistakes** — when the SKEPTIC catches a bug, it's fixed automatically
+- **Survives context loss** — persists state to disk, resumes after Claude's context window compresses
+- **Scales with teams** — 5 parallelization strategies turn sequential work into concurrent execution
 
 ---
 
-## Before vs After
+## Quick Start
 
-<table>
-<tr>
-<th>Manual cc-sdd (7 commands, you wait)</th>
-<th>SDLC Autopilot (1 word, walk away)</th>
-</tr>
-<tr>
-<td>
-
-```
-You: /kiro:spec-init
-You: /kiro:spec-requirements
-You: (review requirements)
-You: /kiro:spec-design
-You: (review design)
-You: /kiro:spec-tasks
-You: (review tasks)
-You: Now implement task 1.1
-You: Now implement task 1.2
-You: Now implement task 1.3
-...
-You: Now review the implementation
-You: Fix the issue
-You: Review again
+**1. Install cc-sdd** (spec orchestrator)
+```bash
+npx cc-sdd@latest --claude
 ```
 
-7+ commands. Manual phase transitions. You babysit every step.
-
-</td>
-<td>
-
-```
-You: SDLC
+**2. Install PDLC Autopilot** (product lifecycle wrapper)
+```bash
+npx pdlc-autopilot
 ```
 
-1 word. Walk away. Come back to a completed feature with validated requirements, reviewed design, batched implementation, dual-critic review, and auto-fixed issues.
+**3. Describe what you want to build**
+```
+You: SDLC — build a user authentication system with OAuth support
+```
 
-</td>
-</tr>
-</table>
+The autopilot kicks in — asks you targeted product context questions, generates specs, validates with dual critics, implements in batches, reviews, fixes, and reports back. You stay in control: you provide the direction, review validation results, and can intervene at any point.
 
 ---
 
-## How It Works
+## The Product Development Lifecycle
 
-Here is what happens when you say "SDLC" in a project with a spec:
+Unlike pure SDLC tools that jump straight to code, PDLC Autopilot wraps the implementation loop with **product phases** — ensuring you build the right thing, not just build the thing right.
 
-### Single-Agent Mode
-
-```
-Director: Starting SDLC Autopilot...
-
-  Spec: .claude/specs/auth-module/
-   - 3 phases, 8 tasks
-
-  Step 0a: Checking artifacts...
-   requirements.md  exists
-   design.md        exists
-   tasks.md         MISSING -> Invoking kiro:spec-tasks...
-   tasks.md         generated
-
-  Step 0b: Dual Validation...
-   [Requirements ADVOCATE]  PASS - requirements implementable
-   [Requirements SKEPTIC]   PASS WITH WARNINGS - minor gaps noted
-    -> Consensus: PASS (both pass)
-
-   [kiro:validate-gap]      2 areas need research (non-blocking)
-   [kiro:validate-design]   GO decision
-
-   [Tasks ADVOCATE]  PASS - tasks ready
-   [Tasks SKEPTIC]   PASS - no critical gaps
-    -> Consensus: PASS (both pass)
-
-  Batching:
-   BATCH A: auth/handlers.ts  (Tasks 1.1, 1.2, 1.3, 1.4)
-   BATCH B: auth/routes.ts    (Task 2.1)
-   BATCH C: tests/auth.test.ts (Tasks 3.1, 3.2, 3.3)
-
-  Executing BATCH A (4 tasks, 1 file)
-   [Actor] Implementing all 4 tasks...
-   [Actor] Done. Self-review: all criteria addressed.
-   [Critic ADVOCATE]  18/18 criteria pass
-   [Critic SKEPTIC]   FAIL (missing fallback in Task 1.2)
-    -> Consensus: DISAGREE - Director reviews...
-    -> Director: SKEPTIC has valid point. Fixing.
-   [Actor] Fixing specific issue...
-   [Critic ADVOCATE]  All pass
-   [Critic SKEPTIC]   All pass
-    -> Consensus: PASS
-    BATCH A complete
-
-  Executing BATCH B (1 task, 1 file)
-   [Actor] Implementing Task 2.1...
-   [Critic ADVOCATE]  All pass
-   [Critic SKEPTIC]   All pass
-    -> Consensus: PASS
-    BATCH B complete
-
-  Executing BATCH C (3 tasks, 1 file)
-   [Actor] Implementing test suite...
-   [Critic ADVOCATE]  All pass
-   [Critic SKEPTIC]   All pass
-    -> Consensus: PASS
-    BATCH C complete
-
-  Final Validation:
-   [Final ADVOCATE]  All FR-* requirements covered
-   [Final SKEPTIC]   No gaps found
-    -> Consensus: PASS
-
-  Summary:
-   - 3 batches, 8 critic calls (4 ADVOCATE + 4 SKEPTIC)
-   - 1 disagreement resolved (SKEPTIC was right)
-   - All 8 tasks complete
-   - All FR-* requirements verified
+```mermaid
+flowchart TD
+    P0["P0: Product Context<br/>Understand WHAT and WHY"] --> GEN["Phase 0a: Generate Specs<br/>Requirements → Design → Tasks"]
+    GEN --> VAL["Phase 0b: Validate<br/>ADVOCATE + SKEPTIC + Product Skeptic"]
+    VAL --> EXEC["Phase 1+: Execute Batches<br/>Actor implements → Critics review → Auto-fix"]
+    EXEC --> FINAL["Final Validation<br/>Dual critics + drift check"]
+    FINAL --> RETRO["Retrospective<br/>3 questions → decision log"]
+    RETRO --> P2["P2: Document (opt-in)<br/>DevRel Actor generates docs"]
+    P2 --> P3["P3: Demo & Package (opt-in)<br/>README, demo scripts, comparison"]
 ```
 
-> **You said 1 word. The autopilot ran 14 operations.**
+### Product Context First (P0)
 
-### Fix Cycle Example
+Every run starts by checking for `product-context.md`. If missing, the autopilot asks you a few targeted questions and generates it. This file captures:
 
-When the SKEPTIC catches a real issue, the autopilot fixes it automatically:
+- **Product tier** — how much process is appropriate (hobby project vs production system)
+- **Target users** — who benefits and how
+- **Success criteria** — what "done" looks like
+- **Constraints** — what's off the table
 
-```
-  [Critic SKEPTIC]  FAIL (missing fallback in Task 1.2)
-   -> Evidence: auth/handlers.ts:47 - no default case for unknown role
-   -> Consensus: DISAGREE
+No implementation starts without product context. This prevents building the wrong thing efficiently.
 
-  Director reviews both reports...
-   -> SKEPTIC has file:line evidence. Valid finding.
+### Three Workflow Paths
 
-  [Actor] Fix cycle 1 of 2...
-   -> Added default case at auth/handlers.ts:47
-   -> Added test for unknown role edge case
+Not every task needs the full lifecycle. The autopilot classifies your request and picks the right path:
 
-  [Critic ADVOCATE]  All pass
-  [Critic SKEPTIC]   All pass (previous issue resolved)
-   -> Consensus: PASS
-```
+| Signal | Path | Phases | Agent Calls |
+|--------|------|--------|-------------|
+| "Build feature", "implement spec" | **Full PDLC** | P0 → Generate → Validate → Execute → Retro | ~10-20 |
+| "Bug report", "fix regression" | **Bug Fix** | Diagnose → Fix → SKEPTIC-only validation → Retro | ~2-4 |
+| "Add flag", "tweak behavior" | **Iteration** | Mini-spec → Execute → Adaptive validation → Retro | ~4-6 |
 
-### T-Mode (Parallel Teams)
-
-When `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` is set:
-
-```
-Director: Starting SDLC Autopilot (T-Mode: Agent Teams)...
-
-  T-Mode: ACTIVE
-  Strategy selected: S2 (Impl + Test)
-
-  Executing BATCH A (T-Mode S2: Impl + Test)
-   [Lead] Spawning 2 teammates...
-   [Teammate IMPL] Implementing all 4 tasks...
-   [Teammate TEST] Writing tests against design interfaces...
-   [Teammate IMPL]  Done (4 tasks completed)
-   [Teammate TEST]  Done (test suite written)
-   [Lead] Both finished. Updating barrel exports...
-   [Lead] Running npm test... 14/15 pass, 1 fail (interface mismatch)
-   [Lead] Fixing: validator return type mismatch
-   [Lead] Running npm test... 15/15 pass
-   [Critic ADVOCATE]  All pass
-   [Critic SKEPTIC]   All pass
-    -> Consensus: PASS
-    BATCH A complete (parallel execution)
-```
+All three paths end with a retrospective and decision log. The lightweight paths skip spec generation and use targeted validation instead of the full dual-critic sweep.
 
 ---
 
 ## Architecture
 
-### Overall SDLC Flow
+### Director / Actor / Critic
 
-The complete lifecycle from trigger to completion:
-
-```mermaid
-flowchart TD
-    A[User says 'SDLC'] --> B{spec.json exists?}
-    B -->|No| C[Ask user for feature]
-    B -->|Yes| D[Read spec.json state]
-    D --> E{Artifacts complete?}
-    E -->|Missing| F[Auto-generate via kiro:spec-*]
-    F --> E
-    E -->|All present| G[Dual Validation]
-    G --> H{ADVOCATE + SKEPTIC}
-    H -->|Both PASS| I[Batch Tasks by File]
-    H -->|Both FAIL| J[Block - Report to User]
-    H -->|Disagree| K[Director Decides]
-    K --> I
-    I --> L[Execute Batch: Actor]
-    L --> M[Review Batch: Critics]
-    M -->|PASS| N{More batches?}
-    M -->|FAIL| O{Fix cycle less than 2?}
-    O -->|Yes| L
-    O -->|No| J
-    N -->|Yes| L
-    N -->|No| P[All Complete]
-```
-
-### Director / Actor / Critic Pattern
-
-Three distinct roles prevent self-evaluation bias.
-
-> **Why three roles? A neuroscience perspective.**
->
-> The human brain doesn't evaluate its own output well. The prefrontal cortex (planning) and the anterior cingulate cortex (error monitoring) compete for the same cognitive resources -- when you're deep in implementation, your error-detection circuits are suppressed. This is why code reviews exist: *the person who wrote the code is neurologically the worst person to review it.*
->
-> SDLC Autopilot encodes this into its architecture:
->
-> - **Director** = prefrontal cortex: planning, sequencing, strategic decisions
-> - **Actor** = motor cortex + working memory: focused execution, one batch at a time
-> - **Critic** = anterior cingulate + amygdala: error detection, threat assessment, "what could go wrong?"
->
-> By splitting these into separate agents with separate contexts, we eliminate the self-evaluation bias that plagues single-agent systems. The Actor never reviews its own work. The Critic never implements. The Director never touches code. This mirrors how high-performing human teams work -- and how the brain *would* work if it could run planning and error-detection in parallel without interference.
+Three distinct roles prevent self-evaluation bias — the same reason humans do code reviews.
 
 ```mermaid
 flowchart LR
@@ -295,8 +126,8 @@ flowchart LR
         A3[Return Results]
     end
     subgraph Critics["Critics (Validators)"]
-        C1["ADVOCATE\n'Can this work?'"]
-        C2["SKEPTIC\n'What could fail?'"]
+        C1["ADVOCATE<br/>'Can this work?'"]
+        C2["SKEPTIC<br/>'What could fail?'"]
     end
     D3 -->|batch + spec context| A1
     A3 -->|implementation| C1
@@ -306,13 +137,15 @@ flowchart LR
     D4 -->|consensus| D3
 ```
 
-- **Director** reads the spec once, groups tasks into batches, dispatches Actors and Critics, and evaluates consensus
-- **Actor** receives a batch of tasks (all touching the same files), implements them together, and self-reviews
-- **Critics** (ADVOCATE + SKEPTIC) independently review the implementation from opposing perspectives
+- **Director** reads the spec once, groups tasks into batches, dispatches Actors and Critics, evaluates consensus
+- **Actor** receives a batch of tasks (all touching the same files), implements them together, self-reviews
+- **Critics** (ADVOCATE + SKEPTIC) independently review from opposing perspectives
 
-### Dual Validation Consensus
+> See [docs/agentic-principles.md](docs/agentic-principles.md) for the neuroscience behind role separation.
 
-Every review dispatches two critics in parallel. Their verdicts combine via consensus rules:
+### Dual Validation
+
+Every review dispatches two critics in parallel. Their verdicts combine via consensus:
 
 ```mermaid
 flowchart TD
@@ -321,35 +154,45 @@ flowchart TD
     V --> SKP[SKEPTIC reviews]
     ADV -->|PASS| R1{SKEPTIC?}
     ADV -->|FAIL| R2{SKEPTIC?}
-    R1 -->|PASS| PROCEED[Proceed - Consensus PASS]
+    R1 -->|PASS| PROCEED[Proceed]
     R1 -->|FAIL| DIRECTOR[Director Decides]
     R2 -->|PASS| DIRECTOR
-    R2 -->|FAIL| BLOCK[Block - Consensus FAIL]
+    R2 -->|FAIL| BLOCK[Block]
 ```
 
 | ADVOCATE | SKEPTIC | Result |
 |----------|---------|--------|
 | PASS | PASS | Proceed |
-| FAIL | FAIL | Block -- fix issues first |
-| PASS | FAIL | Director reviews both reports, makes call |
-| FAIL | PASS | Director reviews both reports, makes call |
+| FAIL | FAIL | Block — fix issues first |
+| PASS | FAIL | Director reviews both reports |
+| FAIL | PASS | Director reviews both reports |
 
-### Task Batching
+When the SKEPTIC catches an issue with file:line evidence, the Actor fixes it automatically — up to 2 fix cycles per batch before escalating to you.
+
+### Product Skeptic
+
+Beyond code validation, the **Product Skeptic** checks alignment with your product context:
+
+- Does this feature serve the stated users?
+- Does it match the product tier? (don't over-engineer a hobby project)
+- Is scope appropriate? (flag gold-plating, cut unnecessary complexity)
+
+Three verdicts: **APPROVE** (proceed), **SCOPE** (cut specific items, then proceed), **KILL** (blocks execution — misaligned with product goals).
+
+### Intelligent Task Batching
 
 Tasks are grouped by file ownership to minimize agent overhead:
 
 ```mermaid
 flowchart TD
-    T[tasks.md: 8 tasks] --> G[Group by file]
-    G --> B1["Batch A\nauth/handlers.ts\nTasks 1.1, 1.2, 1.3, 1.4"]
-    G --> B2["Batch B\nauth/routes.ts\nTask 2.1"]
-    G --> B3["Batch C\ntests/auth.test.ts\nTasks 3.1, 3.2, 3.3"]
+    T["tasks.md<br/>8 tasks"] --> G[Group by file]
+    G --> B1["Batch A<br/>auth/handlers.ts<br/>Tasks 1.1, 1.2, 1.3, 1.4"]
+    G --> B2["Batch B<br/>auth/routes.ts<br/>Task 2.1"]
+    G --> B3["Batch C<br/>tests/auth.test.ts<br/>Tasks 3.1, 3.2, 3.3"]
     B1 --> E1["1 Actor + 2 Critics"]
     B2 --> E2["1 Actor + 2 Critics"]
     B3 --> E3["1 Actor + 2 Critics"]
 ```
-
-**Why batching matters:**
 
 | Scenario | Per-Task Agents | Batched Agents | Savings |
 |----------|----------------|----------------|---------|
@@ -357,59 +200,29 @@ flowchart TD
 | 10 tasks, 2 files | 30 | 4 | 87% |
 | 10 tasks, 5 files | 30 | 10 | 67% |
 
-The Actor reads the file once and implements all tasks together. The Critic reads once and checks all criteria together. The Director never re-reads the spec.
+### Session Recovery
 
-### Context Compaction Survival
-
-Long SDLC sessions exceed Claude's context window. When compaction happens, other tools lose state. SDLC Autopilot persists critical data to disk and recovers automatically:
+Long sessions exceed Claude's context window. PDLC Autopilot persists critical state to disk and recovers automatically:
 
 ```mermaid
 flowchart LR
-    A["Full Context\n(50k tokens)"] -->|compaction| B["Compressed\n(10k tokens)"]
-    B --> C["Step 0.5: Re-read"]
-    C --> D["validation-criteria.md\n(persisted to disk)"]
-    C --> E["spec.json sdlc_state\n(persisted to disk)"]
-    D --> F["Resume from\nlast phase"]
+    A["Full Context<br/>(50k tokens)"] -->|compaction| B["Compressed<br/>(10k tokens)"]
+    B --> C[Re-read from disk]
+    C --> D["spec.json<br/>(execution state)"]
+    C --> E["validation-criteria.md<br/>(validation rules)"]
+    D --> F[Resume from last phase]
     E --> F
 ```
 
-Two files survive compaction:
-
-- **`spec.json`** -- tracks `current_phase`, `last_batch_completed`, `t_strategy`, and validation results
-- **`validation-criteria.md`** -- stores phase checklists, tenet compliance, and validator prompts as the single source of truth for "what does valid mean?"
-
-After compaction, the Director re-reads both files at Step 0.5 and resumes from the last known phase. No context is lost. No work is repeated.
+Two files survive compaction: `spec.json` (tracks current phase, last batch, validation results) and `validation-criteria.md` (stores the rules validators check against). No work is lost. No work is repeated.
 
 ---
 
-## T-Mode: Team Strategies
+## T-Mode: Parallel Teams
 
-> **Preview Feature:** Agent Teams is currently in preview in Claude Code. To enable it, set the environment variable before launching Claude Code:
->
-> ```bash
-> export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-> ```
->
-> T-Mode is entirely optional. SDLC Autopilot works fully in standard single-agent mode without it. When the feature graduates from preview, the environment variable requirement will be removed.
+> **Preview Feature:** Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`. PDLC Autopilot works fully without it.
 
-When Agent Teams is enabled, the Director can spawn parallel teammates within a batch. It analyzes the task graph and selects the right strategy automatically.
-
-### Strategy Selection
-
-```mermaid
-flowchart TD
-    START[Analyze Tasks] --> Q1{Tasks touch\nsame files?}
-    Q1 -->|No| Q2{Tests needed?}
-    Q1 -->|Yes| S5["S5: Swarm"]
-    Q2 -->|Yes| Q3{Want product\nvalidation?}
-    Q2 -->|No| S1["S1: File Ownership"]
-    Q3 -->|Yes| S3["S3: Full Triad"]
-    Q3 -->|No| S2["S2: Impl + Test"]
-    START --> Q4{Strict ordering?}
-    Q4 -->|Yes| S4["S4: Pipeline"]
-```
-
-### Strategy Comparison
+When Agent Teams is enabled, the Director spawns parallel teammates within batches. It analyzes the task graph and selects the right strategy:
 
 | Strategy | Team Shape | Parallelism | Best For |
 |----------|-----------|-------------|----------|
@@ -419,196 +232,50 @@ flowchart TD
 | S4: Pipeline | Sequential handoff chain | Low (ordered) | Dependent tasks |
 | S5: Swarm | Multiple concerns, shared files | High (coordinated) | Complex refactors |
 
-### S1: File Ownership
+You don't configure teams manually. The Director analyzes the task graph and picks. You can override if you want.
 
-Each teammate owns a set of files. Maximum parallelism, no merge conflicts.
-
-```mermaid
-flowchart LR
-    Director --> T1["Teammate A\nauth/handlers.ts"]
-    Director --> T2["Teammate B\nauth/routes.ts"]
-    Director --> T3["Teammate C\ntests/"]
-```
-
-### S2: Impl + Test
-
-One teammate builds, one writes tests. Tests are written against design interfaces, not the implementation -- catching mismatches early.
-
-```mermaid
-flowchart LR
-    Director --> Builder["Builder\nimplements code"]
-    Director --> Tester["Tester\nwrites tests"]
-    Builder -.->|code ready| Tester
-```
-
-### S3: Full Triad
-
-Builder + Tester + Product Eye. The Product Eye monitors implementation, flags UX issues, and evolves the spec with discovered requirements.
-
-```mermaid
-flowchart LR
-    Director --> Builder
-    Director --> Tester
-    Director --> Product["Product Eye\nUX + requirements"]
-    Builder -.-> Tester
-    Tester -.-> Product
-```
-
-### S4: Pipeline
-
-Sequential handoff for tasks with strict ordering: schemas first, then handlers, then tests. Each stage waits for the previous one.
-
-```mermaid
-flowchart LR
-    A["Stage 1\nSchemas + Types"] -->|output| B["Stage 2\nHandlers + Logic"]
-    B -->|output| C["Stage 3\nTests + Integration"]
-```
-
-### S5: Swarm
-
-Multiple teammates work on the same file from different angles (happy path, error paths, edge cases). High coordination overhead -- the Lead reconciles merge conflicts after.
-
-```mermaid
-flowchart TD
-    Director --> C1["Core Logic\nhappy path"]
-    Director --> C2["Error Paths\nvalidation"]
-    Director --> C3["Edge Cases\nboundaries"]
-    C1 --> Merge["Lead Reconciles\nmerge conflicts"]
-    C2 --> Merge
-    C3 --> Merge
-```
-
-### Team Strategy Taxonomy
-
-The five strategies form a taxonomy along two axes: **file coupling** (do teammates share files?) and **coordination overhead** (how much does the Lead need to manage?).
-
-```mermaid
-flowchart TD
-    subgraph Low["Low Coordination"]
-        S1["S1: File Ownership\nExclusive files\nMax parallelism"]
-    end
-    subgraph Medium["Medium Coordination"]
-        S2["S2: Impl + Test\nRole split\nInterface contract"]
-        S3["S3: Full Triad\nRole split + Product\nSpec evolution"]
-    end
-    subgraph Ordered["Ordered Coordination"]
-        S4["S4: Pipeline\nSequential handoff\nDependency chain"]
-    end
-    subgraph High["High Coordination"]
-        S5["S5: Swarm\nShared files\nMerge reconciliation"]
-    end
-```
-
-| | No shared files | Shared files |
-|---|---|---|
-| **Independent tasks** | S1: File Ownership | S5: Swarm |
-| **Role-specialized** | S2: Impl + Test / S3: Full Triad | -- |
-| **Ordered dependencies** | S4: Pipeline | -- |
-
-The Director picks the simplest strategy that fits. S1 is preferred when file ownership can be cleanly divided. S5 is a last resort for complex single-file refactors.
-
-### Not Just Default Claude Code Teams
-
-> Claude Code gives you raw `TeamCreate` and `SendMessage`. That is agent spawning.
->
-> SDLC Autopilot gives you **intelligent strategy selection**:
->
-> - **File ownership enforcement** -- no two teammates modify the same file (S1/S4)
-> - **Strategy-based team composition** -- the Director analyzes file groups, test needs, dependency chains, and spec maturity to pick the right pattern
-> - **Director oversight with consensus-based promotion** -- work is only accepted when both ADVOCATE and SKEPTIC agree
-> - **Automatic idle management** -- the Director assigns next work when a teammate finishes
-> - **Graceful shutdown sequencing** -- Director sends `shutdown_request` to all teammates when batches complete
->
-> **You do not configure teams manually.** The Director analyzes the task graph and picks the right strategy. You can override if you want, but the default is smart.
+> See [docs/t-mode-strategies.md](docs/t-mode-strategies.md) for detailed diagrams and selection flowchart.
 
 ---
 
-## Zero Config, One Command
+## Before vs After
 
-The learning curve is near-zero. There is no YAML config file. No mandatory environment variables. No project-specific setup beyond having cc-sdd installed.
+<table>
+<tr>
+<th>cc-sdd alone (7+ commands)</th>
+<th>Wrapped with PDLC Autopilot</th>
+</tr>
+<tr>
+<td>
 
-**Three things to know:**
-
-| Step | What You Do | What Happens |
-|------|------------|--------------|
-| 1. **Install** | `npx sdlc-autopilot` | Skill installed to `~/.claude/skills/` |
-| 2. **Trigger** | Say "SDLC" in Claude Code | Autopilot takes over |
-| 3. **Review** | Read the summary when it finishes | All tasks implemented and validated |
-
-That is the entire workflow. Everything else is automatic.
-
----
-
-## FAQ
-
-### Do I need to learn the 5 team strategies?
-
-No. The Director picks the right strategy based on your task structure. You will be shown the top options and can accept the recommendation or override. Most users never need to think about it.
-
-### What if I don't have cc-sdd?
-
-The installer tells you. One command to fix:
-
-```bash
-npx cc-sdd@latest --claude
+```
+You: /kiro:spec-requirements
+You: (review requirements)
+You: /kiro:spec-design
+You: (review design)
+You: /kiro:spec-tasks
+You: (review tasks)
+You: Implement task 1.1
+You: Implement task 1.2
+You: Now review everything
+You: Fix the issue
+You: Review again
 ```
 
-cc-sdd provides the Kiro spec commands (`spec-init`, `spec-requirements`, `spec-design`, `spec-tasks`) that SDLC Autopilot orchestrates. Without it, the autopilot cannot generate or read spec artifacts.
+7+ commands. Manual phase transitions. You babysit every step.
 
-### Can I use it on existing specs?
+</td>
+<td>
 
-Yes. SDLC Autopilot detects existing artifacts in your `.claude/specs/{feature}/` directory and picks up where you left off. If requirements and design exist but tasks are missing, it generates only the tasks and continues to validation and execution.
-
-### What if the critics disagree?
-
-When the ADVOCATE passes but the SKEPTIC fails (or vice versa), the Director reviews both reports and makes the call. In practice, SKEPTIC findings with file:line evidence are almost always valid -- the Director will trigger a fix cycle.
-
-### What is `validation-criteria.md`?
-
-An optional file you can create in your spec directory that defines project-specific validation rules. It survives context compaction, so validators always have access to your custom criteria even in long sessions. See `examples/validation-criteria-template.md` for a starter template.
-
-### Can I use T-Mode?
-
-T-Mode requires Claude Code's Agent Teams feature, which is currently in **preview**. Enable it by setting the environment variable before launching Claude Code:
-
-```bash
-export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+```
+You: SDLC — add rate limiting to the API
 ```
 
-Without this flag, SDLC Autopilot works fully in standard single-agent mode. T-Mode is optional and additive -- you lose nothing by not enabling it, and gain parallel execution when you do.
+One trigger. You provide the direction and review key decisions. The autopilot handles spec generation, validation, batched implementation, dual-critic review, and auto-fix cycles.
 
----
-
-## Prerequisites
-
-**Required:**
-
-- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) -- the runtime environment
-- [cc-sdd](https://github.com/gotalab/cc-sdd) >= 2.0.0 -- provides Kiro spec commands
-
-**Install cc-sdd in your project:**
-
-```bash
-npx cc-sdd@latest --claude
-```
-
-This installs the Kiro spec commands (`spec-init`, `spec-requirements`, `spec-design`, `spec-tasks`, `validate-gap`, `validate-design`) to your project's `.claude/commands/kiro/` directory.
-
-**Optional:**
-
-- `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` -- enables T-Mode parallel execution
-
----
-
-## Compatibility Matrix
-
-| sdlc-autopilot | cc-sdd | Claude Code | Notes |
-|---------------|--------|-------------|-------|
-| 1.0.x | >= 2.0.0 | Jan 2026+ | Initial release, core orchestration |
-| 1.1.x (planned) | >= 2.0.0 | Jan 2026+ | Adds hooks (stop, post-edit-lint, post-edit-test) |
-| 2.0.x (reserved) | >= 3.0.0 | TBD | Reserved for breaking changes |
-
-Tested against cc-sdd v2.1.1.
+</td>
+</tr>
+</table>
 
 ---
 
@@ -618,55 +285,161 @@ Tested against cc-sdd v2.1.1.
 
 ```bash
 # Global install (works across all projects)
-npx sdlc-autopilot
+npx pdlc-autopilot
 
 # Project-level install (version-pinned per repo)
-npx sdlc-autopilot --project
+npx pdlc-autopilot --project
 ```
 
 ### Manual install
 
 ```bash
-# Clone the repo
-git clone https://github.com/vishnujayvel/sdlc-autopilot.git
-
-# Copy the skill file
-mkdir -p ~/.claude/skills/sdlc-autopilot
-cp sdlc-autopilot/templates/skills/sdlc-autopilot/SKILL.md ~/.claude/skills/sdlc-autopilot/
+git clone https://github.com/vishnujayvel/pdlc-autopilot.git
+mkdir -p ~/.claude/skills/pdlc-autopilot
+cp pdlc-autopilot/templates/skills/pdlc-autopilot/SKILL.md ~/.claude/skills/pdlc-autopilot/
 ```
-
-No build step required for manual install. The SKILL.md is self-contained.
 
 ### CLI flags
 
 | Flag | Description |
 |------|-------------|
-| `--project` | Install to `.claude/skills/` (project-level) instead of `~/.claude/skills/` (global) |
+| `--project` | Install to `.claude/skills/` (project-level) instead of global |
 | `--yes`, `-y` | Skip confirmation prompts |
 | `--dry-run` | Show what would be installed without writing files |
-| `--version`, `-v` | Print version and exit |
-| `--help`, `-h` | Print usage help |
+| `--version`, `-v` | Print version |
+| `--help`, `-h` | Print usage |
 
 ---
 
-## Hooks (Coming in v1.1)
+## Prerequisites
 
-Deterministic hooks for automated quality gates during SDLC execution:
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) — the runtime environment
+- [cc-sdd](https://github.com/gotalab/cc-sdd) >= 2.0.0 — provides Kiro spec commands
 
-- **`sdlc-stop-check.sh`** -- prevents Claude from exiting when SDLC tasks are still pending. Reads `tasks.md`, counts incomplete items, blocks exit if work remains.
-- **`post-edit-lint.sh`** -- auto-formats files after Claude writes or edits. Detects your project's formatter (prettier, ruff, gofmt, etc.).
-- **`post-edit-test.sh`** -- runs related tests after file modifications. Detects your test framework (jest, pytest, vitest, etc.) and runs only affected tests.
+```bash
+npx cc-sdd@latest --claude
+```
 
-Hooks are opt-in and will be installable via `npx sdlc-autopilot --hooks`.
+---
+
+## FAQ
+
+**Do I need to learn the 5 team strategies?**
+
+No. The Director picks based on your task structure. Most users never think about it.
+
+**What if I don't have cc-sdd?**
+
+The installer warns you. One command: `npx cc-sdd@latest --claude`.
+
+**Can I use it on existing specs?**
+
+Yes. It detects existing artifacts and picks up where you left off.
+
+**What if the critics disagree?**
+
+The Director reviews both reports. SKEPTIC findings with file:line evidence are almost always valid.
+
+**What is `validation-criteria.md`?**
+
+An optional file defining project-specific validation rules. It survives context compaction, so validators always have access. See `examples/validation-criteria-template.md`.
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Architecture Deep Dive](docs/architecture.md) | Director/Actor/Critic internals, consensus engine, task batching, session persistence |
+| [Agentic Principles](docs/agentic-principles.md) | Why role separation works, opposing incentives, how Claude Code primitives compose |
+| [PDLC Lifecycle](docs/pdlc-lifecycle.md) | All phases (P0-P3), lightweight paths, context health, retrospectives |
+| [T-Mode Strategies](docs/t-mode-strategies.md) | All 5 strategies with diagrams, selection flowchart, team coordination |
+
+---
+
+## Hooks (Included)
+
+Three opt-in hooks add deterministic quality gates to the PDLC loop. They work with Claude Code's native hook system — add them to your `.claude/settings.json` to activate.
+
+| Hook | Event | What It Does |
+|------|-------|-------------|
+| `pdlc-stop-check.sh` | `Stop` | Prevents Claude from exiting when tasks are still pending. Counts `- [ ]` items in tasks.md and blocks exit until all are complete. Includes a safety valve (default: 50 continues max). |
+| `post-edit-lint.sh` | `PostToolUse` (Write/Edit) | Auto-formats files after Claude edits them. Detects your project's formatter (prettier, ruff, black, gofmt, rustfmt) by walking the directory tree. Fails silently if no formatter found. |
+| `post-edit-test.sh` | `PostToolUse` (Write/Edit) | Runs related tests after file modifications. Detects your test framework (vitest, jest, pytest, go test, cargo test), finds the corresponding test file, and runs only that test. Truncates output to 30 lines. |
+
+All hooks exit 0 on failure — they **never block Claude Code**. They're informational quality gates, not hard stops.
+
+Install via: `npx pdlc-autopilot --hooks` (coming soon) or copy from `hooks/` manually.
+
+---
+
+## How It Fits Together
+
+[cc-sdd](https://github.com/gotalab/cc-sdd) is a spec orchestrator in its own right — it generates structured requirements, designs, and tasks via Kiro-style commands. You can use it standalone and run each phase manually.
+
+PDLC Autopilot wraps cc-sdd with the **product development lifecycle** — the parts that turn spec-driven development into an autonomous pipeline:
+
+```mermaid
+flowchart TD
+    subgraph You["You (Human)"]
+        IDEA["Feature idea<br/>or bug report"]
+    end
+    subgraph PDLC["PDLC Autopilot — Product Wrapper"]
+        PC["Product Context (P0)"]
+        PS["Product Skeptic"]
+        DAC["Director / Actor / Critic"]
+        BATCH["Batched Execution + Auto-Fix"]
+        RETRO["Retrospective + Decision Log"]
+        SESSION["Session Persistence"]
+    end
+    subgraph CCSDD["cc-sdd — Spec Orchestrator"]
+        REQ["kiro:spec-requirements"]
+        DES["kiro:spec-design"]
+        TSK["kiro:spec-tasks"]
+        VAL["kiro:validate-*"]
+    end
+    subgraph Runtime["Claude Code — Agentic Platform"]
+        TASK["Task tool (subagents)"]
+        TEAM["Agent Teams"]
+        HOOKS["Hooks"]
+    end
+
+    IDEA -->|"SDLC"| PC
+    PC --> DAC
+    DAC -->|generates specs| REQ & DES & TSK
+    DAC -->|validates| VAL
+    DAC --> BATCH
+    PS -->|alignment gate| BATCH
+    BATCH --> RETRO
+    SESSION -.->|survives context loss| DAC
+    DAC -->|composes| TASK & TEAM & HOOKS
+```
+
+| What | Tool | Does |
+|------|------|------|
+| **Spec generation** | [cc-sdd](https://github.com/gotalab/cc-sdd) | Requirements, design, tasks — works standalone or called by PDLC Autopilot |
+| **Product wrapper** | PDLC Autopilot | Product context, dual validation, Product Skeptic, batching, auto-fix, session recovery |
+| **Agentic platform** | [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Task tool, skills, hooks, agent teams — the runtime everything runs on |
+
+cc-sdd works without PDLC Autopilot. PDLC Autopilot calls cc-sdd internally when specs need generating. T-Mode is optional on top of both.
+
+---
+
+## Compatibility
+
+| pdlc-autopilot | cc-sdd | Claude Code |
+|---------------|--------|-------------|
+| 1.0.x | >= 2.0.0 | Jan 2026+ |
+| 1.1.x | >= 2.0.0 | Jan 2026+ |
 
 ---
 
 ## Acknowledgments
 
-SDLC Autopilot stands on the shoulders of [cc-sdd](https://github.com/gotalab/cc-sdd) by the Kiro spec community. They built the spec-driven development primitives -- `spec-init`, `spec-requirements`, `spec-design`, `spec-tasks` -- that make structured AI-assisted development possible in Claude Code. Without their work creating an open, composable spec format, this orchestration layer wouldn't exist. Thank you to the cc-sdd maintainers and contributors for building the foundation.
+PDLC Autopilot builds on [cc-sdd](https://github.com/gotalab/cc-sdd) by the Kiro spec community. cc-sdd is the spec orchestrator that makes structured AI-assisted development possible in Claude Code — PDLC Autopilot wraps it with product development lifecycle automation. Thank you to the cc-sdd maintainers and contributors.
 
 ---
 
 ## License
 
-[MIT](LICENSE) -- same as [cc-sdd](https://github.com/gotalab/cc-sdd).
+[MIT](LICENSE)

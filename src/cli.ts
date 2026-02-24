@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * sdlc-autopilot CLI entry point.
+ * pdlc-autopilot CLI entry point.
  *
- * Installs the SDLC Autopilot skill (SKILL.md) into the Claude Code
+ * Installs the PDLC Autopilot skill (SKILL.md) into the Claude Code
  * skills directory (global or project-level).
  *
- * Usage: npx sdlc-autopilot [options]
+ * Usage: npx pdlc-autopilot [options]
  */
 
 import { existsSync, mkdirSync, copyFileSync, readFileSync } from "node:fs";
@@ -91,7 +91,7 @@ function parseArgs(argv: string[]): CLIOptions {
         break;
       default:
         console.error(`Unknown flag: ${arg}`);
-        console.error('Run "npx sdlc-autopilot --help" for usage information.');
+        console.error('Run "npx pdlc-autopilot --help" for usage information.');
         process.exit(1);
     }
   }
@@ -106,25 +106,25 @@ function parseArgs(argv: string[]): CLIOptions {
 function printHelp(): void {
   const version = getVersion();
   const text = `
-sdlc-autopilot v${version}
-Install the SDLC Autopilot skill for Claude Code.
+pdlc-autopilot v${version}
+Install the PDLC Autopilot skill for Claude Code.
 
 USAGE
-  npx sdlc-autopilot [options]
+  npx pdlc-autopilot [options]
 
 OPTIONS
-  --project      Install into the current project (.claude/skills/sdlc-autopilot/)
-                 instead of the global location (~/.claude/skills/sdlc-autopilot/)
+  --project      Install into the current project (.claude/skills/pdlc-autopilot/)
+                 instead of the global location (~/.claude/skills/pdlc-autopilot/)
   --yes, -y      Skip confirmation prompts (overwrite without asking)
   --dry-run      Show what would be installed without writing any files
   --version, -v  Print version and exit
   --help, -h     Show this help message and exit
 
 EXAMPLES
-  npx sdlc-autopilot              Install globally (recommended)
-  npx sdlc-autopilot --project    Install into current project only
-  npx sdlc-autopilot --dry-run    Preview installation without writing
-  npx sdlc-autopilot -y           Install globally, overwrite if exists
+  npx pdlc-autopilot              Install globally (recommended)
+  npx pdlc-autopilot --project    Install into current project only
+  npx pdlc-autopilot --dry-run    Preview installation without writing
+  npx pdlc-autopilot -y           Install globally, overwrite if exists
 `.trimStart();
 
   console.log(text);
@@ -136,9 +136,9 @@ EXAMPLES
 
 function resolveTargetDir(options: CLIOptions): string {
   if (options.project) {
-    return resolve(process.cwd(), ".claude", "skills", "sdlc-autopilot");
+    return resolve(process.cwd(), ".claude", "skills", "pdlc-autopilot");
   }
-  return join(homedir(), ".claude", "skills", "sdlc-autopilot");
+  return join(homedir(), ".claude", "skills", "pdlc-autopilot");
 }
 
 // ---------------------------------------------------------------------------
@@ -149,7 +149,7 @@ function resolveTemplatePath(): string {
   // In the built output (dist/cli.js), templates/ is at ../templates/ relative
   // to the dist directory.
   const thisFile = fileURLToPath(import.meta.url);
-  return join(dirname(thisFile), "..", "templates", "skills", "sdlc-autopilot", "SKILL.md");
+  return join(dirname(thisFile), "..", "templates", "skills", "pdlc-autopilot", "SKILL.md");
 }
 
 // ---------------------------------------------------------------------------
@@ -209,9 +209,9 @@ function installSkill(templatePath: string, targetDir: string): InstallResult {
     if (error.code === "EACCES") {
       console.error(`\nPermission denied: ${targetDir}`);
       console.error("Try one of the following:");
-      console.error(`  sudo npx sdlc-autopilot`);
+      console.error(`  sudo npx pdlc-autopilot`);
       console.error(`  Check ownership: ls -la ${dirname(targetDir)}`);
-      console.error(`  Or install to the project instead: npx sdlc-autopilot --project`);
+      console.error(`  Or install to the project instead: npx pdlc-autopilot --project`);
     } else {
       console.error(`\nFailed to install SKILL.md: ${error.message ?? String(err)}`);
     }
@@ -232,7 +232,7 @@ function checkPrerequisites(cwd: string): string[] {
     warnings.push(
       [
         "cc-sdd not detected in this project.",
-        "SDLC Autopilot works best with cc-sdd (Kiro-style specs for Claude Code).",
+        "PDLC Autopilot works best with cc-sdd (Kiro-style specs for Claude Code).",
         "Install it with:  npx cc-sdd@latest --claude",
         "More info: https://github.com/gotalab/cc-sdd",
       ].join("\n"),
@@ -278,7 +278,7 @@ async function main(argv: string[]): Promise<void> {
 
   // --version
   if (options.version) {
-    console.log(`sdlc-autopilot v${getVersion()}`);
+    console.log(`pdlc-autopilot v${getVersion()}`);
     process.exit(0);
   }
 

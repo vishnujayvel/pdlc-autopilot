@@ -1,10 +1,10 @@
 {
-  "name": "sdlc-autopilot",
-  "version": "1.0.0",
-  "description": "Automated SDLC pipeline that uses AI critics (Advocate + Skeptic) to validate requirements, designs, and implementations",
+  "name": "pdlc-autopilot",
+  "version": "1.1.0",
+  "description": "Autonomous product development lifecycle for Claude Code — Director/Actor/Critic pattern with dual validation",
   "type": "module",
   "bin": {
-    "sdlc-autopilot": "dist/cli.js"
+    "pdlc-autopilot": "dist/cli.js"
   },
   "files": [
     "dist/",
@@ -20,6 +20,7 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [
+    "pdlc",
     "sdlc",
     "ai",
     "code-review",
