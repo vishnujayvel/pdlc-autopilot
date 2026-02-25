@@ -116,6 +116,10 @@ All three paths end with a retrospective and decision log. The lightweight paths
 
 Three distinct roles prevent self-evaluation bias — the same reason humans do code reviews.
 
+<div align="center">
+<img src="docs/assets/director-actor-critic.png" alt="Director / Actor / Critic — The agent that writes the code should never be the one that reviews it" width="700">
+</div>
+
 ```mermaid
 flowchart LR
     subgraph Director["Director (Orchestrator)"]
