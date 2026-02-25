@@ -11,7 +11,11 @@
 
 *You set the direction. The machine handles the rest.*
 
-<img src="docs/assets/hero.png" alt="PDLC Autopilot — Autonomous Product Development Lifecycle" width="100%">
+<img src="docs/assets/hero-soundstage.png" alt="Meridian Pictures — The Director orchestrates while the Actor performs and Critics review from opposing perspectives" width="600">
+
+<br>
+
+<img src="docs/assets/hero-clapperboard.png" alt="Scene 7, Take 3 — Every implementation gets reviewed, every review gets evidence" width="600">
 
 </div>
 
