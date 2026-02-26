@@ -72,9 +72,9 @@ reviews:
            (Full PDLC / Bug Fix / Iteration) and route correctly.
 
         6. Check that the shipped SKILL.md template in
-           templates/skills/pdlc-autopilot/SKILL.md matches the v3.2
+           templates/skills/pdlc-autopilot/SKILL.md matches the current
            architecture (5-lens, Boris principles, elegance check,
-           retrospective→memory).
+           retrospective→memory). Cross-check version against CHANGELOG.
 
     - path: "hooks/**"
       instructions: >
@@ -94,16 +94,16 @@ reviews:
         Developer documentation (architecture, agentic principles, PDLC
         lifecycle, T-mode strategies). Review for:
 
-        1. Architecture descriptions must match current code (v3.2, 5-lens
+        1. Architecture descriptions must match current code (5-lens
            Product Skeptic, Director/Actor/Critic, three workflow paths).
-           Flag any stale references to earlier versions.
+           Cross-check version against CHANGELOG. Flag stale references.
         2. Agentic principles must be consistent with the Boris workflow
            mapping (plan-by-default, verification-before-done,
            demand-elegance, self-improvement loop).
         3. Code examples must reference actual source files and line numbers
            where possible.
-        4. Links must use relative paths and point to files that exist in
-           the repo.
+        4. Internal links must use relative paths and point to files that
+           exist in the repo. External links (HTTPS) are allowed.
         5. No duplicate content between docs/ files and README.md — each
            must have a clear scope.
 
@@ -123,8 +123,9 @@ reviews:
         All markdown files (README, CHANGELOG, contributing guides).
         Check for:
 
-        1. README must accurately describe the current architecture (v3.2,
-           PDLC not SDLC, 5-lens Product Skeptic, three workflow paths).
+        1. README must accurately describe the current architecture (PDLC
+           not SDLC, 5-lens Product Skeptic, three workflow paths).
+           Cross-check version against CHANGELOG.
         2. Installation and usage instructions must work as written.
         3. Version references must be consistent across all docs.
         4. No TODO or FIXME comments left in published docs.
