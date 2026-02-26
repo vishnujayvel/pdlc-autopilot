@@ -3,7 +3,7 @@ early_access: false
 
 reviews:
   profile: "assertive"
-  request_changes_workflow: false
+  request_changes_workflow: true
   high_level_summary: true
   poem: false
   review_status: true
@@ -13,22 +13,133 @@ reviews:
   path_instructions:
     - path: "src/**/*.ts"
       instructions: >
-        Review for TypeScript best practices, proper error handling,
-        and consistency with the Director/Actor/Critic pattern.
-        Check that ADVOCATE and SKEPTIC roles are clearly separated.
+        CLI source and core logic. Enforce these invariants:
+
+        1. Director/Actor/Critic separation: Directors orchestrate workflow
+           and dispatch subagents. Actors execute implementation tasks — they
+           must NEVER dispatch subagents or make architectural decisions.
+           Critics validate output — they must NEVER implement or modify code.
+           Flag any role boundary violation.
+
+        2. ADVOCATE vs SKEPTIC critics must have distinct, non-overlapping
+           perspectives. ADVOCATE validates completeness and positive
+           alignment. SKEPTIC challenges assumptions with 5-lens analysis
+           (build trap, audience, MVP hydration, kill criteria, output
+           contracts). Flag merged or ambiguous critic roles.
+
+        3. Session persistence: progress.md and validation-criteria.md must
+           survive context compaction. Any code that writes to these files
+           must append, not overwrite. Flag any truncation risk.
+
+        4. validation-criteria.md is the single source of truth for all
+           validators. Every validation step must receive it as input.
+           Flag validators that hard-code criteria or skip this file.
+
+        5. Output format contracts: every template that produces structured
+           output must specify the exact output shape (JSON schema or
+           markdown heading structure). Flag templates with ambiguous or
+           missing output format specifications.
+
+        6. Spec-driven development: tasks must trace to FR-* requirements.
+           Flag orphan tasks that don't reference a functional requirement.
+
+        Categorize issues as Critical (role violations, data loss risk,
+        contract breaks), Important (missing validation, type safety),
+        or Minor (naming, style).
+
     - path: "templates/**"
       instructions: >
-        These are prompt templates for the SDLC workflow.
-        Check for clarity, completeness, and that they follow
-        the validation-criteria pattern.
+        Prompt templates for the PDLC workflow (skill template, phase
+        prompts, critic templates). Review against these rules:
+
+        1. No placeholder text left as-is. Strings like [PASTE ... HERE]
+           must be documented as instructions to the agent, not left as
+           literal text that could appear in output.
+
+        2. Every template must specify its output format contract — what
+           exact structure the agent is expected to produce.
+
+        3. ADVOCATE templates must focus on completeness, alignment with
+           spec, and positive validation. SKEPTIC templates must focus on
+           the 5-lens Product Skeptic analysis (build trap, audience fit,
+           MVP hydration, kill criteria, output contracts).
+
+        4. Templates must not assume context that isn't explicitly passed.
+           Flag any template that references files or state without
+           receiving them as input.
+
+        5. Director templates must include the three workflow paths
+           (Full PDLC / Bug Fix / Iteration) and route correctly.
+
+        6. Check that the shipped SKILL.md template in
+           templates/skills/pdlc-autopilot/SKILL.md matches the v3.2
+           architecture (5-lens, Boris principles, elegance check,
+           retrospective→memory).
+
     - path: "hooks/**"
       instructions: >
-        Claude Code hooks. Verify they follow the hookwise pattern:
-        guards → context → side effects. Check for proper error handling.
+        Claude Code hooks (3 shell scripts). Review against hookwise
+        pattern:
+
+        1. Three-phase separation: guards → context → side effects.
+        2. Fail-open guarantee: errors must exit 0, never block the user.
+        3. pdlc-stop-check: must correctly detect when PDLC session is
+           active and warn about uncommitted progress.
+        4. post-edit-lint and post-edit-test: must run only on relevant
+           file types, not on every edit.
+        5. Scripts must be POSIX-compatible (no bash-isms if targeting sh).
+
+    - path: "docs/**/*.md"
+      instructions: >
+        Developer documentation (architecture, agentic principles, PDLC
+        lifecycle, T-mode strategies). Review for:
+
+        1. Architecture descriptions must match current code (v3.2, 5-lens
+           Product Skeptic, Director/Actor/Critic, three workflow paths).
+           Flag any stale references to earlier versions.
+        2. Agentic principles must be consistent with the Boris workflow
+           mapping (plan-by-default, verification-before-done,
+           demand-elegance, self-improvement loop).
+        3. Code examples must reference actual source files and line numbers
+           where possible.
+        4. Links must use relative paths and point to files that exist in
+           the repo.
+        5. No duplicate content between docs/ files and README.md — each
+           must have a clear scope.
+
+    - path: "examples/**"
+      instructions: >
+        Example files (validation-criteria-template.md). Review for:
+
+        1. Examples must be valid and runnable against the current version.
+        2. validation-criteria-template.md must match the schema expected
+           by the validator code in src/.
+        3. Examples must not contain real project data or credentials.
+        4. Each example must have a comment header explaining its purpose
+           and how to use it.
+
     - path: "**/*.md"
       instructions: >
-        Documentation files. Check for accuracy, broken links,
-        and consistency with the SDLC methodology described in README.
+        All markdown files (README, CHANGELOG, contributing guides).
+        Check for:
+
+        1. README must accurately describe the current architecture (v3.2,
+           PDLC not SDLC, 5-lens Product Skeptic, three workflow paths).
+        2. Installation and usage instructions must work as written.
+        3. Version references must be consistent across all docs.
+        4. No TODO or FIXME comments left in published docs.
+        5. License and attribution must be present and correct.
+
+    - path: "package.json"
+      instructions: >
+        Package manifest. Check for:
+
+        1. Package name is "pdlc-autopilot" (not sdlc-autopilot).
+        2. Version follows semver and matches CHANGELOG.
+        3. bin entry points to the correct CLI entry file.
+        4. Dependencies are minimal — this is a skill/template package,
+           not a runtime library. Flag unnecessary runtime deps.
+        5. No pinned versions without justification.
 
 chat:
   auto_reply: true
