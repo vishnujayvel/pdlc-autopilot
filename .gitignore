@@ -3,3 +3,9 @@ dist/
 .DS_Store
 .claude/specs/
 *.tgz
+
+# Playwright MCP screenshots
+.playwright-mcp/
+
+# Excalidraw logs
+excalidraw.log
