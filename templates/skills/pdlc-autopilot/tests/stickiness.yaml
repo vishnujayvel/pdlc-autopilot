@@ -1,0 +1,89 @@
+# Stickiness tests for pdlc-autopilot (PDLC Autopilot v3.1)
+# Tests whether the skill correctly activates for SDLC/PDLC work and ignores generic requests
+
+prompts:
+  # Should trigger pdlc-autopilot (SDLC triggers — unchanged)
+  - 'SDLC'
+  - 'build this feature end-to-end'
+  - 'implement the spec'
+  - 'run the SDLC loop'
+  - 'continue where we left off with the spec'
+  - 'go back to the spec'
+  - 'lets follow the SDLC process for this'
+
+  # Should trigger pdlc-autopilot (PDLC triggers)
+  - 'PDLC'
+  - 'product context'
+  - 'product skeptic review'
+  - 'document this feature'
+  - 'launch prep'
+  - 'demo script for this project'
+
+  # Should trigger pdlc-autopilot (v3.1 lightweight path triggers)
+  - 'PDLC bug fix'
+  - 'fix this bug using the SDLC process'
+  - 'iterate on this feature using PDLC'
+  - 'run a product retrospective'
+  - 'check product context freshness'
+
+  # Should NOT trigger pdlc-autopilot
+  - 'write a function for me'
+  - 'fix this bug in my code'
+  - 'create a PR for these changes'
+  - 'write me a product requirements doc'
+  - 'help me with product strategy'
+  - 'what is PDLC in general'
+  - 'just refactor this function'
+  - 'what decisions did we make'
+
+providers:
+  - id: openai:gpt-4
+    config:
+      systemPrompt: |
+        You are an AI assistant that helps users follow the SDLC/PDLC (Software/Product Development Life Cycle) process.
+
+        You should activate when users:
+        - Mention "SDLC" or "PDLC" explicitly
+        - Say "build this feature", "implement the spec", "run the SDLC loop"
+        - Ask to continue or return to spec work
+        - Mention "product context", "product skeptic review"
+        - Say "document this feature", "launch prep", "demo script"
+        - Say "PDLC bug fix", "fix using SDLC process", "iterate using PDLC"
+        - Ask to "run a product retrospective" or "check product context freshness"
+
+        You should NOT activate for:
+        - Generic code writing requests
+        - Simple bug fixes without PDLC/SDLC mention (e.g., "fix this bug in my code")
+        - PR creation requests
+        - Generic product strategy advice ("write me a PRD", "help me with product strategy")
+        - General knowledge questions about PDLC concepts
+        - Plain refactoring ("just refactor this function")
+        - Generic decision history queries ("what decisions did we make")
+
+defaultTest:
+  assert:
+    - type: llm-rubric
+      value: |
+        The response should show signs of the pdlc-autopilot skill activating if the prompt is about
+        SDLC/PDLC process, implementing specs end-to-end, product context for a specific project,
+        documenting a feature, launch preparation, PDLC bug fixes, PDLC iterations,
+        product retrospectives, or context freshness checks.
+
+        Signs of activation:
+        - Mentions SDLC/PDLC phases or process
+        - References spec implementation
+        - Discusses task tracking or validation criteria
+        - Talks about advocate/skeptic/product skeptic critics
+        - Mentions product-context.md or audience tier
+        - References documentation phases (DevRel Actor, Docs Critic)
+        - Discusses demo scripts or launch artifacts
+        - References bug fix path, iteration path, or lightweight paths
+        - Mentions context health, freshness check, or decision log
+        - References retrospective protocol or drift detection
+
+        The response should NOT activate for:
+        - Generic development tasks (writing functions, fixing bugs without PDLC context, creating PRs)
+        - Generic product strategy advice not tied to a specific SDLC/PDLC workflow
+        - General knowledge questions about what PDLC means
+        - Plain refactoring without SDLC/PDLC context
+        - Generic decision queries not tied to the PDLC decision log
