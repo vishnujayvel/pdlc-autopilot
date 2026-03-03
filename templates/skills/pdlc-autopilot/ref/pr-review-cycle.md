@@ -10,7 +10,7 @@
 
 ### 5.1 Create PR
 
-```
+```text
 1. Create branch: pdlc/{feature-name} (from current HEAD)
 2. Stage all implementation files
 3. Filter sensitive files — NEVER commit:
@@ -26,13 +26,13 @@
 
 ### 5.2 Wait for External Review
 
-```
+```text
 1. Check for external review tools:
    - CodeRabbit: check if .coderabbit.yaml exists or PR gets auto-review
    - Human reviewers: check CODEOWNERS or repo settings
 2. Poll for review completion:
    - `gh pr checks {pr_number}` — wait for CI to pass
-   - `gh pr reviews {pr_number}` — wait for at least one review
+   - `gh pr view {pr_number} --json reviews` — wait for at least one review
 3. Configurable timeout: default 5 minutes for automated reviews
    - If no automated review after timeout, proceed with human-only flow
    - If waiting for human review, notify user and pause
@@ -40,7 +40,7 @@
 
 ### 5.3 Ingest Review Comments
 
-```
+```text
 1. Fetch all review comments:
    - `gh api repos/{owner}/{repo}/pulls/{pr}/comments`
    - `gh api repos/{owner}/{repo}/pulls/{pr}/reviews`
@@ -65,7 +65,7 @@
 
 ### 5.4 Address Comments
 
-```
+```text
 1. Group comments by file → create fix batches
 2. For each batch:
    a. Dispatch Actor with:
@@ -81,7 +81,7 @@
 
 ### 5.5 Reply to Reviewer Comments
 
-```
+```text
 For each addressed comment:
   - Reply on PR explaining the fix:
     "Fixed in {commit_sha}: {1-line explanation}"
@@ -99,7 +99,7 @@ For each skipped comment:
 
 ### 5.6 Push Fixes + Re-request Review
 
-```
+```text
 1. Push fix commits to PR branch
 2. Re-request review if significant changes made:
    - `gh pr edit {pr} --add-reviewer {reviewer}`
@@ -110,7 +110,7 @@ For each skipped comment:
 
 ### 5.7 Gap Classification → Retrospective Input
 
-```
+```text
 After all review comments are processed, classify each into a gap category.
 This feeds directly into the retrospective (Phase: Retrospective).
 
@@ -137,9 +137,9 @@ Record in progress.md:
 
 Review comment Actors receive loaded context to make informed fix decisions:
 
-```
+```text
 Context Loading (for each fix Actor):
-1. Read {spec_dir}/product-context.md — understand product tier and principles
+1. Read {project}/.claude/product-context.md — understand product tier and principles
 2. Read {spec_dir}/design.md — understand architectural decisions
 3. Read {spec_dir}/validation-criteria.md — understand quality bars
 4. Read {spec_dir}/requirements.md — understand FR-* requirements
@@ -170,7 +170,7 @@ Map CodeRabbit's comment format to PDLC severity:
 
 CodeRabbit comments follow patterns the Director can parse:
 
-```
+```text
 Typical CodeRabbit comment structure:
 - Summary line (first sentence = the issue)
 - Code suggestion (```suggestion block)
@@ -195,7 +195,7 @@ Common CodeRabbit false positives to auto-filter:
 
 When a reviewer suggests a change, check it against the spec before implementing:
 
-```
+```text
 For each review comment:
 1. Does the suggestion CONTRADICT a requirement in requirements.md?
    → If yes: FALSE POSITIVE — reply citing the requirement

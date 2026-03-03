@@ -36,8 +36,8 @@ Render on invocation and update after each phase transition.
 ┌──────────────────────────────────────────────────────────────┐
 │  PDLC v3.6 ━ {feature_name} ━ Tier {N}                      │
 ├──────────────────────────────────────────────────────────────┤
-│  {P0} P0 → {0a} 0a → {0b} 0b → {75} 0.75 → {1+} 1+ → {Fn} Final → {P5} P5 → {P2} P2 → {P3} P3  │
-│  ctx    spec   valid  test    exec   valid   review  docs   launch                │
+│  {P0} P0 → {0a} 0a → {0b} 0b → {75} 0.75 → {1+} 1+ → {Fn} Final → {P5} P5 → {Rt} Rt → {P2} P2 → {P3} P3  │
+│  ctx    spec   valid  test    exec   valid   review  retro   docs   launch                │
 │                                                              │
 │  Progress: [{bar}] {done}/{total} batches                    │
 │  Tests: {N} passing | Critics: ADVOCATE {a} SKEPTIC {s}      │
@@ -47,7 +47,7 @@ Render on invocation and update after each phase transition.
 ```
 
 **Field substitutions:**
-- `{P0}` through `{P3}`: Phase markers (✅🔵⬜❌⏭️)
+- `{P0}` through `{P3}` (including `{Rt}`): Phase markers (✅🔵⬜❌⏭️)
 - `{bar}`: Progress bar scaled to batch count
 - `{a}`, `{s}`: Critic summary (e.g., "3/3 ✅" or "2/3 ⚠️")
 - `{verdict}`: Product Skeptic result (e.g., "APPROVE", "SCOPE — 2 cuts applied")
@@ -122,7 +122,7 @@ Rendered at cycle completion (all paths):
 ┌──────────────────────────────────────────────────────────────┐
 │  PDLC COMPLETE ━ {feature_name} ━ Tier {N}                   │
 ├──────────────────────────────────────────────────────────────┤
-│  ✅ P0 → ✅ 0a → ✅ 0b → ✅ 0.75 → ✅ 1+ → ✅ Final → {P5} P5 → {P2} P2 → {P3} P3 │
+│  ✅ P0 → ✅ 0a → ✅ 0b → ✅ 0.75 → ✅ 1+ → ✅ Final → {P5} P5 → {Rt} Rt → {P2} P2 → {P3} P3 │
 │                                                              │
 │  Batches: {total} | Tests: {N} passing                       │
 │  Critics: ADVOCATE {pass}/{total} | SKEPTIC {pass}/{total}   │

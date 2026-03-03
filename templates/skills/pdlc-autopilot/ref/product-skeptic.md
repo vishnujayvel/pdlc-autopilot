@@ -229,10 +229,15 @@ Log: "Product Skeptic: APPROVE — spec aligns with product context"
 
 The Product Skeptic runs IN PARALLEL with the existing ADVOCATE/SKEPTIC in Phase 0b, but evaluates a different dimension:
 
-| Agent | Evaluates | Can Block? |
-|-------|-----------|-----------|
-| ADVOCATE | Technical quality of spec | Yes if FAIL |
-| SKEPTIC | Technical gaps in spec | Yes if FAIL |
-| Product Skeptic | Product alignment of spec | Yes if SCOPE or KILL |
+| Agent | Evaluates | Can Block? | Blocking Behavior |
+|-------|-----------|-----------|-------------------|
+| ADVOCATE | Technical quality of spec | Yes if FAIL | Both ADVOCATE and SKEPTIC must not FAIL for Phase 1+ |
+| SKEPTIC | Technical gaps in spec | Yes if FAIL | Both ADVOCATE and SKEPTIC must not FAIL for Phase 1+ |
+| Product Skeptic | Product alignment of spec | Yes if KILL; conditionally if SCOPE | KILL blocks independently. SCOPE requires presenting cuts to user, then proceeds after confirmation. |
 
-**All three must clear for Phase 1+ to proceed.** Product Skeptic can block independently of ADVOCATE/SKEPTIC consensus.
+**Blocking rules:**
+- **KILL** blocks Phase 1+ independently -- even if ADVOCATE and SKEPTIC both PASS, a KILL verdict stops execution until the user overrides or abandons.
+- **SCOPE** is a conditional resolution: the Director presents recommended scope cuts to the user, applies confirmed cuts, then proceeds to Phase 1+. SCOPE does not block on its own.
+- **ADVOCATE/SKEPTIC** must not FAIL. If both FAIL, the spec must be fixed and all three re-run.
+
+See @ref/validator-templates.md "Resolution matrix" table for the full 3-agent consensus matrix.

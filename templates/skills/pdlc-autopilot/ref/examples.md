@@ -1,12 +1,16 @@
-# SDLC Execution Examples
+# PDLC Execution Examples
 
 ## Standard Mode Example
 
 ```
-Director: Starting SDLC Autopilot v2 (Dual-Perspective Mode)...
+Director: Starting PDLC Autopilot v3.6 (Dual-Perspective Mode)...
 
 📋 Spec: .claude/specs/my-feature/
-   - 4 phases, 11 tasks
+   - 11 tasks
+
+🔍 Phase P0: Product Context Check
+   product-context.md found. Tier: 0 (Personal)
+   → Product context loaded. Proceeding.
 
 🔍 Phase 0a: Check/Generate Artifacts (PROC-1)...
    requirements.md ✅ exists
@@ -21,11 +25,19 @@ Director: Starting SDLC Autopilot v2 (Dual-Perspective Mode)...
 🔍 Phase 0b: Subagent Validation (parallel)...
    [Requirements ADVOCATE] ✅ PASS - requirements implementable
    [Requirements SKEPTIC] ⚠️ PASS WITH WARNINGS - minor gaps noted
-   → Consensus: PASS (both pass)
+   [Product Skeptic] ✅ APPROVE — spec aligns with product context
+   → Consensus: PASS (all pass)
 
    [Tasks ADVOCATE] ✅ PASS - tasks ready for implementation
    [Tasks SKEPTIC] ✅ PASS - no critical gaps
    → Consensus: PASS (both pass)
+
+🔍 Phase 0.5: Load validation-criteria.md ✅
+   → ARCH-1, ARCH-2 extracted from design.md
+
+🔍 Phase 0.75: Test Strategy Research
+   [Test Strategy Designer] ✅ infrastructure audited, 2 holdout scenarios sealed
+   → Test tier requirements stored for Actors
 
 📦 Batching:
    BATCH A: transform_snapshot.py (Tasks 1.1-1.4, 3.1-3.2)
@@ -56,29 +68,43 @@ Director: Starting SDLC Autopilot v2 (Dual-Perspective Mode)...
 ... (continues)
 
 🏁 Final Validation:
-   [Final ADVOCATE] ✅ All FR-* requirements covered
-   [Final SKEPTIC] ✅ No gaps found
+   [Final ADVOCATE] ✅ All FR-* requirements covered + PDLC compliance OK
+   [Final SKEPTIC] ✅ No gaps found. Holdout scenarios passed.
    → Consensus: PASS
+
+🔄 Phase 5: PR Review Cycle (opt-in)
+   [PR created] → 1 reviewer comment (minor style nit)
+   [Review Actor] Fixed style issue → re-requested review
+   → Approved ✅
+
+📝 Retrospective:
+   Changed: Implemented batch processing with 4 file groups
+   Learned: SKEPTIC caught a missing fallback early — saved rework
+   Context: updated | Decisions: 1 logged
 
 📊 Summary:
    - 4 batches, 16 critic calls (8 ADVOCATE + 8 SKEPTIC)
    - 1 disagreement resolved (Batch A, SKEPTIC was right)
    - All 11 tasks complete
    - All FR-* requirements verified
+   - Phase 5: 1 PR cycle, 1 comment addressed
 ```
 
 ## T-Mode Example (S2: Impl + Test)
 
 ```
-Director: Starting SDLC Autopilot v2 (T-Mode: Agent Teams)...
+Director: Starting PDLC Autopilot v3.6 (T-Mode: Agent Teams)...
 
 📋 Spec: .claude/specs/my-feature/
-   - 3 phases, 9 tasks
+   - 9 tasks
    - T-Mode: ACTIVE (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
 
-🔍 Phase 0a-0b: Artifacts + Validation (same as standard mode — PROC-1)
+🔍 Phase P0-0b: Product Context + Artifacts + Validation (same as standard mode — PROC-1)
+   [Product context loaded. Tier: 0]
    [Skill tool invocations for kiro:validate-gap, kiro:validate-design]
-   [All validations PASS]
+   [All validations PASS, Product Skeptic: APPROVE]
+
+🔍 Phase 0.5-0.75: Validation criteria loaded, test strategy designed
 
 📦 Batching:
    BATCH A: Task CRUD (handlers, validators, templates — 6 tasks)
@@ -145,7 +171,7 @@ Director: Starting SDLC Autopilot v2 (T-Mode: Agent Teams)...
 ## PDLC Mode Example
 
 ```
-Director: Starting PDLC Autopilot v3...
+Director: Starting PDLC Autopilot v3.6...
 
 📋 Project: ~/workplace/hookwise/
    - Feature: hookwise-docs
@@ -178,6 +204,11 @@ Director: Starting PDLC Autopilot v3...
    → User accepts. FR-7, FR-11 removed from requirements.md and tasks.md.
 
 🔍 Phase 0.5: Load validation-criteria.md ✅
+   → ARCH-1, ARCH-2 extracted from design.md
+
+🔍 Phase 0.75: Test Strategy Research
+   [Test Strategy Designer] ✅ infrastructure audited, 3 holdout scenarios sealed
+   → Test tier requirements stored for Actors
 
 📦 Batching (after scope cuts):
    BATCH A: docs-generator.ts (Tasks 1-3)
@@ -189,8 +220,19 @@ Director: Starting PDLC Autopilot v3...
 
 🏁 Final Validation:
    [Final ADVOCATE] ✅ All FR-* covered + PDLC compliance OK
-   [Final SKEPTIC] ✅ No gaps. Deferred FR-7/FR-11 correctly untouched.
+   [Final SKEPTIC] ✅ No gaps. Deferred FR-7/FR-11 correctly untouched. Holdout scenarios passed.
    → Consensus: PASS
+
+🔄 Phase 5: PR Review Cycle
+   [PR created] → 2 reviewer comments (1 critical, 1 minor)
+   [Review Actor] Fixed critical: missing null check in docs-generator.ts:45
+   [Review Actor] Fixed minor: typo in template header
+   → Re-requested review → Approved ✅
+
+📝 Retrospective:
+   Changed: Implemented docs generator with 3 template types
+   Learned: Product Skeptic caught Layer 2/3 scope creep — saved ~40% wasted effort
+   Context: updated | Decisions: 2 logged (scope cuts)
 
 📝 Phase P2: Document (user requested "document this")
    [DevRel Actor] Generating docs from source code...
@@ -209,6 +251,9 @@ Director: Starting PDLC Autopilot v3...
 📊 PDLC Report:
    - Tier 1 Community, Product Skeptic: SCOPE (2 cuts)
    - 8 tasks completed, 3 batches
+   - Phase 0.75: 3 holdout scenarios sealed, all passed at Final Validation
+   - Phase 5: 1 PR cycle, 2 comments addressed (1 critical, 1 minor)
+   - Retrospective: 2 decisions logged, context updated
    - P2: 3 docs files, 1 hallucination fixed
    - P3: README, demo script, CHANGELOG
    - All FR-* verified, deferred reqs untouched
@@ -216,8 +261,8 @@ Director: Starting PDLC Autopilot v3...
 
 ## Efficiency Gains
 
-| Scenario | v1 Agents | v2 Agents | v2+T-Mode | Savings |
-|----------|-----------|-----------|-----------|---------|
+| Scenario | v1 Agents | v3.6 Agents | v3.6+T-Mode | Savings |
+|----------|-----------|-------------|-------------|---------|
 | 4 tasks, same file | 12 | 2 | 2 (no gain) | 83% |
 | 10 tasks, 2 files | 30 | 4 | 4 (parallel) | 87% |
 | 10 tasks, 5 files | 30 | 10 | 5 teammates + 2 critics | 77% |

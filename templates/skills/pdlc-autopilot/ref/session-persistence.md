@@ -2,14 +2,16 @@
 
 **Problem:** Long SDLC sessions often hit conversation compaction. Context is lost — which batches completed, critic results, test counts, files created all vanish.
 
-**Solution:** TWO persistent files in the spec directory survive compaction:
+**Solution:** FOUR persistent files survive compaction:
 
-1. **`validation-criteria.md`** — What are the rules? (tenets, phase checklists)
-2. **`progress.md`** — Where are we? (batch status, critic results, test counts, next steps)
+1. **`{project}/.claude/product-context.md`** — Why are we building this? (thesis, tier, scope, principles)
+2. **`{spec_dir}/validation-criteria.md`** — What are the rules? (tenets, phase checklists)
+3. **`{spec_dir}/progress.md`** — Where are we? (batch status, critic results, test counts, next steps)
+4. **`{project}/.claude/decision-log.md`** — What did we decide? (append-only verdicts, scope changes)
 
 ## The Pattern
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────┐
 │                 CONVERSATION COMPACTION SURVIVAL               │
 ├────────────────────────────────────────────────────────────────┤
@@ -180,7 +182,7 @@ Valid status progression: PENDING → ACTOR_DONE → DONE+CRITICS
    - Skip re-reading completed batch details — trust progress.md
    - Only read the files needed for the NEXT batch
 
-```
+```text
 PATTERN: Save-Before-Dispatch
 
 BEFORE dispatching any batch:

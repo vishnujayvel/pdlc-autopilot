@@ -177,7 +177,7 @@ This is one-way: product-context.md is the source of truth. If cc-sdd steering a
 ## Validation
 
 A valid product-context.md:
-- Has ALL 7 sections present (even if some say "N/A" for Tier 0)
+- Has ALL 8 sections present (even if some say "N/A" for Tier 0)
 - Has a declared tier (0, 1, or 2)
 - Has at least 1 V1 Core feature
 - "Core Thesis & Problem" is never empty — even personal tools solve a problem

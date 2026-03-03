@@ -8,20 +8,32 @@
 
 ## Test Strategy Designer Prompt Template
 
-```
+### Required Inputs
+
+Before dispatching this prompt, the Director MUST substitute:
+
+| Variable | Source |
+|----------|--------|
+| `{feature_name}` | Feature name from spec |
+| `{product_context_summary}` | Summary from `{project}/.claude/product-context.md` (core thesis, tier, principles) |
+| `{requirements_list}` | FR-* requirements from `{spec_dir}/requirements.md` |
+| `{design_sections}` | Relevant architectural sections from `{spec_dir}/design.md` |
+| `{task_list}` | Tasks with acceptance criteria from `{spec_dir}/tasks.md` |
+
+```yaml
 Task tool (general-purpose):
-  description: "Test Strategy Designer: [feature]"
+  description: "Test Strategy Designer: {feature_name}"
   prompt: |
     You are the Test Strategy Designer. Your job is to research the project's test
     infrastructure and produce a test strategy BEFORE any implementation begins.
 
     ## Project Context
-    [PASTE product-context.md summary]
+    {product_context_summary}
 
     ## Spec Reference
-    - Requirements: [List FR-* requirements]
-    - Design: [Relevant design.md sections]
-    - Tasks: [List of tasks with acceptance criteria]
+    - Requirements: {requirements_list}
+    - Design: {design_sections}
+    - Tasks: {task_list}
 
     ## Your Mission
     Research the codebase's test setup and produce a comprehensive test strategy.
@@ -107,7 +119,7 @@ Task tool (general-purpose):
 
 ## Director Protocol for Phase 0.75
 
-```
+```text
 1. Dispatch Test Strategy Designer subagent (single)
 2. Receive test strategy document
 3. Extract holdout scenarios → store in validation-criteria.md under:
@@ -127,7 +139,7 @@ Task tool (general-purpose):
 
 During Final Validation, the Final SKEPTIC receives the sealed holdout scenarios:
 
-```
+```text
 ## Holdout Scenario Verification
 For each HOLDOUT-N scenario:
 1. Execute the scenario against the implemented code
