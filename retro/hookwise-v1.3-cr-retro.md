@@ -11,9 +11,9 @@
 | PROMPT_GAP | 14 | Architecture violations, input validation, timezone, test quality, docs |
 | CALLSITE_GAP | 3 | Missing weather/memories in status, doctor, segments |
 | TOOLING_GAP | 5 | Linter issues, type safety |
-| ARCH_CONSTRAINT_GAP | 1 | Dispatch phase ordering |
+| ARCH_GAP | 1 | Dispatch phase ordering |
 | COVERAGE_GAP | 1 | Shallow merge helper |
-| HUMAN_REVIEW_ONLY | 1 | TOCTOU race |
+| HUMAN_ONLY | 1 | TOCTOU race |
 
 > **Note:** Counts sum to 25 because 3 issues span multiple gap types. Unique issue count is 22.
 

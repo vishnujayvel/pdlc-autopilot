@@ -35,7 +35,8 @@ The Product Skeptic adjusts its aggressiveness based on tier:
 The Product Skeptic evaluates the spec through 5 lenses:
 
 ### Lens 1: BUILD TRAP
-```
+
+```text
 Question: Is this solving a REAL pain point, or is it technically interesting?
 
 Check against: product-context.md → "Core Thesis & Problem"
@@ -51,7 +52,8 @@ Tier 1+: Must trace to stated pain point
 ```
 
 ### Lens 2: AUDIENCE ALIGNMENT
-```
+
+```text
 Question: Is this serving the target persona, or scope-creeping to a different audience?
 
 Check against: product-context.md → "Audience & Maturity Tier"
@@ -68,7 +70,8 @@ Tier 2: "Does this serve the persona AND justify the investment?"
 ```
 
 ### Lens 3: MVP HYDRATION
-```
+
+```text
 Question: Is this V1 Core, or is a Layer 2/3 feature creeping into the current scope?
 
 Check against: product-context.md → "MVP Scope & Hydration Roadmap"
@@ -84,7 +87,8 @@ Tier 1+: Strict — Layer 2 features in V1 scope → [SCOPE] verdict
 ```
 
 ### Lens 4: KILL CRITERIA ENFORCEMENT
-```
+
+```text
 Question: Has any kill criterion been triggered?
 
 Check against: product-context.md → "Kill Criteria"
@@ -99,7 +103,8 @@ ALL TIERS: If a kill criterion is met → [KILL] verdict
 ```
 
 ### Lens 5: OUTPUT CONTRACT CONSISTENCY
-```
+
+```text
 Question: Can the spec's output descriptions be misinterpreted by consumers?
 
 Check against: requirements.md → acceptance criteria for output-producing features
@@ -119,7 +124,16 @@ Tier 1+: Strict — every output must have exact shape in ACs
 
 ## Prompt Template
 
-```
+### Required Inputs
+
+| Variable | Source | Description |
+|----------|--------|-------------|
+| `{product_context_full}` | `{project}/.claude/product-context.md` | Full content of the product context file |
+| `{requirements_full}` | `{spec_dir}/requirements.md` | Full content of the requirements file |
+| `{tasks_full}` | `{spec_dir}/tasks.md` | Full content of the tasks file (if available) |
+| `{tier_level}` | Extracted from product-context.md | Audience tier: 0, 1, or 2 |
+
+```text
 Task tool (general-purpose):
   description: "Product Skeptic review"
   prompt: |
@@ -130,14 +144,14 @@ Task tool (general-purpose):
     PRODUCT ALIGNMENT: does this spec serve the product's stated purpose?
 
     ## Product Context (SOURCE OF TRUTH)
-    [PASTE FULL CONTENT of {project}/.claude/product-context.md HERE]
+    {product_context_full}
 
     ## Spec Under Review
     ### Requirements
-    [Full content of requirements.md]
+    {requirements_full}
 
     ### Tasks (if available)
-    [Full content of tasks.md]
+    {tasks_full}
 
     ## Your 5-Lens Analysis
 
@@ -166,6 +180,15 @@ Task tool (general-purpose):
     Could any output format be misinterpreted by consumers?
     [Analysis]
 
+    ## Output Format (REQUIRED)
+
+    Return exactly:
+    1. LENS_RESULTS: For each of the 5 lenses, state PASS/CONCERN with 1-line evidence
+    2. VERDICT: One of APPROVE / SCOPE / KILL
+    3. SCOPE_CUTS: (only if SCOPE) Numbered list of specific requirements to defer
+    4. KILL_REASON: (only if KILL) 1-line reason why this shouldn't be built
+    5. CONFIDENCE: HIGH/MEDIUM/LOW with reasoning
+
     ## Verdict
 
     Based on the tier ({tier_level}), apply the appropriate scrutiny level.
@@ -182,13 +205,15 @@ Task tool (general-purpose):
 ## Director Verdict Handling
 
 ### On `[APPROVE]`
-```
+
+```text
 Log: "Product Skeptic: APPROVE — spec aligns with product context"
 → Proceed to Phase 1+ (batch execution)
 ```
 
 ### On `[SCOPE]`
-```
+
+```text
 1. Present the Product Skeptic's cuts to the user:
    "Product Skeptic recommends cutting these requirements:
     - FR-X: [reason] — this is Layer 2, not V1
@@ -205,7 +230,8 @@ Log: "Product Skeptic: APPROVE — spec aligns with product context"
 ```
 
 ### On `[KILL]`
-```
+
+```text
 1. BLOCK execution. Do NOT proceed to Phase 1+.
 
 2. Present reasoning to user:

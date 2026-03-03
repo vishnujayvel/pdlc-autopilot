@@ -2,7 +2,7 @@
 
 ## Standard Mode Example
 
-```
+```text
 Director: Starting PDLC Autopilot v3.6 (Dual-Perspective Mode)...
 
 📋 Spec: .claude/specs/my-feature/
@@ -92,7 +92,7 @@ Director: Starting PDLC Autopilot v3.6 (Dual-Perspective Mode)...
 
 ## T-Mode Example (S2: Impl + Test)
 
-```
+```text
 Director: Starting PDLC Autopilot v3.6 (T-Mode: Agent Teams)...
 
 📋 Spec: .claude/specs/my-feature/
@@ -134,7 +134,7 @@ Director: Starting PDLC Autopilot v3.6 (T-Mode: Agent Teams)...
         - Slowest
 
    → User selects: [2] Impl + Test
-   → Stored: sdlc_state.t_strategy = "impl-test"
+   → Stored: pdlc_state.t_strategy = "impl-test"
    → BATCH B: too coupled → Standard mode
 
 🔄 Executing BATCH A (T-Mode S2: Impl + Test)
@@ -170,7 +170,7 @@ Director: Starting PDLC Autopilot v3.6 (T-Mode: Agent Teams)...
 
 ## PDLC Mode Example
 
-```
+```text
 Director: Starting PDLC Autopilot v3.6...
 
 📋 Project: ~/workplace/hookwise/

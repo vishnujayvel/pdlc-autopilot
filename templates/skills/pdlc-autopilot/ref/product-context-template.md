@@ -26,7 +26,7 @@ Every product gets a tier that determines the DEPTH of each section, not WHETHER
 
 **Director instructions:**
 
-```
+```text
 1. ASK user: "What audience tier is this product?"
    - Tier 0: Personal/internal tool
    - Tier 1: Community/OSS
@@ -162,7 +162,7 @@ Key decisions are logged when:
 
 If the project uses Kiro/cc-sdd, the Director can auto-populate `.kiro/steering/product.md` from product-context.md:
 
-```
+```text
 Mapping:
   product-context.md "Core Thesis & Problem"    → product.md "Product Overview"
   product-context.md "Audience & Maturity Tier"  → product.md "Target Users"
