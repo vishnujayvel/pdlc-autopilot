@@ -9,3 +9,4 @@ dist/
 
 # Excalidraw logs
 excalidraw.log
+.local/
