@@ -16,7 +16,7 @@ Pure markdown/unicode visualization for PDLC progress. No external tools, no Pyt
 
 ## Progress Bars
 
-```
+```text
 Full:    [████████████████] 8/8
 Partial: [████████░░░░░░░░] 4/8
 Empty:   [░░░░░░░░░░░░░░░░] 0/8
@@ -32,12 +32,12 @@ Use █ (full) and ░ (empty). 16 chars total width. Scale to batch count.
 
 Render on invocation and update after each phase transition.
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│  PDLC v3.6 ━ {feature_name} ━ Tier {N}                      │
-├──────────────────────────────────────────────────────────────┤
-│  {P0} P0 → {0a} 0a → {0b} 0b → {75} 0.75 → {1+} 1+ → {Fn} Final → {P5} P5 → {Rt} Rt → {P2} P2 → {P3} P3  │
-│  ctx    spec   valid  test    exec   valid   review  retro   docs   launch                │
+```text
+┌──────────────────────────────────────────────────────────────────────────┐
+│  PDLC v3.6 ━ {feature_name} ━ Tier {N}                                  │
+├──────────────────────────────────────────────────────────────────────────┤
+│  {P0} P0 → {0a} 0a → {0b} 0b → {05} 0.5 → {75} 0.75 → {1+} 1+ → {Fn} Final → {P5} P5 → {Rt} Rt → {P2} P2 → {P3} P3  │
+│  ctx    spec   valid  load    test     exec   valid    review  retro   docs   launch                │
 │                                                              │
 │  Progress: [{bar}] {done}/{total} batches                    │
 │  Tests: {N} passing | Critics: ADVOCATE {a} SKEPTIC {s}      │
@@ -47,7 +47,7 @@ Render on invocation and update after each phase transition.
 ```
 
 **Field substitutions:**
-- `{P0}` through `{P3}` (including `{Rt}`): Phase markers (✅🔵⬜❌⏭️)
+- `{P0}` through `{P3}` (including `{05}`, `{75}`, `{Rt}`): Phase markers (✅🔵⬜❌⏭️)
 - `{bar}`: Progress bar scaled to batch count
 - `{a}`, `{s}`: Critic summary (e.g., "3/3 ✅" or "2/3 ⚠️")
 - `{verdict}`: Product Skeptic result (e.g., "APPROVE", "SCOPE — 2 cuts applied")
@@ -57,7 +57,7 @@ Render on invocation and update after each phase transition.
 
 Shorter — bug fixes are lightweight.
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  PDLC Bug Fix ━ {description}                        │
 ├──────────────────────────────────────────────────────┤
@@ -67,7 +67,7 @@ Shorter — bug fixes are lightweight.
 
 ### Iteration Pipeline (Medium)
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  PDLC Iteration ━ {description} ━ Tier {N}           │
 ├──────────────────────────────────────────────────────┤
@@ -101,7 +101,7 @@ The Director renders/updates the pipeline visualization at these moments:
 
 Rendered at end of any cycle (after retro questions answered):
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  Retrospective ━ {cycle_type} ━ {feature/description}│
 ├──────────────────────────────────────────────────────┤
@@ -118,11 +118,11 @@ Rendered at cycle completion (all paths):
 
 ### Full PDLC Final
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│  PDLC COMPLETE ━ {feature_name} ━ Tier {N}                   │
-├──────────────────────────────────────────────────────────────┤
-│  ✅ P0 → ✅ 0a → ✅ 0b → ✅ 0.75 → ✅ 1+ → ✅ Final → {P5} P5 → {Rt} Rt → {P2} P2 → {P3} P3 │
+```text
+┌──────────────────────────────────────────────────────────────────────┐
+│  PDLC COMPLETE ━ {feature_name} ━ Tier {N}                           │
+├──────────────────────────────────────────────────────────────────────┤
+│  ✅ P0 → ✅ 0a → ✅ 0b → ✅ 0.5 → ✅ 0.75 → ✅ 1+ → ✅ Final → {P5} P5 → {Rt} Rt → {P2} P2 → {P3} P3 │
 │                                                              │
 │  Batches: {total} | Tests: {N} passing                       │
 │  Critics: ADVOCATE {pass}/{total} | SKEPTIC {pass}/{total}   │
@@ -134,7 +134,7 @@ Rendered at cycle completion (all paths):
 
 ### Bug Fix Final
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  BUG FIX COMPLETE ━ {description}                    │
 ├──────────────────────────────────────────────────────┤
@@ -148,7 +148,7 @@ Rendered at cycle completion (all paths):
 
 ### Iteration Final
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  ITERATION COMPLETE ━ {description} ━ Tier {N}       │
 ├──────────────────────────────────────────────────────┤
