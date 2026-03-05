@@ -278,7 +278,7 @@ File ownership is the sign on the door. Worktrees give each actor their own room
 Enable in spec.json to add worktree isolation to S1/S2/S3:
 
 ```json
-"sdlc_state": {
+"pdlc_state": {
   "worktree_safety": true
 }
 ```

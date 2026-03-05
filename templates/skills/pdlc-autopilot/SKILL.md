@@ -122,7 +122,10 @@ User says "implement the feature" → ALWAYS use this skill
     "validation_results": { "requirements": "pass", "design": "pass", "tasks": "pass" },
     "product_skeptic_verdict": "approve",
     "p2_docs": "skipped",
-    "p3_launch": "skipped"
+    "p3_launch": "skipped",
+    "t_mode": false,              // optional T-Mode fields
+    "t_strategy": null,           // selected strategy (S1-S6)
+    "worktree_safety": false      // opt-in worktree isolation
   }
 }
 ```
