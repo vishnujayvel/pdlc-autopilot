@@ -2,7 +2,7 @@
 
 **Why:** Full PDLC ceremony (P0 → specs → build → validate) is overkill for fixing a bug or adding a config flag. These paths preserve rigor with less overhead.
 
-**Stickiness gate:** Lightweight paths ONLY activate when user explicitly invokes PDLC context. "PDLC bug fix", "fix this using the SDLC process", "iterate on this feature using PDLC". Plain "fix this bug" is a NON-trigger — it stays in normal Claude Code mode.
+**Stickiness gate:** Lightweight paths ONLY activate when user explicitly invokes PDLC context. "PDLC bug fix", "fix this using the PDLC process", "iterate on this feature using PDLC". Plain "fix this bug" is a NON-trigger — it stays in normal Claude Code mode.
 
 ---
 
