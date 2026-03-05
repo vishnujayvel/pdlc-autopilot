@@ -17,4 +17,9 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
+      # Requires npm Trusted Publisher configured at npmjs.com:
+      # Package Settings → Trusted Publishers → Add GitHub Actions
+      # Repository: vishnujayvel/pdlc-autopilot, Workflow: publish.yml
       - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
