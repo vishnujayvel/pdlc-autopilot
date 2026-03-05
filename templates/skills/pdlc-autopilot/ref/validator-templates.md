@@ -2,6 +2,23 @@
 
 **CRITICAL: Include validation-criteria.md content in EVERY validator prompt!**
 
+## Substitution Variables
+
+Templates below use `{variable}` substitution syntax. The Director MUST replace
+these with actual content before dispatching each subagent:
+
+| Variable | Source | Used In |
+|----------|--------|---------|
+| `{validation_criteria}` | Full content of `{spec_dir}/validation-criteria.md` | All critics, final validators |
+| `{acceptance_criteria}` | Acceptance criteria from all tasks in the current batch | Critic ADVOCATE/SKEPTIC, Actor |
+| `{files_to_verify}` | List of files changed in the current batch | Critic ADVOCATE/SKEPTIC |
+| `{design_context}` | Relevant sections from `design.md` | Actor, S2/S3 teammates |
+| `{task_descriptions}` | Full task descriptions for the batch | Actor, S1/S2/S3/S4 teammates |
+| `{requirements_doc}` | Full content of `requirements.md` | Requirements validators, final validators |
+| `{tasks_doc}` | Full content of `tasks.md` | Tasks validators, final validators |
+| `{fr_requirements}` | All FR-* requirements from `requirements.md` | Final validators |
+| `{completed_tasks}` | All completed tasks with FR-* mappings | Final validators |
+
 ## Critic Prompt Templates
 
 **PROC-2 MANDATORY: Per-Batch Critic dispatch is REQUIRED after every Actor batch. See PROC-2 constraint in SKILL.md.**
@@ -9,7 +26,8 @@
 Critics review ALL artifact types — code, skill ref files, config JSON, documentation. There is no exception for "simple" batches.
 
 ### ADVOCATE (Critic)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Critic ADVOCATE review: [files]"
   prompt: |
@@ -17,13 +35,13 @@ Task tool (general-purpose):
     Your role: Find reasons the implementation IS correct and DOES meet criteria.
 
     ## Project Validation Criteria (SOURCE OF TRUTH)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE]
+    {validation_criteria}
 
     ## Files to Verify
-    [List of files]
+    {files_to_verify}
 
     ## ALL Acceptance Criteria to Check
-    [List all criteria from all tasks in batch]
+    {acceptance_criteria}
 
     ## ADVOCATE Instructions
     1. Read the actual code (DO NOT trust any report)
@@ -48,7 +66,8 @@ Task tool (general-purpose):
 ```
 
 ### SKEPTIC (Critic)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Critic SKEPTIC review: [files]"
   prompt: |
@@ -56,13 +75,13 @@ Task tool (general-purpose):
     Your role: Find gaps, bugs, and criteria NOT met.
 
     ## Project Validation Criteria (SOURCE OF TRUTH)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE]
+    {validation_criteria}
 
     ## Files to Verify
-    [List of files]
+    {files_to_verify}
 
     ## ALL Acceptance Criteria to Check
-    [List all criteria from all tasks in batch]
+    {acceptance_criteria}
 
     ## SKEPTIC Instructions
     1. Read the actual code (DO NOT trust any report)
@@ -131,7 +150,8 @@ Task tool (general-purpose):
 ## Requirements Validator Templates
 
 ### ADVOCATE (Requirements)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Requirements ADVOCATE review"
   prompt: |
@@ -139,10 +159,10 @@ Task tool (general-purpose):
     Your role: Find reasons this spec CAN work and IS implementable.
 
     ## Project Validation Criteria (if exists)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE - especially "Requirements Phase" section]
+    {validation_criteria}
 
     ## Requirements Document
-    [Full content of requirements.md]
+    {requirements_doc}
 
     ## ADVOCATE Checklist (look for strengths)
 
@@ -171,7 +191,8 @@ Task tool (general-purpose):
 ```
 
 ### SKEPTIC (Requirements)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Requirements SKEPTIC review"
   prompt: |
@@ -179,10 +200,10 @@ Task tool (general-purpose):
     Your role: Find gaps, ambiguities, and risks that could cause failure.
 
     ## Project Validation Criteria (if exists)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE - especially "Requirements Phase" section]
+    {validation_criteria}
 
     ## Requirements Document
-    [Full content of requirements.md]
+    {requirements_doc}
 
     ## SKEPTIC Checklist (look for weaknesses)
 
@@ -225,7 +246,8 @@ Task tool (general-purpose):
 ## Tasks Validator Templates
 
 ### ADVOCATE (Tasks)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Tasks ADVOCATE review"
   prompt: |
@@ -233,13 +255,13 @@ Task tool (general-purpose):
     Your role: Find reasons these tasks CAN be implemented successfully.
 
     ## Project Validation Criteria (if exists)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE - especially "Tasks Phase" section]
+    {validation_criteria}
 
     ## Tasks Document
-    [Full content of tasks.md]
+    {tasks_doc}
 
     ## Requirements Document (for traceability)
-    [Full content of requirements.md]
+    {requirements_doc}
 
     ## ADVOCATE Checklist (look for strengths)
 
@@ -268,7 +290,8 @@ Task tool (general-purpose):
 ```
 
 ### SKEPTIC (Tasks)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Tasks SKEPTIC review"
   prompt: |
@@ -276,13 +299,13 @@ Task tool (general-purpose):
     Your role: Find gaps that could cause implementation failure.
 
     ## Project Validation Criteria (if exists)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE - especially "Tasks Phase" section]
+    {validation_criteria}
 
     ## Tasks Document
-    [Full content of tasks.md]
+    {tasks_doc}
 
     ## Requirements Document (for traceability)
-    [Full content of requirements.md]
+    {requirements_doc}
 
     ## SKEPTIC Checklist (look for weaknesses)
 
@@ -331,7 +354,8 @@ Task tool (general-purpose):
 **CRITICAL: These are invoked via the Skill tool, NOT the Task tool. See PROC-1 constraint in SKILL.md.**
 
 ### kiro:validate-gap (Phase 0b — Informational)
-```
+
+```yaml
 Skill tool:
   skill: "kiro:validate-gap"
 
@@ -341,7 +365,8 @@ Skill tool:
 ```
 
 ### kiro:validate-design (Phase 0b — GO/NO-GO, BLOCKING)
-```
+
+```yaml
 Skill tool:
   skill: "kiro:validate-design"
 
@@ -353,7 +378,8 @@ Skill tool:
 ```
 
 ### kiro:spec-requirements (Phase 0a — Artifact Generation)
-```
+
+```yaml
 Skill tool:
   skill: "kiro:spec-requirements"
 
@@ -363,7 +389,8 @@ Skill tool:
 ```
 
 ### kiro:spec-design (Phase 0a — Artifact Generation)
-```
+
+```yaml
 Skill tool:
   skill: "kiro:spec-design"
   args: "-y"
@@ -374,7 +401,8 @@ Skill tool:
 ```
 
 ### kiro:spec-tasks (Phase 0a — Artifact Generation)
-```
+
+```yaml
 Skill tool:
   skill: "kiro:spec-tasks"
   args: "-y"
@@ -394,7 +422,7 @@ Skill tool:
 
 ### Quick Reference
 
-```
+```yaml
 Task tool (general-purpose):
   description: "Product Skeptic review"
   prompt: See @ref/product-skeptic.md for full prompt template
@@ -429,7 +457,8 @@ In Phase 0b, the Director dispatches THREE parallel subagents:
 ## Final Validator Templates
 
 ### ADVOCATE (Final)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Final ADVOCATE validation"
   prompt: |
@@ -437,16 +466,16 @@ Task tool (general-purpose):
     Your role: Confirm requirements ARE satisfied and implementation IS complete.
 
     ## Project Validation Criteria (SOURCE OF TRUTH)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE]
+    {validation_criteria}
     - Check "Implementation Phase" section
     - Check ALL tenet compliance items
     - This is the FINAL validation against stored criteria
 
     ## Requirements from requirements.md
-    [List ALL FR-* requirements]
+    {fr_requirements}
 
     ## Tasks Completed
-    [List all completed tasks with their FR-* mappings]
+    {completed_tasks}
 
     ## ADVOCATE Instructions
     1. For EACH FR-* requirement, find evidence it IS covered
@@ -500,7 +529,8 @@ Task tool (general-purpose):
 ```
 
 ### SKEPTIC (Final)
-```
+
+```yaml
 Task tool (general-purpose):
   description: "Final SKEPTIC validation"
   prompt: |
@@ -508,16 +538,16 @@ Task tool (general-purpose):
     Your role: Find requirements NOT satisfied and implementation gaps.
 
     ## Project Validation Criteria (SOURCE OF TRUTH)
-    [PASTE FULL CONTENT of {spec_dir}/validation-criteria.md HERE]
+    {validation_criteria}
     - Check "Implementation Phase" section for violations
     - Check ALL tenet compliance items for violations
     - This is the FINAL validation against stored criteria
 
     ## Requirements from requirements.md
-    [List ALL FR-* requirements]
+    {fr_requirements}
 
     ## Tasks Completed
-    [List all completed tasks with their FR-* mappings]
+    {completed_tasks}
 
     ## SKEPTIC Instructions
     1. For EACH FR-* requirement, look for evidence it is NOT covered
@@ -594,32 +624,20 @@ Task tool (general-purpose):
 
 ## Actor Prompt Template
 
-```
+```yaml
 Task tool (general-purpose):
   description: "Implement Batch: [files]"
   prompt: |
     You are implementing MULTIPLE tasks for the same file(s).
 
     ## Files to Modify
-    [List of files]
+    {files_to_verify}
 
     ## Tasks (implement ALL of these)
-
-    ### Task 1: [title]
-    [Full task description]
-    Acceptance Criteria:
-    - [ ] Criterion 1
-    - [ ] Criterion 2
-
-    ### Task 2: [title]
-    [Full task description]
-    Acceptance Criteria:
-    - [ ] Criterion 1
-
-    [... more tasks ...]
+    {task_descriptions}
 
     ## Design Context
-    [Relevant sections from design.md]
+    {design_context}
 
     ## Instructions
     1. Read the file(s) ONCE
@@ -640,4 +658,18 @@ Task tool (general-purpose):
     8. Report summary of what you implemented
 
     DO NOT dispatch subagents. Implement directly.
+```
+
+## Actor Output Contract
+
+Every Actor MUST end their work with this structured output:
+
+### Batch Result
+
+```text
+- **Status:** DONE | BLOCKED | PARTIAL
+- **Files modified:** [list with line counts]
+- **Tests:** [pass count] / [total count] passing
+- **Lint:** [pass/fail] (ran markdownlint for .md, eslint for .ts)
+- **Blockers:** [none | description]
 ```

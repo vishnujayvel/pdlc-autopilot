@@ -4,14 +4,14 @@
 
 ## T-Mode Detection
 
-```
+```text
 On startup, check for Teams availability:
 
 1. Check env: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
    - If SET → T-Mode available, announce: "T-Mode active. Parallel teammates enabled."
    - If NOT SET → Standard mode, use single Actor subagent per batch
 
-2. Store t_mode in spec.json sdlc_state:
+2. Store t_mode in spec.json pdlc_state:
    "t_mode": true           // persists across compaction
    "t_strategy": "..."      // selected strategy name (persists)
 ```
@@ -41,7 +41,7 @@ digraph strategy_selection {
     present [label="Present top 2-3\nto user" shape=box fillcolor=orange];
 
     start -> q1;
-    q1 -> s1 [label="3+ groups"];
+    q1 -> s1 [label="2+ groups"];
     q1 -> q2 [label="1-2 groups"];
     q2 -> s2 [label="yes, interfaces clear"];
     q2 -> q3 [label="no / unclear"];
@@ -64,7 +64,7 @@ digraph strategy_selection {
 
 **When T-Mode is active, present options using this format:**
 
-```
+```text
 T-Mode Strategy Options for [Batch Name]:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -188,8 +188,8 @@ Which strategy? [0-5]
 ```
 
 **After user selects:**
-```
-4. Store choice in spec.json: sdlc_state.t_strategy = "file-ownership"
+```text
+4. Store choice in spec.json: pdlc_state.t_strategy = "<selected-strategy>"
 5. Apply selected strategy for all batches (unless user overrides per-batch)
 ```
 
@@ -207,7 +207,7 @@ Which strategy? [0-5]
 
 ## File Ownership Rules (applies to S1, partially to S4)
 
-```
+```text
 1. NO two teammates touch the same file
 2. Shared files (index.ts, barrel exports, package.json) are RESERVED for Lead
 3. Lead updates shared files AFTER all teammates complete
@@ -219,7 +219,7 @@ Which strategy? [0-5]
 
 ### S1: File Ownership — Teammate Request Template
 
-```
+```text
 "I need [N] teammates to implement this batch in parallel.
 
 Teammate A: Implement tasks [1.1, 1.2] in [handlers/].
@@ -239,7 +239,7 @@ Shared files will be updated by me (Lead) after you all finish."
 
 ### S2: Impl + Test — Teammate Request Template
 
-```
+```text
 "I need 2 teammates working in parallel on this batch.
 
 Teammate IMPL: Implement all tasks for this batch.
@@ -264,7 +264,7 @@ after you both finish and fix any integration gaps."
 
 ### S3: Impl + Test + Product — Teammate Request Template
 
-```
+```text
 "I need 3 teammates working on this batch.
 
 Teammate IMPL: [same as S2 IMPL above]
@@ -289,7 +289,7 @@ I (Lead) will reconcile spec changes before the next batch."
 
 ### S4: Pipeline — Teammate Request Template
 
-```
+```text
 "I need [N] teammates working in a pipeline for this batch.
 
 Teammate A (schemas/types): Start IMMEDIATELY.
@@ -315,7 +315,7 @@ I (Lead) will merge shared files and run the full suite after C completes."
 
 ## Teammate Coordination (all strategies)
 
-```
+```text
 1. Lead creates TaskCreate for each task (if not already created)
 2. Lead requests teammates per selected strategy template
 3. Teammates work per their assigned role
@@ -328,7 +328,7 @@ I (Lead) will merge shared files and run the full suite after C completes."
 
 ## Lead Post-Teammate Checklist
 
-```
+```text
 After all teammates complete:
   1. TaskList() → verify all teammate tasks are "completed"
   2. If S3 (Product): review spec changes, reconcile with current batch
@@ -341,7 +341,7 @@ After all teammates complete:
 
 ## Fallback: When to Abort T-Mode
 
-```
+```text
 Abort T-Mode and fall back to standard Actor if:
   - File ownership can't be cleanly divided (S1)
   - Tasks have data dependencies that don't fit a pipeline (S4)
@@ -352,7 +352,7 @@ Abort T-Mode and fall back to standard Actor if:
 
 ## T-Mode Batch Analysis
 
-```
+```text
 Standard mode: Group tasks by file → one Actor per batch
 T-Mode:        Group tasks by file → analyze → select strategy → spawn teammates
 
