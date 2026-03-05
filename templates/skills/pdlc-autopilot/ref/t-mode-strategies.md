@@ -235,7 +235,7 @@ T-Mode Strategy Options for [Batch Name]:
 [0] Standard Mode (no teammates)
     Single Actor → Critics. Safe, sequential, no coordination overhead.
 
-Which strategy? [0-5]
+Which strategy? [0-7]
 ```
 
 **After user selects:**
@@ -267,7 +267,7 @@ Claude Code supports `isolation: "worktree"` on subagents, giving each teammate 
 | Layer | Mechanism | What It Prevents |
 |-------|-----------|-----------------|
 | File Ownership (prompt) | "DO NOT touch files outside your list" | Most accidental edits |
-| Worktree (structural) | Separate filesystem per actor | ALL accidental edits — impossible to stomps others' files |
+| Worktree (structural) | Separate filesystem per actor | ALL accidental edits — impossible to stomp others' files |
 | Branch merge | `git merge worktree-X` | Silent corruption — conflicts become visible git conflicts |
 | Auto-cleanup | Worktree removed on no changes | Stale state from failed actors |
 
