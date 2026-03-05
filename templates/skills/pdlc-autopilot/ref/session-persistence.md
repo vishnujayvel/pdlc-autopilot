@@ -1,6 +1,6 @@
 # Session Persistence & Compaction Survival
 
-**Problem:** Long SDLC sessions often hit conversation compaction. Context is lost — which batches completed, critic results, test counts, files created all vanish.
+**Problem:** Long PDLC sessions often hit conversation compaction. Context is lost — which batches completed, critic results, test counts, files created all vanish.
 
 **Solution:** FOUR persistent files survive compaction:
 
@@ -78,11 +78,11 @@
 
 **Where:** `{spec_dir}/progress.md`
 
-**MANDATORY:** The Director MUST update progress.md after each batch and critic pass. This is not optional.
+**For Full PDLC workflow: MANDATORY** — The Director MUST update progress.md after each batch and critic pass. This is not optional. (Lightweight paths use Tasks API primarily; see @ref/lightweight-paths.md.)
 
 **Template:**
 ```markdown
-# SDLC Progress: [feature-name]
+# PDLC Progress: [feature-name]
 
 ## Execution State
 - **Started:** [ISO timestamp]
@@ -157,7 +157,7 @@ Valid status progression: PENDING → ACTOR_DONE → DONE+CRITICS
 
 ## Context Budget Awareness (CRITICAL)
 
-**Problem:** The SDLC loop dispatches many agents. Each agent result floods the context window. After ~6-8 batches, compaction hits.
+**Problem:** The PDLC loop dispatches many agents. Each agent result floods the context window. After ~6-8 batches, compaction hits.
 
 **Mitigation strategies (Director MUST follow):**
 
@@ -198,7 +198,7 @@ This way, even if compaction hits MID-BATCH, progress.md has the last known good
 
 ## Creating validation-criteria.md
 
-**When:** During or after requirements phase, BEFORE running SDLC
+**When:** During or after requirements phase, BEFORE running PDLC
 
 **Where:** `{spec_dir}/validation-criteria.md`
 
@@ -206,7 +206,7 @@ This way, even if compaction hits MID-BATCH, progress.md has the last known good
 1. **Phase Validation Checklists** - What to check after requirements, design, tasks, implementation
 2. **Tenet Compliance Checklist** - Project-specific tenets (T0, T1, T2...)
 3. **Validation Agent Prompt** - Custom instructions for validators
-4. **SDLC Loop Integration** - How validators should use this file
+4. **PDLC Loop Integration** - How validators should use this file
 
 **Template:**
 ```markdown
@@ -271,7 +271,7 @@ Output format:
 |-------|--------|----------------|
 | T0 | PASS/FAIL/WARN | [specific evidence] |
 
-## SDLC Loop Integration
+## PDLC Loop Integration
 
 phase_complete:
   - artifact: requirements.md → Check Requirements Phase section

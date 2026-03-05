@@ -52,7 +52,7 @@ Efficient autonomous PDLC execution using batched implementation with the Direct
 | "Iterate", "tweak", "add flag" + PDLC context | **Iteration** | @ref/lightweight-paths.md |
 | "Build feature", "implement spec", full SDLC | **Full PDLC** | This file (below) |
 
-```
+```text
 Classification rules:
   "bug", "fix", "broken", "regression" + PDLC → Bug Fix Path
   "add", "tweak", "iterate", "enhance"  + PDLC → Iteration Path
@@ -66,7 +66,7 @@ Classification rules:
 
 Before ANY path executes, check product context freshness. See @ref/context-health.md for full protocol.
 
-```
+```text
 1. Read product-context.md
 2. Extract <!-- last_reviewed: YYYY-MM-DD -->
 3. Compare against tier threshold (T0=90d, T1=30d, T2=14d)
@@ -79,7 +79,7 @@ Before ANY path executes, check product context freshness. See @ref/context-heal
 
 **Every SDLC run goes through the full PDLC flow.** Product context is not optional.
 
-```
+```text
 IF {project}/.claude/product-context.md DOES NOT EXIST:
   → Phase P0 runs FIRST (asks user tier + targeted questions, generates file)
   → See @ref/product-context-template.md for generation protocol
@@ -98,7 +98,7 @@ The Product Skeptic (Phase P1) ALWAYS runs during Phase 0b validation. See @ref/
 
 **Solution:** This skill is the ORCHESTRATOR. Kiro skills are building blocks it calls internally.
 
-```
+```text
 User says "SDLC" → ALWAYS use this skill
 User says "go back to spec" → ALWAYS use this skill
 User says "implement the feature" → ALWAYS use this skill
@@ -115,7 +115,7 @@ User says "implement the feature" → ALWAYS use this skill
 ```json
 {
   "active_workflow": "pdlc-autopilot",
-  "sdlc_state": {
+  "pdlc_state": {
     "started_at": "2026-02-04T22:30:00.000Z",
     "current_phase": "execution",
     "last_batch_completed": 2,
@@ -131,7 +131,7 @@ User says "implement the feature" → ALWAYS use this skill
 
 **FIRST ACTION (ALWAYS):**
 
-```
+```text
 1. Check for product-context.md:
    - Read {project}/.claude/product-context.md
    - IF MISSING → Run Phase P0 (see @ref/product-context-template.md)
@@ -160,7 +160,7 @@ User says "implement the feature" → ALWAYS use this skill
 4. Run context health check (see above)
 5. Classify request → select path (Bug Fix / Iteration / Full PDLC)
 6. Render phase visualization for selected path (see @ref/phase-viz.md)
-7. Announce: "PDLC Autopilot v3.1 active for {feature_name}. Tier: {tier}. Path: {path}. Phase: {current_phase}"
+7. Announce: "PDLC Autopilot v3.6 active for {feature_name}. Tier: {tier}. Path: {path}. Phase: {current_phase}"
 ```
 
 ## CRITICAL: Autonomous Execution (NO STOPPING)
@@ -179,7 +179,7 @@ If you find yourself about to ask "Should I proceed?" — STOP. That's the stick
 ## Architecture
 
 **Standard Mode (single Actor per batch):**
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    DIRECTOR (Main Claude)                    │
 │  - Reads spec ONCE, extracts all context                    │
@@ -203,7 +203,7 @@ If you find yourself about to ask "Should I proceed?" — STOP. That's the stick
 
 ### Full PDLC Path (default for new features)
 
-```
+```text
 Phase P0: Product Context (MANDATORY — runs if product-context.md missing)
     → Ask user tier → ask targeted questions → write product-context.md
     → See @ref/product-context-template.md
@@ -271,14 +271,14 @@ Phase P3: Demo & Package (opt-in — "launch prep")
 
 ### Bug Fix Path (lightweight — ~2 agent calls)
 
-```
+```text
 B1: Diagnose → B2: Fix → B3: Validate (SKEPTIC only) → B4: Retrospective
 See @ref/lightweight-paths.md for full protocol.
 ```
 
 ### Iteration Path (medium — ~4-6 agent calls)
 
-```
+```text
 I1: Mini-Spec → I2: Execute → I3: Validate (adaptive) → I4: Retrospective
 See @ref/lightweight-paths.md for full protocol.
 ```
@@ -307,7 +307,7 @@ See @ref/lightweight-paths.md for full protocol.
 
 **CRITICAL: This skill AUTO-GENERATES missing artifacts using Kiro skills. Do NOT ask user to run Kiro skills manually. Do NOT use general-purpose subagents to write spec artifacts.**
 
-```
+```text
 1. Read spec.json → get spec_dir and feature_name
 2. Update spec.json: active_workflow = "pdlc-autopilot"
 
@@ -347,13 +347,14 @@ See @ref/lightweight-paths.md for full protocol.
 ```
 
 **Runtime Error Handling:** If Kiro skill fails:
-```
-⚠️ Kiro commands not found. SDLC Autopilot requires cc-sdd to generate specs.
+```text
+⚠️ Kiro commands not found. PDLC Autopilot requires cc-sdd to generate specs.
 Run this in your project directory:  npx cc-sdd@latest --claude
 ```
 
 ### Step 1: Read & Parse Spec
-```
+
+```text
 1. Read requirements.md, design.md, tasks.md
 2. Read validation-criteria.md (if exists)
 3. Extract: FR-* requirements, acceptance criteria, task→FR-* mapping, file paths, tenets
@@ -385,7 +386,8 @@ Run this in your project directory:  npx cc-sdd@latest --claude
 ```
 
 ### Step 1.5: Test Strategy Research (Phase 0.75)
-```
+
+```text
 1. Dispatch Test Strategy Designer subagent (see @ref/test-strategy.md)
 2. Receive test strategy: infrastructure audit, tier matrix, holdout scenarios, quality bars
 3. Store holdout scenarios in validation-criteria.md under "Holdout Scenarios (SEALED)"
@@ -396,7 +398,8 @@ Run this in your project directory:  npx cc-sdd@latest --claude
 ```
 
 ### Step 2: Create Batches
-```
+
+```text
 1. For each task, identify primary file(s)
 2. Group tasks by file
 3. If batch > 5 tasks, split by phase
@@ -407,15 +410,16 @@ Run this in your project directory:  npx cc-sdd@latest --claude
 
 See @ref/t-mode-strategies.md for strategy flowchart, diagrams, and teammate templates.
 
-```
+```text
 1. Check env: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 2. If active: analyze batches, present top 2-3 strategies to user
-3. Store choice in spec.json: sdlc_state.t_strategy
+3. Store choice in spec.json: pdlc_state.t_strategy
 4. This is the ONE place we pause for user input in T-Mode
 ```
 
 ### Step 3: Execute Batches
-```
+
+```text
 For each batch:
   0. UPDATE progress.md with "starting Batch X"
   1. Collect ALL tasks, acceptance criteria, design context
@@ -444,7 +448,8 @@ For each batch:
 ```
 
 ### Step 4: Retrospective + Decision Log
-```
+
+```text
 After Final Validator (or after lightweight path validation):
   1. Run retrospective protocol (3 questions — see @ref/context-health.md)
   2. Log decisions to {project}/.claude/decision-log.md if applicable
@@ -472,14 +477,16 @@ After Final Validator (or after lightweight path validation):
 **Prerequisite:** `CLAUDE_CODE_TASK_LIST_ID=pdlc-autopilot` in shell env (persists tasks across sessions in `~/.claude/tasks/`).
 
 ### Implementation Tasks
-```
+
+```text
 Director Setup: Parse tasks.md → TaskCreate for each task
 Per Batch: TaskUpdate(in_progress) → Actor → Critic → TaskUpdate(completed)
 Final: TaskList() to verify all tasks completed
 ```
 
 ### Bug Tracking via Tasks API
-```
+
+```text
 Bug discovered (by Critic, test, or user):
   → TaskCreate with metadata: { "type": "bug", "project": "{project}", "severity": "high|medium|low", "found_by": "SKEPTIC|ADVOCATE|test|user", "batch": "N" }
   → Subject: "[BUG] {concise description}"
@@ -500,7 +507,7 @@ Retrospective:
 ## Batching Strategy
 
 **Group tasks that touch the same files:**
-```
+```text
 Tasks 1.1-1.4 all modify transform_snapshot.py → BATCH A (1 Actor, not 4)
 Tasks 2.3 modifies app.js → BATCH B
 → Run A and B in PARALLEL if no file overlap
@@ -518,7 +525,7 @@ See @ref/session-persistence.md for compaction survival, progress.md template, c
 
 ### Resume Protocol
 
-```
+```text
 1. Read spec.json → get spec_dir, current_phase
 2. Read {spec_dir}/progress.md → EXACT execution state
 3. Read {spec_dir}/validation-criteria.md → rules
@@ -539,7 +546,7 @@ See @ref/examples.md for full standard mode and T-Mode execution walkthroughs.
 **Why this exists:** During the Formation Fellowship build (Mar 2, 2026), Kiro skills were prescribed but not invoked — general-purpose subagents wrote artifacts directly, bypassing Kiro's structured generation and validation. This produced artifacts that lacked Kiro's format discipline and missed Kiro's built-in validation checks.
 
 **Phase 0a — Artifact Generation:**
-```
+```text
 BLOCKING REQUIREMENT: When requirements.md, design.md, or tasks.md is MISSING,
 the Director MUST invoke the Kiro skill via the Skill tool:
 
@@ -553,7 +560,7 @@ MUST generate them.
 ```
 
 **Phase 0b — Validation:**
-```
+```text
 BLOCKING REQUIREMENT: Before proceeding to Phase 1+ execution, the Director MUST invoke:
 
   Skill tool: skill="kiro:validate-gap"     → gap analysis (informational, non-blocking)
@@ -567,7 +574,7 @@ skills, not as replacements.
 ```
 
 **Provenance Gate (Phase 0a → 0b transition):**
-```
+```text
 BEFORE entering Phase 0b, the Director MUST verify:
   1. Each artifact (requirements.md, design.md, tasks.md) exists
   2. Each artifact was generated by a Kiro skill invocation (not manually written)
@@ -585,7 +592,7 @@ IF any artifact was written by a subagent instead of Kiro:
 ```
 
 **Verification in Final Validator:**
-```
+```text
 Final ADVOCATE/SKEPTIC prompts MUST include this check:
   "PROC-1 COMPLIANCE: Verify that spec artifacts in {spec_dir}/ were generated
    by Kiro skills (check progress.md Artifact Provenance table). Flag if provenance
@@ -599,7 +606,7 @@ Final ADVOCATE/SKEPTIC prompts MUST include this check:
 **Why this exists:** During the Formation Fellowship build (Mar 2, 2026), the Director dispatched Actor subagents for all 5 batches but never dispatched Critic ADVOCATE/SKEPTIC for any batch. The "Never skip Critic review" red flag existed but had no enforcement mechanism. Bugs that Critics would have caught (schema path inconsistencies, field name errors) were only found by the Final Validator, requiring post-completion rework.
 
 **Per-Batch Enforcement:**
-```
+```text
 BLOCKING REQUIREMENT: After EACH Actor batch returns, the Director MUST:
 1. Dispatch Critic ADVOCATE subagent (parallel)
 2. Dispatch Critic SKEPTIC subagent (parallel)
@@ -613,7 +620,7 @@ VIOLATION: Substituting Actor self-review for Critic dispatch.
 ```
 
 **Artifact-Agnostic Scope:**
-```
+```text
 SCOPE: Critics review ALL artifact types produced by Actors:
 - Source code (functions, modules, tests)
 - Skill files (SKILL.md, ref/ protocols, config/ JSON)
@@ -624,14 +631,14 @@ There is no "too simple for Critic review" exception. Every batch gets Critics.
 ```
 
 **Provenance in progress.md:**
-```
+```text
 Batch Status table MUST have ADVOCATE and SKEPTIC columns with PASS/FAIL/PASS_WARN values.
 A batch with status "DONE" but blank ADVOCATE/SKEPTIC columns is a PROC-2 violation.
 Valid status progression: PENDING → ACTOR_DONE → DONE+CRITICS
 ```
 
 **Verification in Final Validator:**
-```
+```text
 Final ADVOCATE/SKEPTIC prompts MUST include this check:
   "PROC-2 COMPLIANCE: Check progress.md Batch Status table. Every batch MUST have
    ADVOCATE and SKEPTIC results filled in. Flag any batch with blank critic columns
