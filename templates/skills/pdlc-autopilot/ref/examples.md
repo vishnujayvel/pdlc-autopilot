@@ -276,4 +276,4 @@ Director: Starting PDLC Autopilot v3.6...
 **T-Mode additional gains:**
 - Teammates work in parallel (wall-clock time reduced by ~Nx for N teammates)
 - Each teammate has smaller context (only their owned files)
-- No file contention (exclusive ownership prevents merge conflicts)
+- For S1-S4, no file contention (exclusive ownership prevents merge conflicts). S5 (Swarm) intentionally allows same-file access with Director reconciliation; S5w uses git-mediated merging to reduce S5's conflict risk. S6 (sequential retries) has no parallel contention.

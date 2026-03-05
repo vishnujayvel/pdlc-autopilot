@@ -25,13 +25,14 @@
 Generate documentation from actual source code. Every claim in the docs must reference a real `file:line` in the codebase.
 
 ### Flow
-```
+
+```text
 DevRel Actor → Docs Critic → Fix cycle (max 2) → Docs complete
 ```
 
 ### DevRel Actor Template
 
-```
+```yaml
 Task tool (general-purpose):
   description: "DevRel Actor: generate docs for [feature]"
   prompt: |
@@ -39,7 +40,7 @@ Task tool (general-purpose):
     from SOURCE CODE, not from specs or memory.
 
     ## Product Context
-    [PASTE FULL CONTENT of {project}/.claude/product-context.md HERE]
+    {product_context_full}
 
     ## Spec Reference
     - Requirements: [summary of FR-* requirements]
@@ -78,9 +79,7 @@ Task tool (general-purpose):
 
     ## Format
     Write as markdown. Include file:line citations inline:
-    ```
-    The `transform()` function accepts... (src/transform.ts:42)
-    ```
+        The `transform()` function accepts... (src/transform.ts:42)
 
     ## Deliverables
     1. Documentation content (markdown)
@@ -90,7 +89,7 @@ Task tool (general-purpose):
 
 ### Docs Critic Template
 
-```
+```yaml
 Task tool (general-purpose):
   description: "Docs Critic: verify docs for [feature]"
   prompt: |
@@ -100,7 +99,7 @@ Task tool (general-purpose):
     does NOT exist in the actual codebase.
 
     ## Documentation Under Review
-    [PASTE the DevRel Actor's output HERE]
+    {devrel_actor_output}
 
     ## Instructions
     1. For EACH file:line citation in the docs:
@@ -142,13 +141,14 @@ Task tool (general-purpose):
 Create launch-ready artifacts: demo scripts, comparison matrices, README updates, and packaging.
 
 ### Flow
-```
+
+```text
 Demo Actor → Director validation (run demo + spot-check) → Fix cycle (max 2) → Launch artifacts complete
 ```
 
 ### Demo Actor Template
 
-```
+```yaml
 Task tool (general-purpose):
   description: "Demo Actor: create launch artifacts for [feature]"
   prompt: |
@@ -156,10 +156,10 @@ Task tool (general-purpose):
     the product to its target audience.
 
     ## Product Context
-    [PASTE FULL CONTENT of {project}/.claude/product-context.md HERE]
+    {product_context_full}
 
     ## Documentation (from P2, if available)
-    [PASTE docs output HERE, or "P2 not run"]
+    {p2_docs_output}
 
     ## Your Mission
     Create launch artifacts appropriate for the product's audience tier.

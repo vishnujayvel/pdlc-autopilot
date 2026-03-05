@@ -32,6 +32,10 @@
     "quality",
     "validation"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vishnujayvel/pdlc-autopilot.git"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18"

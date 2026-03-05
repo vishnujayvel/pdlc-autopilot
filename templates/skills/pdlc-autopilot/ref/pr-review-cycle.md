@@ -170,7 +170,7 @@ Map CodeRabbit's comment format to PDLC severity:
 
 CodeRabbit comments follow patterns the Director can parse:
 
-```text
+````text
 Typical CodeRabbit comment structure:
 - Summary line (first sentence = the issue)
 - Code suggestion (```suggestion block)
@@ -178,7 +178,7 @@ Typical CodeRabbit comment structure:
 - Sometimes: link to relevant docs/rules
 
 Extract: summary + suggestion block + file:line for Actor context.
-```
+````
 
 ### False Positive Patterns
 

@@ -25,7 +25,7 @@ The Product Skeptic adjusts its aggressiveness based on tier:
 | Tier | Scrutiny Level | Expected Outcome |
 |------|---------------|-----------------|
 | **Tier 0: Personal** | Light — "Does this serve your stated problem?" | Almost always APPROVE. SCOPE if feature list ballooned. |
-| **Tier 1: Community** | Standard — full 4-lens analysis | APPROVE or SCOPE. KILL rare but valid. |
+| **Tier 1: Community** | Standard — full 5-lens analysis | APPROVE or SCOPE. KILL rare but valid. |
 | **Tier 2: Enterprise** | Strict — every feature must justify ROI | SCOPE is common. Features must map to business metrics. |
 
 ---
