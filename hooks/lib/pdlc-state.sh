@@ -35,10 +35,8 @@ pdlc_get_field() {
     echo ""
     return 0
   fi
-  # Use fixed-string grep with exact field: prefix, then strip it
-  local value
-  value=$(echo "${frontmatter}" | grep -F "${field}:" | grep -E "^${field}:" | head -1 | sed "s/^${field}:[[:space:]]*//")
-  echo "${value}"
+  # Single awk pass: match exact field name, print value, exit
+  echo "${frontmatter}" | awk -F': ' -v key="${field}" '$1 == key { print substr($0, length(key)+3); exit }'
 }
 
 # Write HANDOFF.md atomically (write to .tmp, then mv)
@@ -73,7 +71,6 @@ pdlc_set_field() {
     pdlc_write_handoff "${field}: ${value}" ""
     return 0
   fi
-  pdlc_ensure_state_dir
 
   # Guard: if file has no frontmatter delimiters, treat as malformed — recreate with field + existing content as body
   if ! grep -q '^---[[:space:]]*$' "${PDLC_HANDOFF}" 2>/dev/null; then
@@ -111,8 +108,8 @@ pdlc_set_field() {
         continue
       fi
     fi
-    # Only match within frontmatter; use exact field name anchored with :
-    if [[ ${in_fm} -eq 1 ]] && echo "${line}" | grep -qE "^${field}:"; then
+    # Only match within frontmatter; exact field name match
+    if [[ ${in_fm} -eq 1 ]] && [[ "${line%%:*}" == "${field}" ]]; then
       echo "${field}: ${value}"
       found=1
     else

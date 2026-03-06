@@ -69,10 +69,26 @@ if ! echo "${PROMPT}" | grep -qiE '\[ACTOR[:\[]'; then
 fi
 
 # Actor dispatch detected — check if prior batch has critic results
-# Read current batch from HANDOFF.md
-CURRENT_BATCH=$(pdlc_get_field "batch")
+# Read HANDOFF.md frontmatter ONCE (avoid 3 separate file reads)
+if [[ ! -f "${PDLC_HANDOFF}" ]]; then
+  echo '{"decision": "allow"}'
+  exit 0
+fi
+FRONTMATTER=$(awk '
+  BEGIN { in_fm=0; count=0 }
+  /^---[[:space:]]*$/ { count++; if (count==1) { in_fm=1; next } else { exit } }
+  in_fm { print }
+' "${PDLC_HANDOFF}")
 
-# If no HANDOFF.md or no batch field, allow (can't enforce without state)
+if [[ -z "${FRONTMATTER}" ]]; then
+  echo '{"decision": "allow"}'
+  exit 0
+fi
+
+# Extract batch from frontmatter
+CURRENT_BATCH=$(echo "${FRONTMATTER}" | awk -F': ' '$1 == "batch" { print $2; exit }')
+
+# If no batch field, allow (can't enforce without state)
 if [[ -z "${CURRENT_BATCH}" ]]; then
   echo '{"decision": "allow"}'
   exit 0
@@ -90,10 +106,10 @@ if [[ "${CURRENT_BATCH}" -le 1 ]]; then
   exit 0
 fi
 
-# Check prior batch critic status (flat fields: batch_N_advocate, batch_N_skeptic)
+# Check prior batch critic status from already-read frontmatter
 PRIOR_BATCH=$((CURRENT_BATCH - 1))
-ADVOCATE=$(pdlc_get_field "batch_${PRIOR_BATCH}_advocate")
-SKEPTIC=$(pdlc_get_field "batch_${PRIOR_BATCH}_skeptic")
+ADVOCATE=$(echo "${FRONTMATTER}" | awk -F': ' -v key="batch_${PRIOR_BATCH}_advocate" '$1 == key { print $2; exit }')
+SKEPTIC=$(echo "${FRONTMATTER}" | awk -F': ' -v key="batch_${PRIOR_BATCH}_skeptic" '$1 == key { print $2; exit }')
 
 # Both must be non-empty and not PENDING
 if [[ -n "${ADVOCATE}" && "${ADVOCATE}" != "PENDING" && -n "${SKEPTIC}" && "${SKEPTIC}" != "PENDING" ]]; then

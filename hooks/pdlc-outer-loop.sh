@@ -113,9 +113,11 @@ None yet.
 None."
 fi
 
-# --- Session loop ---
-SESSION_COUNT=0
-TOTAL_COST=0.00
+# --- Session loop (resume from HANDOFF.md if restarting) ---
+SESSION_COUNT=$(pdlc_get_field "session_count")
+SESSION_COUNT="${SESSION_COUNT:-0}"
+TOTAL_COST=$(pdlc_get_field "total_cost_usd")
+TOTAL_COST="${TOTAL_COST:-0.00}"
 NO_PROGRESS=0
 
 echo "=========================================="
