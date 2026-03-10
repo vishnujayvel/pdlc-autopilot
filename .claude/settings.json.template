@@ -57,7 +57,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash hooks/pdlc-stop-check.sh"
+            "command": "bash hooks/pdlc-stop-check.sh",
+            "timeout": 10000
           }
         ]
       }

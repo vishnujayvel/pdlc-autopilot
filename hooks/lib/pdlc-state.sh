@@ -72,8 +72,10 @@ pdlc_set_field() {
     return 0
   fi
 
-  # Guard: if file has no frontmatter delimiters, treat as malformed — recreate with field + existing content as body
-  if ! grep -q '^---[[:space:]]*$' "${PDLC_HANDOFF}" 2>/dev/null; then
+  # Guard: if file has fewer than 2 frontmatter delimiters or first line isn't ---, treat as malformed — recreate with field + existing content as body
+  local fm_delims
+  fm_delims=$(grep -c '^---[[:space:]]*$' "${PDLC_HANDOFF}" 2>/dev/null || true)
+  if [[ "${fm_delims}" -lt 2 ]] || ! head -n1 "${PDLC_HANDOFF}" | grep -q '^---[[:space:]]*$'; then
     local existing_content
     existing_content=$(cat "${PDLC_HANDOFF}")
     pdlc_write_handoff "${field}: ${value}" "${existing_content}"

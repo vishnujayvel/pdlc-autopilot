@@ -22,7 +22,7 @@ create_handoff() {
   local workdir="$1"
   local content="$2"
   mkdir -p "${workdir}/.pdlc/state"
-  echo "$content" > "${workdir}/.pdlc/state/HANDOFF.md"
+  printf '%s\n' "$content" > "${workdir}/.pdlc/state/HANDOFF.md"
 }
 
 # Helper: run a hook script from a given workdir with optional stdin
@@ -31,7 +31,7 @@ run_hook() {
   local workdir="$2"
   local stdin_data="${3:-}"
   if [[ -n "$stdin_data" ]]; then
-    (cd "$workdir" && echo "$stdin_data" | bash "${HOOKS_DIR}/${script}")
+    (cd "$workdir" && printf '%s' "$stdin_data" | bash "${HOOKS_DIR}/${script}")
   else
     (cd "$workdir" && bash "${HOOKS_DIR}/${script}" < /dev/null 2>/dev/null)
   fi

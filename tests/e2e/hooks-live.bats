@@ -43,16 +43,6 @@ run_claude_with_hooks() {
     2>/dev/null
 }
 
-# Helper: check if output contains evidence of a hook deny
-output_has_deny() {
-  local output="$1"
-  local pattern="$2"
-  # Check the result text for evidence the hook fired
-  local result
-  result=$(echo "$output" | jq -r '.result // empty' 2>/dev/null)
-  echo "$result" | grep -qi "$pattern"
-}
-
 # --- SpecGate Tests: Block spec generation via Task tool ---
 
 @test "SpecGate live: hook blocks 'generate requirements' via Task tool" {

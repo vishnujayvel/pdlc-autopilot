@@ -36,8 +36,8 @@ teardown() {
   # HANDOFF.md should exist with initial state
   [[ -f ".pdlc/state/HANDOFF.md" ]]
   source "${HOOKS_DIR}/lib/pdlc-state.sh"
-  phase=$(pdlc_get_field "spec_dir")
-  [[ "$phase" == ".claude/specs/test-feature" ]]
+  spec_dir=$(pdlc_get_field "spec_dir")
+  [[ "$spec_dir" == ".claude/specs/test-feature" ]]
 }
 
 @test "outer loop: extracts pending tasks from tasks.md" {

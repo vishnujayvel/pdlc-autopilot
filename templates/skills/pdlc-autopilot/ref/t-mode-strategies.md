@@ -319,16 +319,16 @@ Default: `false` (no overhead unless explicitly enabled).
 ```text
 "I need [N] teammates to implement this batch in parallel.
 
-Teammate A [if worktree_safety: name: "{feature}-B{N}-handlers", isolation: worktree]:
-  Implement tasks [1.1, 1.2] in [handlers/].
-  Files you OWN: handlers/create-entity.ts, handlers/create-fleeting-note.ts
+Teammate A [if worktree_safety: name: "{feature}-B{N}-{module_a}", isolation: worktree]:
+  Implement tasks [1.1, 1.2] in [{module_a}/].
+  Files you OWN: {module_a}/create-entity.ts, {module_a}/create-fleeting-note.ts
   DO NOT touch any files outside your ownership.
   Tasks: [paste task descriptions + acceptance criteria]
   Design context: [paste relevant design sections]
   When done, mark your tasks as completed in the task list.
 
-Teammate B [if worktree_safety: name: "{feature}-B{N}-templates", isolation: worktree]:
-  Implement tasks [2.1] in [templates/].
+Teammate B [if worktree_safety: name: "{feature}-B{N}-{module_b}", isolation: worktree]:
+  Implement tasks [2.1] in [{module_b}/].
   Files you OWN: templates/generators.ts, templates/index.ts
   [same structure...]
 

@@ -68,6 +68,9 @@ All 8 issues were fixed:
 3. Added `bc` dependency check to outer loop
 4. Reverted `read -r ADVOCATE SKEPTIC` to two separate awk calls (space-split regression)
 5. Added ERR traps to post-compact-restore.sh, session-init.sh, pre-compact-save.sh
+6. Fixed stale hook comment referencing old env var name
+7. Added missing no-progress counter reset on successful progress
+8. Removed stale outer-loop doc referencing deprecated `PDLC_STATE_FILE`
 
 ## Cost Analysis
 

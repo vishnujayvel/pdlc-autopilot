@@ -41,6 +41,8 @@ if [[ -f "hooks/lib/pdlc-state.sh" ]]; then
   source "hooks/lib/pdlc-state.sh"
 elif [[ -n "${PDLC_HOOKS_DIR:-}" ]]; then
   source "${PDLC_HOOKS_DIR}/lib/pdlc-state.sh"
+else
+  echo "WARN: pdlc-state.sh not found; state advancement skipped" >&2
 fi
 
 # Advance state

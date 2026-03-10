@@ -81,6 +81,18 @@ run_spec_gate() {
   [[ "$decision" == "allow" ]]
 }
 
+@test "deny Task with 'produce requirements'" {
+  result=$(run_spec_gate '{"tool_name":"Task","tool_input":{"prompt":"produce requirements for billing"}}')
+  decision=$(echo "$result" | jq -r '.decision')
+  [[ "$decision" == "deny" ]]
+}
+
+@test "deny Task with 'draft design'" {
+  result=$(run_spec_gate '{"tool_name":"Task","tool_input":{"prompt":"draft design for cache invalidation"}}')
+  decision=$(echo "$result" | jq -r '.decision')
+  [[ "$decision" == "deny" ]]
+}
+
 @test "case insensitive match" {
   result=$(run_spec_gate '{"tool_name":"Task","tool_input":{"prompt":"GENERATE REQUIREMENTS for the module"}}')
   decision=$(echo "$result" | jq -r '.decision')

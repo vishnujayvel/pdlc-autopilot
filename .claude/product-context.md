@@ -37,8 +37,9 @@ PDLC Autopilot is an autonomous product development lifecycle orchestrator for C
 
 - Core PDLC loop is stable and actively used
 - Backlog implementation branch active (`pdlc/v3.6-backlog-implementation`)
-- Key gap: **Session continuity** — context compaction breaks PDLC state; no outer loop; hooks not implemented
-- Key gap: **Process enforcement** — SpecGate/CriticGate are documented but not hook-enforced
+- **Session continuity** — Outer loop (`hooks/pdlc-outer-loop.sh`) cycles fresh sessions per batch; `pre-compact-save.sh` / `post-compact-restore.sh` hooks persist state across compaction via HANDOFF.md
+- **Process enforcement** — SpecGate (`hooks/spec-gate.sh`) and CriticGate (`hooks/critic-gate.sh`) are hook-enforced via `PreToolUse` in settings.json
+- **Shared state library** — `hooks/lib/pdlc-state.sh` provides `pdlc_get_field` / `pdlc_set_field` for atomic HANDOFF.md access
 
 ## What Success Looks Like
 
