@@ -36,9 +36,15 @@
 #   PDLC_SPECGATE_PATTERNS — Pipe-separated regex patterns to match against the
 #                          Task prompt (case-insensitive). Override to customize
 #                          which phrases trigger the guard.
-#                          Default: generate requirements|write requirements\.md|
-#                          generate design|write design\.md|generate tasks|
-#                          write tasks\.md|create spec|write specification
+#                          Default includes 16 patterns:
+#                            generate requirements|write requirements\.md|
+#                            generate design|write design\.md|
+#                            generate tasks|write tasks\.md|
+#                            create spec|write specification|
+#                            produce.*requirements|draft.*design|
+#                            author.*spec|build.*requirements|
+#                            create.*requirements|output.*design|
+#                            assemble.*tasks|spec.*artifact
 #
 # EXIT CODES
 # ----------

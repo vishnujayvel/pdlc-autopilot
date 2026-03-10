@@ -43,6 +43,9 @@
 
 set -euo pipefail
 
+# Safety: always exit 0 (hook must never block compaction)
+trap 'exit 0' ERR
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "${SCRIPT_DIR}/lib/pdlc-state.sh"
 

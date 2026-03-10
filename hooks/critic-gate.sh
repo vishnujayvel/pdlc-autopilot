@@ -106,12 +106,10 @@ if [[ "${CURRENT_BATCH}" -le 1 ]]; then
   exit 0
 fi
 
-# Check prior batch critic status from already-read frontmatter (single awk pass)
+# Check prior batch critic status from already-read frontmatter
 PRIOR_BATCH=$((CURRENT_BATCH - 1))
-read -r ADVOCATE SKEPTIC <<< "$(echo "${FRONTMATTER}" | awk -F': ' \
-  -v akey="batch_${PRIOR_BATCH}_advocate" \
-  -v skey="batch_${PRIOR_BATCH}_skeptic" \
-  '{ if ($1 == akey) a=$2; if ($1 == skey) s=$2 } END { print a, s }')"
+ADVOCATE=$(echo "${FRONTMATTER}" | awk -F': ' -v key="batch_${PRIOR_BATCH}_advocate" '$1 == key { print substr($0, length(key)+3); exit }')
+SKEPTIC=$(echo "${FRONTMATTER}" | awk -F': ' -v key="batch_${PRIOR_BATCH}_skeptic" '$1 == key { print substr($0, length(key)+3); exit }')
 
 # Both must be non-empty and not PENDING
 if [[ -n "${ADVOCATE}" && "${ADVOCATE}" != "PENDING" && -n "${SKEPTIC}" && "${SKEPTIC}" != "PENDING" ]]; then

@@ -30,7 +30,6 @@
 #   PDLC_MAX_TURNS       — Per-session max turns (default: 30)
 #   PDLC_SESSION_BUDGET  — Per-session max cost in USD (default: 5.00)
 #   PDLC_ALLOWED_TOOLS   — Comma-separated tool whitelist
-#   PDLC_STATE_FILE      — Path to HANDOFF.md (default: .pdlc/state/HANDOFF.md)
 #
 # EXIT CODES
 # ----------
@@ -53,8 +52,6 @@ MAX_NO_PROGRESS="${PDLC_MAX_NO_PROGRESS:-3}"
 MAX_TURNS="${PDLC_MAX_TURNS:-30}"
 SESSION_BUDGET="${PDLC_SESSION_BUDGET:-5.00}"
 ALLOWED_TOOLS="${PDLC_ALLOWED_TOOLS:-Read,Write,Edit,Bash,Glob,Grep,Task,Skill,Agent}"
-# Note: STATE_FILE always uses PDLC_HANDOFF from the library
-# The PDLC_STATE_FILE env var is reserved for future SDK migration
 STATE_FILE="${PDLC_HANDOFF}"
 
 # --- Validation ---
@@ -71,6 +68,11 @@ fi
 
 if ! command -v jq &>/dev/null; then
   echo "ERROR: 'jq' not found. Install it: brew install jq" >&2
+  exit 2
+fi
+
+if ! command -v bc &>/dev/null; then
+  echo "ERROR: 'bc' not found. Required for cost tracking." >&2
   exit 2
 fi
 
