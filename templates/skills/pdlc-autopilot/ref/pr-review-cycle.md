@@ -75,7 +75,7 @@
    b. Actor addresses CRITICAL and MAJOR comments (mandatory)
    c. Actor addresses MINOR comments (best effort)
    d. Actor may skip SUGGESTION/NITPICK with justification
-3. PROC-2 applies: dispatch Critics for each fix batch
+3. CriticGate applies: dispatch Critics for each fix batch
 4. Record which comments were addressed vs. skipped in progress.md
 ```
 

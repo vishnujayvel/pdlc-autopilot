@@ -12,13 +12,13 @@ Director: Starting PDLC Autopilot v3.6 (Dual-Perspective Mode)...
    product-context.md found. Tier: 0 (Personal)
    → Product context loaded. Proceeding.
 
-🔍 Phase 0a: Check/Generate Artifacts (PROC-1)...
+🔍 Phase 0a: Check/Generate Artifacts (SpecGate)...
    requirements.md ✅ exists
    design.md ✅ exists
    tasks.md ✅ exists
    → Provenance recorded in progress.md
 
-🔍 Phase 0b: Kiro Validation (PROC-1 — Skill tool invocations)...
+🔍 Phase 0b: Kiro Validation (SpecGate — Skill tool invocations)...
    [Skill tool: kiro:validate-gap] ⚠️ 2 areas need research (non-blocking)
    [Skill tool: kiro:validate-design] ✅ GO decision
 
@@ -99,7 +99,7 @@ Director: Starting PDLC Autopilot v3.6 (T-Mode: Agent Teams)...
    - 9 tasks
    - T-Mode: ACTIVE (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
 
-🔍 Phase P0-0b: Product Context + Artifacts + Validation (same as standard mode — PROC-1)
+🔍 Phase P0-0b: Product Context + Artifacts + Validation (same as standard mode — SpecGate)
    [Product context loaded. Tier: 0]
    [Skill tool invocations for kiro:validate-gap, kiro:validate-design]
    [All validations PASS, Product Skeptic: APPROVE]
@@ -181,13 +181,13 @@ Director: Starting PDLC Autopilot v3.6...
    Tier: 1 (Community)
    → Product context loaded. Proceeding.
 
-🔍 Phase 0a: Check/Generate Artifacts (PROC-1)...
+🔍 Phase 0a: Check/Generate Artifacts (SpecGate)...
    requirements.md ✅ exists
    design.md ✅ exists
    tasks.md ✅ exists
    → Provenance recorded in progress.md ✅
 
-🔍 Phase 0b: Kiro Validation (PROC-1 — Skill tool invocations)...
+🔍 Phase 0b: Kiro Validation (SpecGate — Skill tool invocations)...
    [Skill tool: kiro:validate-gap] ✅ No critical gaps
    [Skill tool: kiro:validate-design] ✅ GO decision
 
