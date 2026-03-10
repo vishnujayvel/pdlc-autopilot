@@ -485,7 +485,7 @@ T-Mode state is persisted in `spec.json` alongside other execution state. This e
 ```json
 {
   "active_workflow": "pdlc-autopilot",
-  "sdlc_state": {
+  "pdlc_state": {
     "started_at": "2026-02-23T10:00:00.000Z",
     "current_phase": "execution",
     "last_batch_completed": 1,
@@ -511,7 +511,7 @@ T-Mode state is persisted in `spec.json` alongside other execution state. This e
 
 When a session resumes after context compaction or a new Claude Code session:
 
-1. The Director reads `spec.json` and checks `sdlc_state.t_mode`.
+1. The Director reads `spec.json` and checks `pdlc_state.t_mode`.
 2. If `t_mode` is `true`, the Director checks whether `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` is still set.
 3. If the env var is present, T-Mode resumes with the persisted `t_strategy`.
 4. If the env var is absent (user launched Claude Code differently), the Director falls back to standard mode and logs a note.

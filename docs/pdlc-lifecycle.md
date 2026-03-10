@@ -137,7 +137,7 @@ flowchart TD
 
 ### Product Skeptic
 
-Evaluates specs through 4 lenses: **Build Trap** (real pain point?), **Audience Alignment** (right persona?), **MVP Hydration** (Layer 2/3 creep?), **Kill Criteria** (should we stop?).
+Evaluates specs through 5 lenses: **Build Trap** (real pain point?), **Audience Alignment** (right persona?), **MVP Hydration** (Layer 2/3 creep?), **Kill Criteria** (should we stop?), **Output Contract Consistency** (output format clear to consumers?).
 
 | Verdict | Meaning | Action |
 |---|---|---|
@@ -448,7 +448,7 @@ Product Skeptic blocks independently. A technical PASS does not override a produ
 | **Agent calls** | ~2 | ~4-6 | ~10-30 |
 | **Spec artifacts** | None | Mini-spec in progress.md | requirements, design, tasks |
 | **Critics** | SKEPTIC only | Adaptive (1 or 2) | Dual + Product Skeptic |
-| **Product Skeptic** | No | No (alignment check only) | Yes (4-lens) |
+| **Product Skeptic** | No | No (alignment check only) | Yes (5-lens) |
 | **Fix cycles** | Max 1 | Max 2 | Max 2 per batch |
 | **Duration** | Minutes | ~30 min | Hours to days |
 | **T-Mode** | No | No | Yes |

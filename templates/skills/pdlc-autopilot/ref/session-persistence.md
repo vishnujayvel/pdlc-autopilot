@@ -81,6 +81,7 @@
 **For Full PDLC workflow: MANDATORY** — The Director MUST update progress.md after each batch and critic pass. This is not optional. (Lightweight paths use Tasks API primarily; see @ref/lightweight-paths.md.)
 
 **Template:**
+
 ```markdown
 # PDLC Progress: [feature-name]
 
@@ -209,6 +210,7 @@ This way, even if compaction hits MID-BATCH, progress.md has the last known good
 4. **PDLC Loop Integration** - How validators should use this file
 
 **Template:**
+
 ```markdown
 # Validation Criteria for [Feature Name]
 

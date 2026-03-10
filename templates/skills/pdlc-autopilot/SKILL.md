@@ -112,6 +112,7 @@ User says "implement the feature" → ALWAYS use this skill
 3. If `active_workflow` missing/different: Set it, start fresh
 
 **State tracking in spec.json:**
+
 ```json
 {
   "active_workflow": "pdlc-autopilot",
@@ -182,6 +183,7 @@ If you find yourself about to ask "Should I proceed?" — STOP. That's the stick
 ## Architecture
 
 **Standard Mode (single Actor per batch):**
+
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    DIRECTOR (Main Claude)                    │
@@ -350,6 +352,7 @@ See @ref/lightweight-paths.md for full protocol.
 ```
 
 **Runtime Error Handling:** If Kiro skill fails:
+
 ```text
 ⚠️ Kiro commands not found. PDLC Autopilot requires cc-sdd to generate specs.
 Run this in your project directory:  npx cc-sdd@latest --claude
@@ -510,6 +513,7 @@ Retrospective:
 ## Batching Strategy
 
 **Group tasks that touch the same files:**
+
 ```text
 Tasks 1.1-1.4 all modify transform_snapshot.py → BATCH A (1 Actor, not 4)
 Tasks 2.3 modifies app.js → BATCH B
@@ -549,6 +553,7 @@ See @ref/examples.md for full standard mode and T-Mode execution walkthroughs.
 **Why this exists:** During the Formation Fellowship build (Mar 2, 2026), Kiro skills were prescribed but not invoked — general-purpose subagents wrote artifacts directly, bypassing Kiro's structured generation and validation. This produced artifacts that lacked Kiro's format discipline and missed Kiro's built-in validation checks.
 
 **Phase 0a — Artifact Generation:**
+
 ```text
 BLOCKING REQUIREMENT: When requirements.md, design.md, or tasks.md is MISSING,
 the Director MUST invoke the Kiro skill via the Skill tool:
@@ -563,6 +568,7 @@ MUST generate them.
 ```
 
 **Phase 0b — Validation:**
+
 ```text
 BLOCKING REQUIREMENT: Before proceeding to Phase 1+ execution, the Director MUST invoke:
 
@@ -577,6 +583,7 @@ skills, not as replacements.
 ```
 
 **Provenance Gate (Phase 0a → 0b transition):**
+
 ```text
 BEFORE entering Phase 0b, the Director MUST verify:
   1. Each artifact (requirements.md, design.md, tasks.md) exists
@@ -595,6 +602,7 @@ IF any artifact was written by a subagent instead of Kiro:
 ```
 
 **Verification in Final Validator:**
+
 ```text
 Final ADVOCATE/SKEPTIC prompts MUST include this check:
   "PROC-1 COMPLIANCE: Verify that spec artifacts in {spec_dir}/ were generated
@@ -609,6 +617,7 @@ Final ADVOCATE/SKEPTIC prompts MUST include this check:
 **Why this exists:** During the Formation Fellowship build (Mar 2, 2026), the Director dispatched Actor subagents for all 5 batches but never dispatched Critic ADVOCATE/SKEPTIC for any batch. The "Never skip Critic review" red flag existed but had no enforcement mechanism. Bugs that Critics would have caught (schema path inconsistencies, field name errors) were only found by the Final Validator, requiring post-completion rework.
 
 **Per-Batch Enforcement:**
+
 ```text
 BLOCKING REQUIREMENT: After EACH Actor batch returns, the Director MUST:
 1. Dispatch Critic ADVOCATE subagent (parallel)
@@ -623,6 +632,7 @@ VIOLATION: Substituting Actor self-review for Critic dispatch.
 ```
 
 **Artifact-Agnostic Scope:**
+
 ```text
 SCOPE: Critics review ALL artifact types produced by Actors:
 - Source code (functions, modules, tests)
@@ -634,6 +644,7 @@ There is no "too simple for Critic review" exception. Every batch gets Critics.
 ```
 
 **Provenance in progress.md:**
+
 ```text
 Batch Status table MUST have ADVOCATE and SKEPTIC columns with PASS/FAIL/PASS_WARN values.
 A batch with status "DONE" but blank ADVOCATE/SKEPTIC columns is a PROC-2 violation.
@@ -641,6 +652,7 @@ Valid status progression: PENDING → ACTOR_DONE → DONE+CRITICS
 ```
 
 **Verification in Final Validator:**
+
 ```text
 Final ADVOCATE/SKEPTIC prompts MUST include this check:
   "PROC-2 COMPLIANCE: Check progress.md Batch Status table. Every batch MUST have

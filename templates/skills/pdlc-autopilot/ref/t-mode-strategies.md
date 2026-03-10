@@ -239,6 +239,7 @@ Which strategy? [0-7]
 ```
 
 **After user selects:**
+
 ```text
 4. Store choice in spec.json: pdlc_state.t_strategy = "<selected-strategy>"
 5. Apply selected strategy for all batches (unless user overrides per-batch)
@@ -397,7 +398,7 @@ I (Lead) will merge shared files and run the full suite after C completes."
 
 ### S5w: Swarm + Worktree — Teammate Request Template
 
-```
+```text
 "I need [N] teammates to swarm on this batch, each in an isolated worktree.
 
 Teammate CORE (isolation: worktree):
@@ -424,7 +425,7 @@ Git handles structural conflicts; I resolve semantic conflicts."
 
 ### S6: Fix Cycle — Retry Protocol
 
-```
+```text
 When an Actor fails and enters a fix cycle:
 
 1. Actor attempt-1 failed in worktree-batch-X-attempt-1
@@ -502,7 +503,7 @@ Present viable options to user at Step 2.5 (see Strategy Selection above).
 
 When T-Mode is active with worktrees, show status using this format:
 
-```
+```text
 T-Mode Status: S5w (Swarm + Worktree Isolation)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -516,6 +517,7 @@ T-Mode Status: S5w (Swarm + Worktree Isolation)
 ```
 
 Update on each state change:
+
 - `⏳ working...` → actor is implementing
 - `✅ committed` → actor finished and committed
 - `🔀 merging` → Lead is merging this branch
@@ -525,7 +527,8 @@ Update on each state change:
 ## Worktree User Education (Progressive Disclosure)
 
 ### First T-Mode Run (verbose)
-```
+
+```text
 📚 Worktree Isolation Active
 
 Each actor gets their own copy of the repository on a separate git branch.
@@ -538,12 +541,14 @@ the documents, instead of having them all crowd around one desk.
 ```
 
 ### Subsequent Runs (concise)
-```
+
+```text
 🌳 Worktree isolation: 3 actors × 3 branches
 ```
 
 ### During Merge (educational)
-```
+
+```text
 🔀 Merging 3 worktree branches into main...
    ├── wt-batch-A-core: 4 files changed → merged ✅
    ├── wt-batch-A-error: 2 files changed → merged ✅
@@ -552,7 +557,8 @@ the documents, instead of having them all crowd around one desk.
 ```
 
 ### On Cleanup
-```
+
+```text
 🧹 Worktrees cleaned up:
    - 2 worktrees merged and removed
    - 1 worktree kept (failed attempt — available for debugging)

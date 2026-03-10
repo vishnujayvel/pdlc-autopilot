@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Autonomous execution loop** - Single-trigger "SDLC" invocation runs the full loop (generate, validate, batch, execute, review, fix) without asking "shall I proceed?" between phases
 - **Task batching by file ownership** - Groups tasks that touch the same files into batches, dispatching one Actor + one Critic pair per batch instead of per-task agents (77-87% agent reduction)
 - **Context compaction survival** - `validation-criteria.md` persists to disk and is re-read at Step 0.5 after conversation compaction, restoring all validation rules, tenets, and custom prompts
-- **Workflow stickiness** - `active_workflow` and `sdlc_state` persisted in `spec.json` enable session recovery and resume from last known phase
+- **Workflow stickiness** - `active_workflow` and `pdlc_state` persisted in `spec.json` enable session recovery and resume from last known phase
 - **Auto-generation protocol (Phase 0a)** - Automatically invokes `kiro:spec-requirements`, `kiro:spec-design`, and `kiro:spec-tasks` as sub-operations when artifacts are missing, instead of asking the user to run them manually
 - **Phase 0b dual validation** - Requirements, design, and tasks each validated by ADVOCATE + SKEPTIC before execution begins; includes `kiro:validate-gap` (informational) and `kiro:validate-design` (GO/NO-GO)
 - **Max 2 fix cycles per batch** - If Actor fixes fail after 2 Critic re-reviews, execution stops and escalates to user instead of infinite-looping
