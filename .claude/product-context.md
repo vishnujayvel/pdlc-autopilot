@@ -24,7 +24,7 @@ PDLC Autopilot is an autonomous product development lifecycle orchestrator for C
 2. **Spec-driven development** — Requirements before design, design before tasks, product context before requirements
 3. **Batch by file** — Group tasks touching the same files into one Actor dispatch (77-87% agent overhead reduction)
 4. **Session persistence** — State survives context compaction via progress.md, validation-criteria.md, CLAUDE.md
-5. **Process constraints are enforced, not suggested** — PROC-1 (Kiro skills mandatory for specs), PROC-2 (critics mandatory per batch)
+5. **Process constraints are enforced, not suggested** — SpecGate (Kiro skills mandatory for specs), CriticGate (critics mandatory per batch)
 
 ## Architecture
 
@@ -38,7 +38,7 @@ PDLC Autopilot is an autonomous product development lifecycle orchestrator for C
 - Core PDLC loop is stable and actively used
 - Backlog implementation branch active (`pdlc/v3.6-backlog-implementation`)
 - Key gap: **Session continuity** — context compaction breaks PDLC state; no outer loop; hooks not implemented
-- Key gap: **Process enforcement** — PROC-1/PROC-2 are documented but not hook-enforced
+- Key gap: **Process enforcement** — SpecGate/CriticGate are documented but not hook-enforced
 
 ## What Success Looks Like
 

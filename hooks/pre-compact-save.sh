@@ -48,16 +48,15 @@ source "${SCRIPT_DIR}/lib/pdlc-state.sh"
 
 pdlc_ensure_state_dir
 
-if [[ -f "${PDLC_HANDOFF}" ]]; then
-  # HANDOFF.md exists and is current — just mark for post-compact restore
-  pdlc_touch_marker
-else
+if [[ ! -f "${PDLC_HANDOFF}" ]]; then
   # No state file — create minimal stub
   pdlc_write_handoff "phase: UNKNOWN
 partial: true" "## Compaction Recovery
 
 State was not available before compaction. Read progress.md in the spec directory for context."
-  pdlc_touch_marker
 fi
+
+# Mark for post-compact restore (whether HANDOFF.md existed or was just created)
+pdlc_touch_marker
 
 exit 0

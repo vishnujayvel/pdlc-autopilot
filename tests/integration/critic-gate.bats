@@ -1,19 +1,19 @@
 #!/usr/bin/env bats
-# tests/integration/enforce-proc2.bats — BATS tests for hooks/enforce-proc2.sh
+# tests/integration/critic-gate.bats — BATS tests for hooks/critic-gate.sh
 
 load ../helpers/common-setup
 
-# Helper: run enforce-proc2 with given JSON from a specific workdir
-run_proc2() {
+# Helper: run critic-gate with given JSON from a specific workdir
+run_critic_gate() {
   local json="$1"
   local workdir="$2"
-  (cd "$workdir" && echo "$json" | bash "${HOOKS_DIR}/enforce-proc2.sh")
+  (cd "$workdir" && echo "$json" | bash "${HOOKS_DIR}/critic-gate.sh")
 }
 
 @test "allow non-Task tool" {
   local workdir="${TEST_WORK_DIR}/t1"
   mkdir -p "${workdir}"
-  result=$(run_proc2 '{"tool_name":"Read","tool_input":{"file_path":"/tmp/foo"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Read","tool_input":{"file_path":"/tmp/foo"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "allow" ]]
 }
@@ -21,7 +21,7 @@ run_proc2() {
 @test "allow Task without Actor markers" {
   local workdir="${TEST_WORK_DIR}/t2"
   mkdir -p "${workdir}"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"Run tests and fix bugs"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"Run tests and fix bugs"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "allow" ]]
 }
@@ -35,7 +35,7 @@ batch: 1
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 1] Implement login feature"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 1] Implement login feature"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "allow" ]]
 }
@@ -43,7 +43,7 @@ EOF
 @test "allow Actor dispatch with no HANDOFF.md" {
   local workdir="${TEST_WORK_DIR}/t4"
   mkdir -p "${workdir}"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Do something"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Do something"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "allow" ]]
 }
@@ -57,12 +57,12 @@ batch: 2
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Implement feature X"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Implement feature X"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "deny" ]]
 }
 
-@test "deny reason mentions PROC-2 VIOLATION" {
+@test "deny reason mentions CriticGate VIOLATION" {
   local workdir="${TEST_WORK_DIR}/t6"
   create_handoff "$workdir" "$(cat <<'EOF'
 ---
@@ -71,9 +71,9 @@ batch: 2
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Implement feature X"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Implement feature X"}}' "$workdir")
   reason=$(echo "$result" | jq -r '.reason')
-  [[ "$reason" == *"PROC-2 VIOLATION"* ]]
+  [[ "$reason" == *"CriticGate VIOLATION"* ]]
 }
 
 @test "deny when advocate is PENDING" {
@@ -87,7 +87,7 @@ batch_1_skeptic: DONE
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR[2]] Do next batch"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR[2]] Do next batch"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "deny" ]]
 }
@@ -102,7 +102,7 @@ batch_1_advocate: DONE
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Next"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Next"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "deny" ]]
 }
@@ -118,7 +118,7 @@ batch_1_skeptic: APPROVED_WITH_NOTES
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Implement feature Y"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch 2] Implement feature Y"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "allow" ]]
 }
@@ -132,7 +132,7 @@ batch: abc
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch X] Something"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR: Batch X] Something"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "allow" ]]
 }
@@ -148,7 +148,7 @@ batch_2_skeptic: DONE
 ---
 EOF
 )"
-  result=$(run_proc2 '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR[3]] Next batch tasks"}}' "$workdir")
+  result=$(run_critic_gate '{"tool_name":"Task","tool_input":{"prompt":"[ACTOR[3]] Next batch tasks"}}' "$workdir")
   decision=$(echo "$result" | jq -r '.decision')
   [[ "$decision" == "allow" ]]
 }

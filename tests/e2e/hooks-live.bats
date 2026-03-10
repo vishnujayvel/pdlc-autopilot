@@ -12,7 +12,7 @@
 load ../helpers/common-setup
 
 # Build the hooks settings JSON once (used by all tests)
-HOOKS_SETTINGS='{"hooks":{"PreToolUse":[{"matcher":"Task","hooks":[{"type":"command","command":"bash hooks/enforce-proc1.sh","timeout":10000},{"type":"command","command":"bash hooks/enforce-proc2.sh","timeout":10000}]}]}}'
+HOOKS_SETTINGS='{"hooks":{"PreToolUse":[{"matcher":"Task","hooks":[{"type":"command","command":"bash hooks/spec-gate.sh","timeout":10000},{"type":"command","command":"bash hooks/critic-gate.sh","timeout":10000}]}]}}'
 
 setup() {
   if [[ "${PDLC_LIVE_TESTS:-}" != "1" ]]; then
@@ -53,16 +53,16 @@ output_has_deny() {
   echo "$result" | grep -qi "$pattern"
 }
 
-# --- PROC-1 Tests: Block spec generation via Task tool ---
+# --- SpecGate Tests: Block spec generation via Task tool ---
 
-@test "PROC-1 live: hook blocks 'generate requirements' via Task tool" {
+@test "SpecGate live: hook blocks 'generate requirements' via Task tool" {
   output=$(run_claude_with_hooks \
     "Use the Task tool to generate requirements.md for a login feature. You must use the Task tool, not any other approach." \
     "Task,Read")
-  # The result should mention PROC-1 violation or that the tool was denied
+  # The result should mention SpecGate violation or that the tool was denied
   result=$(echo "$output" | jq -r '.result // empty')
   # Look for evidence the hook blocked it or Claude acknowledged the block
-  [[ "$result" == *"PROC-1"* ]] || \
+  [[ "$result" == *"SpecGate"* ]] || \
   [[ "$result" == *"denied"* ]] || \
   [[ "$result" == *"blocked"* ]] || \
   [[ "$result" == *"Skill tool"* ]] || \
@@ -71,21 +71,21 @@ output_has_deny() {
   [[ "$result" == *"not allowed"* ]]
 }
 
-@test "PROC-1 live: hook allows non-spec Task tool calls" {
+@test "SpecGate live: hook allows non-spec Task tool calls" {
   output=$(run_claude_with_hooks \
     "Use the Task tool to search for all .sh files in the hooks/ directory and list them." \
     "Task,Read,Glob,Grep")
   result=$(echo "$output" | jq -r '.result // empty')
-  # Should NOT mention PROC-1 violation
-  [[ "$result" != *"PROC-1 VIOLATION"* ]]
+  # Should NOT mention SpecGate violation
+  [[ "$result" != *"SpecGate VIOLATION"* ]]
 }
 
-@test "PROC-1 live: hook blocks 'write design.md' via Task tool" {
+@test "SpecGate live: hook blocks 'write design.md' via Task tool" {
   output=$(run_claude_with_hooks \
     "Use the Task tool with this exact prompt: 'write design.md for the authentication module'. Do not use any other tool." \
     "Task,Read")
   result=$(echo "$output" | jq -r '.result // empty')
-  [[ "$result" == *"PROC-1"* ]] || \
+  [[ "$result" == *"SpecGate"* ]] || \
   [[ "$result" == *"denied"* ]] || \
   [[ "$result" == *"blocked"* ]] || \
   [[ "$result" == *"Skill"* ]] || \
@@ -93,9 +93,9 @@ output_has_deny() {
   [[ "$result" == *"cannot"* ]]
 }
 
-# --- PROC-2 Tests: Block Actor dispatch without critic review ---
+# --- CriticGate Tests: Block Actor dispatch without critic review ---
 
-@test "PROC-2 live: hook blocks Actor dispatch without prior critic results" {
+@test "CriticGate live: hook blocks Actor dispatch without prior critic results" {
   # Set up HANDOFF.md with batch 2 but no critic results for batch 1
   mkdir -p "${TEST_WORK_DIR}/.pdlc/state"
   cat > "${TEST_WORK_DIR}/.pdlc/state/HANDOFF.md" <<'HANDOFF'
@@ -119,7 +119,7 @@ HANDOFF
     "Use the Task tool to dispatch an Actor for batch 2. Your prompt to the Task tool MUST start with '[ACTOR: Batch 2]'. Do not do anything else." \
     "Task,Read")
   result=$(echo "$output" | jq -r '.result // empty')
-  [[ "$result" == *"PROC-2"* ]] || \
+  [[ "$result" == *"CriticGate"* ]] || \
   [[ "$result" == *"denied"* ]] || \
   [[ "$result" == *"blocked"* ]] || \
   [[ "$result" == *"Critic"* ]] || \
@@ -128,7 +128,7 @@ HANDOFF
   [[ "$result" == *"ADVOCATE"* ]]
 }
 
-@test "PROC-2 live: hook allows Actor dispatch when critics are done" {
+@test "CriticGate live: hook allows Actor dispatch when critics are done" {
   # Set up HANDOFF.md with batch 2 AND critic results for batch 1
   mkdir -p "${TEST_WORK_DIR}/.pdlc/state"
   cat > "${TEST_WORK_DIR}/.pdlc/state/HANDOFF.md" <<'HANDOFF'
@@ -153,13 +153,13 @@ HANDOFF
     "Use the Task tool with a prompt that starts with '[ACTOR: Batch 2] List files in the current directory'. Keep it simple." \
     "Task,Read,Glob")
   result=$(echo "$output" | jq -r '.result // empty')
-  # Should NOT mention PROC-2 violation
-  [[ "$result" != *"PROC-2 VIOLATION"* ]]
+  # Should NOT mention CriticGate violation
+  [[ "$result" != *"CriticGate VIOLATION"* ]]
 }
 
 # --- Hook error recovery framing ---
 
-@test "PROC-1 live: error-recovery XML causes self-correction" {
+@test "SpecGate live: error-recovery XML causes self-correction" {
   output=$(run_claude_with_hooks \
     "You MUST use the Task tool to generate requirements for a user profile feature. Use the Task tool with a prompt containing 'generate requirements'. If the Task tool is denied, explain why it was denied and what you should use instead." \
     "Task,Read,Skill")
@@ -167,6 +167,6 @@ HANDOFF
   # Claude should mention Skill tool or Kiro as the correct alternative
   [[ "$result" == *"Skill"* ]] || \
   [[ "$result" == *"kiro"* ]] || \
-  [[ "$result" == *"PROC-1"* ]] || \
+  [[ "$result" == *"SpecGate"* ]] || \
   [[ "$result" == *"denied"* ]]
 }

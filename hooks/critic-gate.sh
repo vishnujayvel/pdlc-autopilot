@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# enforce-proc2.sh — PROC-2: Block Actor Dispatch Without Critic Review
+# critic-gate.sh — CriticGate: Block Actor Dispatch Without Critic Review
 # =============================================================================
 #
 # Prevents dispatching a new Actor batch if the prior batch has not been
@@ -27,7 +27,7 @@
 #       "PreToolUse": [{
 #         "hooks": [{
 #           "type": "command",
-#           "command": "bash /path/to/enforce-proc2.sh"
+#           "command": "bash /path/to/critic-gate.sh"
 #         }]
 #       }]
 #     }
@@ -106,10 +106,12 @@ if [[ "${CURRENT_BATCH}" -le 1 ]]; then
   exit 0
 fi
 
-# Check prior batch critic status from already-read frontmatter
+# Check prior batch critic status from already-read frontmatter (single awk pass)
 PRIOR_BATCH=$((CURRENT_BATCH - 1))
-ADVOCATE=$(echo "${FRONTMATTER}" | awk -F': ' -v key="batch_${PRIOR_BATCH}_advocate" '$1 == key { print $2; exit }')
-SKEPTIC=$(echo "${FRONTMATTER}" | awk -F': ' -v key="batch_${PRIOR_BATCH}_skeptic" '$1 == key { print $2; exit }')
+read -r ADVOCATE SKEPTIC <<< "$(echo "${FRONTMATTER}" | awk -F': ' \
+  -v akey="batch_${PRIOR_BATCH}_advocate" \
+  -v skey="batch_${PRIOR_BATCH}_skeptic" \
+  '{ if ($1 == akey) a=$2; if ($1 == skey) s=$2 } END { print a, s }')"
 
 # Both must be non-empty and not PENDING
 if [[ -n "${ADVOCATE}" && "${ADVOCATE}" != "PENDING" && -n "${SKEPTIC}" && "${SKEPTIC}" != "PENDING" ]]; then
@@ -118,6 +120,6 @@ if [[ -n "${ADVOCATE}" && "${ADVOCATE}" != "PENDING" && -n "${SKEPTIC}" && "${SK
 fi
 
 # DENY with error-recovery XML framing
-REASON="<error-recovery>PROC-2 VIOLATION: Batch ${PRIOR_BATCH} has not been reviewed by both Critics (ADVOCATE=${ADVOCATE:-MISSING}, SKEPTIC=${SKEPTIC:-MISSING}). You MUST dispatch Critic ADVOCATE and Critic SKEPTIC subagents for Batch ${PRIOR_BATCH} before dispatching a new Actor for Batch ${CURRENT_BATCH}.</error-recovery>"
+REASON="<error-recovery>CriticGate VIOLATION: Batch ${PRIOR_BATCH} has not been reviewed by both Critics (ADVOCATE=${ADVOCATE:-MISSING}, SKEPTIC=${SKEPTIC:-MISSING}). You MUST dispatch Critic ADVOCATE and Critic SKEPTIC subagents for Batch ${PRIOR_BATCH} before dispatching a new Actor for Batch ${CURRENT_BATCH}.</error-recovery>"
 echo "{\"decision\": \"deny\", \"reason\": $(echo "$REASON" | jq -Rs .)}"
 exit 0

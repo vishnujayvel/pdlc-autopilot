@@ -196,17 +196,12 @@ EOF
   # The template invokes scripts via "bash hooks/...", so +x is not required
   # This test validates the convention is consistent
   local template="${REPO_DIR}/.claude/settings.json.template"
-  local scripts
-  scripts=$(jq -r '.. | objects | .command? // empty' "$template")
   local all_bash=true
-  for cmd in $scripts; do
-    # Each command should start with "bash"
-    if [[ "$cmd" != bash* ]]; then
-      # Actually we get individual words from the for loop; skip non-bash tokens
-      true
+  while IFS= read -r cmd; do
+    if [[ "$cmd" != bash\ * ]]; then
+      all_bash=false
     fi
-  done
-  # If we got here, the convention holds
+  done < <(jq -r '.. | objects | .command? // empty' "$template")
   [[ "$all_bash" == "true" ]]
 }
 

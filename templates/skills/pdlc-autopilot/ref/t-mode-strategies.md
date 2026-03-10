@@ -183,9 +183,9 @@ T-Mode Strategy Options for [Batch Name]:
 
 [6] S5w: Swarm + Worktree (recommended over S5)
 
-    main ──┬── worktree-batch-X-core ──── Actor CORE
-           ├── worktree-batch-X-error ─── Actor ERROR
-           └── worktree-batch-X-edge ──── Actor EDGE
+    main ──┬── {feature}-B{N}-core ───── Actor CORE
+           ├── {feature}-B{N}-error ──── Actor ERROR
+           └── {feature}-B{N}-edge ───── Actor EDGE
 
     Each actor works on its own branch + filesystem copy.
     All modify the SAME logical files, but in SEPARATE worktrees.
@@ -249,6 +249,29 @@ automatically when a batch fails and needs a retry in a fresh worktree.
 
 Claude Code supports `isolation: "worktree"` on subagents, giving each teammate its own filesystem copy of the repo on a separate branch. This provides **structural isolation** that complements prompt-based file ownership.
 
+### Worktree Naming Convention (MANDATORY)
+
+When dispatching worktree-isolated agents, **always set the `name` parameter** on the Agent tool. This makes worktrees identifiable in `git worktree list`, the observability dashboard, and logs.
+
+**Convention:** `{feature}-B{batch}-{concern}`
+
+| Strategy | Name Pattern | Example |
+|----------|-------------|---------|
+| S5w (Swarm) | `{feature}-B{N}-{concern}` | `auth-B2-core`, `auth-B2-error`, `auth-B2-edge` |
+| S6 (Fix Cycle) | `{feature}-B{N}-attempt-{M}` | `cache-B3-attempt-1`, `cache-B3-attempt-2` |
+| Worktree Safety (S1/S2/S3) | `{feature}-B{N}-{role}` | `feeds-B1-implA`, `feeds-B1-implB`, `feeds-B1-test` |
+
+**Why:** Without `name`, worktrees get auto-generated IDs like `agent-a4737edc` — meaningless in dashboards and `git worktree list`. Meaningful names let you tell at a glance which worktree handles which concern.
+
+```text
+Agent tool call:
+  name: "auth-B2-core"          ← REQUIRED for worktree agents
+  isolation: "worktree"
+  prompt: "..."
+
+Dashboard shows: project-name/auth-B2-core  (instead of project-name/agent-a4737edc)
+```
+
 ### Why Both Layers?
 
 | Layer | Mechanism | What It Prevents |
@@ -270,7 +293,12 @@ Enable in spec.json to add worktree isolation to S1/S2/S3:
 }
 ```
 
-Effect: All teammates get `isolation: "worktree"` — same file ownership rules apply, but now structurally enforced. If a teammate accidentally touches another's file, it shows up as a merge conflict (visible) instead of silent overwrite (invisible).
+Effect: All teammates get `isolation: "worktree"` + meaningful `name` — same file ownership rules apply, but now structurally enforced. If a teammate accidentally touches another's file, it shows up as a merge conflict (visible) instead of silent overwrite (invisible).
+
+When worktree_safety is enabled, apply naming convention to all strategies:
+- S1: `name: "{feature}-B{N}-{module}"` (e.g., `auth-B1-handlers`, `auth-B1-templates`)
+- S2: `name: "{feature}-B{N}-impl"` and `name: "{feature}-B{N}-test"`
+- S3: `name: "{feature}-B{N}-impl"`, `name: "{feature}-B{N}-test"`, `name: "{feature}-B{N}-product"`
 
 Default: `false` (no overhead unless explicitly enabled).
 
@@ -291,14 +319,16 @@ Default: `false` (no overhead unless explicitly enabled).
 ```text
 "I need [N] teammates to implement this batch in parallel.
 
-Teammate A: Implement tasks [1.1, 1.2] in [handlers/].
+Teammate A [if worktree_safety: name: "{feature}-B{N}-handlers", isolation: worktree]:
+  Implement tasks [1.1, 1.2] in [handlers/].
   Files you OWN: handlers/create-entity.ts, handlers/create-fleeting-note.ts
   DO NOT touch any files outside your ownership.
   Tasks: [paste task descriptions + acceptance criteria]
   Design context: [paste relevant design sections]
   When done, mark your tasks as completed in the task list.
 
-Teammate B: Implement tasks [2.1] in [templates/].
+Teammate B [if worktree_safety: name: "{feature}-B{N}-templates", isolation: worktree]:
+  Implement tasks [2.1] in [templates/].
   Files you OWN: templates/generators.ts, templates/index.ts
   [same structure...]
 
@@ -387,19 +417,19 @@ I (Lead) will merge shared files and run the full suite after C completes."
 ```text
 "I need [N] teammates to swarm on this batch, each in an isolated worktree.
 
-Teammate CORE (isolation: worktree):
+Teammate CORE (name: "{feature}-B{N}-core", isolation: worktree):
   Concern: Core happy-path logic
   Files to modify: [list files]
   Tasks: [paste task descriptions]
   You have your own copy of the repo. Commit when done.
 
-Teammate ERROR (isolation: worktree):
+Teammate ERROR (name: "{feature}-B{N}-error", isolation: worktree):
   Concern: Error handling and validation
   Files to modify: [SAME files as CORE — that's fine, you're isolated]
   Tasks: [paste task descriptions]
   You have your own copy of the repo. Commit when done.
 
-Teammate EDGE (isolation: worktree):
+Teammate EDGE (name: "{feature}-B{N}-edge", isolation: worktree):
   Concern: Edge cases and boundary conditions
   Files to modify: [SAME files as CORE]
   Tasks: [paste task descriptions]
@@ -414,10 +444,10 @@ Git handles structural conflicts; I resolve semantic conflicts."
 ```text
 When an Actor fails and enters a fix cycle:
 
-1. Actor attempt-1 failed in worktree-batch-X-attempt-1
+1. Actor attempt-1 (name: "{feature}-B{N}-attempt-1", isolation: worktree) failed
    → Keep worktree as evidence (do NOT clean up)
 
-2. Create fresh worktree: worktree-batch-X-attempt-2
+2. Create fresh worktree (name: "{feature}-B{N}-attempt-2", isolation: worktree)
    → Actor starts clean, informed by attempt-1's critic feedback
 
 3. If attempt-2 passes:
@@ -427,7 +457,7 @@ When an Actor fails and enters a fix cycle:
 
 4. If attempt-2 fails:
    → Escalate to user (max 2 fix cycles per PDLC rules)
-   → Provide diff: git diff attempt-1..attempt-2
+   → Provide diff: git diff {feature}-B{N}-attempt-1..{feature}-B{N}-attempt-2
    → Keep both worktrees for debugging
 ```
 
@@ -493,9 +523,9 @@ When T-Mode is active with worktrees, show status using this format:
 T-Mode Status: S5w (Swarm + Worktree Isolation)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  main ──┬── wt-batch-A-core ───── Actor CORE   ✅ committed
-         ├── wt-batch-A-error ──── Actor ERROR  ⏳ working...
-         └── wt-batch-A-edge ───── Actor EDGE   ✅ committed
+  main ──┬── auth-B2-core ───── Actor CORE   ✅ committed
+         ├── auth-B2-error ──── Actor ERROR  ⏳ working...
+         └── auth-B2-edge ───── Actor EDGE   ✅ committed
 
   Director: waiting for ERROR to complete
   Files in play: dispatcher.ts, config.ts, types.ts
@@ -536,9 +566,9 @@ the documents, instead of having them all crowd around one desk.
 
 ```text
 🔀 Merging 3 worktree branches into main...
-   ├── wt-batch-A-core: 4 files changed → merged ✅
-   ├── wt-batch-A-error: 2 files changed → merged ✅
-   └── wt-batch-A-edge: 1 file changed → conflict in dispatcher.ts
+   ├── auth-B2-core: 4 files changed → merged ✅
+   ├── auth-B2-error: 2 files changed → merged ✅
+   └── auth-B2-edge: 1 file changed → conflict in dispatcher.ts
        → Director resolving conflict (core logic + edge case overlap)
 ```
 

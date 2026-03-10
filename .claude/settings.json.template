@@ -41,12 +41,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash hooks/enforce-proc1.sh",
+            "command": "bash hooks/spec-gate.sh",
             "timeout": 10000
           },
           {
             "type": "command",
-            "command": "bash hooks/enforce-proc2.sh",
+            "command": "bash hooks/critic-gate.sh",
             "timeout": 10000
           }
         ]

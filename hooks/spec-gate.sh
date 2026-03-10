@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# enforce-proc1.sh — PROC-1: Block Spec Generation via Task Tool
+# spec-gate.sh — SpecGate: Block Spec Generation via Task Tool
 # =============================================================================
 #
 # Prevents spec artifacts (requirements.md, design.md, tasks.md) from being
@@ -25,7 +25,7 @@
 #       "PreToolUse": [{
 #         "hooks": [{
 #           "type": "command",
-#           "command": "bash /path/to/enforce-proc1.sh"
+#           "command": "bash /path/to/spec-gate.sh"
 #         }]
 #       }]
 #     }
@@ -33,7 +33,7 @@
 #
 # ENVIRONMENT VARIABLES
 # ---------------------
-#   PDLC_PROC1_PATTERNS — Pipe-separated regex patterns to match against the
+#   PDLC_SPECGATE_PATTERNS — Pipe-separated regex patterns to match against the
 #                          Task prompt (case-insensitive). Override to customize
 #                          which phrases trigger the guard.
 #                          Default: generate requirements|write requirements\.md|
@@ -67,11 +67,11 @@ fi
 PROMPT=$(pdlc_read_json_field "tool_input.prompt" <<< "$STDIN_JSON")
 
 # Configurable patterns — check env var or default list
-PATTERNS="${PDLC_PROC1_PATTERNS:-generate requirements|write requirements\.md|generate design|write design\.md|generate tasks|write tasks\.md|create spec|write specification|produce.*requirements|draft.*design|author.*spec|build.*requirements|create.*requirements|output.*design|assemble.*tasks|spec.*artifact}"
+PATTERNS="${PDLC_SPECGATE_PATTERNS:-generate requirements|write requirements\.md|generate design|write design\.md|generate tasks|write tasks\.md|create spec|write specification|produce.*requirements|draft.*design|author.*spec|build.*requirements|create.*requirements|output.*design|assemble.*tasks|spec.*artifact}"
 
 if echo "${PROMPT}" | grep -qiE "${PATTERNS}"; then
   # DENY with error-recovery XML framing
-  REASON="<error-recovery>PROC-1 VIOLATION: Spec artifacts (requirements.md, design.md, tasks.md) MUST be generated using the Skill tool with Kiro skills (kiro:spec-requirements, kiro:spec-design, kiro:spec-tasks). Do NOT use the Task tool to write spec artifacts. Use the Skill tool instead.</error-recovery>"
+  REASON="<error-recovery>SpecGate VIOLATION: Spec artifacts (requirements.md, design.md, tasks.md) MUST be generated using the Skill tool with Kiro skills (kiro:spec-requirements, kiro:spec-design, kiro:spec-tasks). Do NOT use the Task tool to write spec artifacts. Use the Skill tool instead.</error-recovery>"
   echo "{\"decision\": \"deny\", \"reason\": $(echo "$REASON" | jq -Rs .)}"
   exit 0
 fi
