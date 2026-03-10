@@ -329,7 +329,7 @@ Teammate A [if worktree_safety: name: "{feature}-B{N}-{module_a}", isolation: wo
 
 Teammate B [if worktree_safety: name: "{feature}-B{N}-{module_b}", isolation: worktree]:
   Implement tasks [2.1] in [{module_b}/].
-  Files you OWN: templates/generators.ts, templates/index.ts
+  Files you OWN: {module_b}/generators.ts, {module_b}/index.ts
   [same structure...]
 
 IMPORTANT: Each teammate ONLY modifies files in their ownership list.
