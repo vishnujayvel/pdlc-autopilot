@@ -215,27 +215,13 @@ T-Mode Strategy Options for [Batch Name]:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[7] S6: Fix Cycle Isolation
-
-    Batch X fails → retry in fresh worktree
-
-    main ──┬── worktree-batch-X-attempt-1 ── ❌ FAILED
-           └── worktree-batch-X-attempt-2 ── ✅ PASSED → merge
-
-    Attempt 1 preserved as evidence. Director can:
-      git diff worktree-batch-X-attempt-1..worktree-batch-X-attempt-2
-
-    Teammates: 1 per attempt (max 2 attempts per PDLC rules)
-    Parallelism: N/A (sequential retries)
-    Risk: ✅ LOW — failed attempts don't pollute main
-    Best for: batches that fail and need fix cycles
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 [0] Standard Mode (no teammates)
     Single Actor → Critics. Safe, sequential, no coordination overhead.
 
-Which strategy? [0-7]
+Which strategy? [0-6]
+
+Note: S6 (Fix Cycle Isolation) is not selectable here — it activates
+automatically when a batch fails and needs a retry in a fresh worktree.
 ```
 
 **After user selects:**
