@@ -29,7 +29,7 @@
 | 11 | Outer loop orchestration (Director-driven) | hooks/pdlc-outer-loop.sh, hooks/lib/pdlc-director.sh | **Tested** | 27 Director + 9 outer-loop tests | v1.2.0 |
 | 12 | HANDOFF.md state persistence | hooks/lib/pdlc-state.sh | **Tested** | pdlc-state.sh | v1.0.0 |
 | 13 | Dual-perspective validation (ADVOCATE + SKEPTIC) | SKILL.md | Guidance | — | — |
-| 14 | Product Skeptic (5-lens analysis) | SKILL.md, ref/product-skeptic.md | Guidance | — | v1.2.0 |
+| 14 | Product Skeptic (5-lens analysis) | hooks/lib/pdlc-skeptic.sh | **Tested** | 23 BATS tests | v1.2.0 |
 | 15 | T-Mode parallel strategies (S1-S5) | SKILL.md, ref/t-mode-strategies.md | Guidance | — | v3.0.0 |
 | 16 | Phase visualization | SKILL.md, ref/phase-viz.md | Guidance | — | v1.3.0 |
 | 17 | Context freshness checks | hooks/lib/pdlc-freshness.sh | **Tested** | 11 BATS tests | v1.2.0 |
@@ -61,8 +61,8 @@
 | Level | Count | Percentage |
 |-------|-------|------------|
 | Enforced | 10 | 26% |
-| Tested | 8 | 21% |
-| Guidance | 13 | 33% |
+| Tested | 9 | 23% |
+| Guidance | 12 | 31% |
 | Aspirational | 8 | 21% |
 | **Total** | **39** | **100%** |
 
@@ -91,6 +91,6 @@ Items without version targets (rows 19-22) are stable guidance — promote oppor
 
 ## Changelog
 
-- **v1.2.0** — Rows 27-29 promoted from Aspirational to Tested: spec lifecycle states (29 tests), placeholder detection (15 tests), cross-reference consistency (13 tests). 10 enforced, 6 tested, 14 guidance, 9 aspirational.
+- **v1.2.0** — Row 14 promoted from Guidance to Tested: Product Skeptic 5-lens analysis (23 tests). Rows 27-29 promoted from Aspirational to Tested: spec lifecycle states (29 tests), placeholder detection (15 tests), cross-reference consistency (13 tests). 10 enforced, 9 tested, 12 guidance, 8 aspirational.
 - **v1.1.1** — Added row 39: formal architecture verification via Alloy (14 invariant checks, all pass). 10 enforced, 3 tested, 14 guidance, 12 aspirational.
 - **v1.1.1** — Initial published audit. Rows 8-10 promoted from Aspirational to Enforced (staleness, signal cleanup, constitution). 10 enforced, 2 tested, 14 guidance, 12 aspirational.

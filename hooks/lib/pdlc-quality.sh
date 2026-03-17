@@ -1,8 +1,8 @@
 #!/bin/bash
 # hooks/lib/pdlc-quality.sh — Unified spec quality report
 #
-# Runs all quality checks (lifecycle, placeholder, cross-reference)
-# and produces a consolidated report.
+# Runs all quality checks (lifecycle, placeholder, cross-reference,
+# lint, semantic, and Product Skeptic) and produces a consolidated report.
 #
 # Sourced by other scripts: source "$(dirname "$0")/lib/pdlc-quality.sh"
 
@@ -16,6 +16,7 @@ source "${SCRIPT_DIR}/pdlc-placeholder.sh"
 source "${SCRIPT_DIR}/pdlc-xref.sh"
 source "${SCRIPT_DIR}/pdlc-lint.sh"
 source "${SCRIPT_DIR}/pdlc-semantic.sh"
+source "${SCRIPT_DIR}/pdlc-skeptic.sh"
 
 # Run all quality checks and produce unified report
 # Usage: pdlc_quality_report <spec_dir>
@@ -106,6 +107,26 @@ pdlc_quality_report() {
     if echo "$semantic_output" | grep -q "BLOCKER"; then
       overall=1
     fi
+  fi
+  echo ""
+
+  # Section 6: Product Skeptic
+  echo "--- Product Skeptic ---"
+  local spec_file="${spec_dir}/spec.md"
+  local skeptic_output
+  skeptic_output=$(pdlc_skeptic_report "$spec_file" 2>&1) || true
+  if echo "$skeptic_output" | grep -q "INFO:No spec file"; then
+    echo "Status: SKIPPED (no spec.md)"
+  elif echo "$skeptic_output" | grep -q "FAIL:"; then
+    echo "$skeptic_output" | grep -E "^(PASS|WARN|FAIL):" | head -10
+    echo "Status: ISSUES FOUND"
+    overall=1
+  elif echo "$skeptic_output" | grep -q "WARN:"; then
+    echo "$skeptic_output" | grep -E "^(PASS|WARN|FAIL):" | head -10
+    echo "Status: WARNINGS"
+  else
+    echo "$skeptic_output" | grep -E "^PASS:" | head -10
+    echo "Status: CLEAN"
   fi
   echo ""
 
