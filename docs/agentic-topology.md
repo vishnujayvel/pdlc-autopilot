@@ -96,35 +96,45 @@ includes pipeline chaining (specify → plan → tasks → implement),
 multi-agent dispatch (parallel actors), and session lifecycle
 management (outer loop).
 
-**Current state**: Partial.
-- **Multi-session**: `pdlc-outer-loop.sh` handles session cycling
-  with HANDOFF.md state passing.
-- **Within-session**: No deterministic chaining. Skills are invoked
-  manually or via prompt-based meta-skills (unreliable past
-  compaction).
+**Current state**: Working. The Director-driven outer loop implements
+a 5-layer orchestration model:
 
-**The orchestration gap**: The outer loop solves multi-session
-orchestration. But within a session, chaining skill → skill has no
-clean mechanism. The `/loop` skill handles recurring same-task
-execution. What's missing is sequential different-task execution.
+```
+┌─────────────────────────────────────────────┐
+│ Layer 1: State Inference (shell)            │
+│   pdlc_lifecycle_infer() → 7-state machine │
+├─────────────────────────────────────────────┤
+│ Layer 2: Director (LLM judgment)            │
+│   Assess → Decide action + dispatch mode    │
+├─────────────────────────────────────────────┤
+│ Layer 3: Actor (LLM, same or spawned)       │
+│   Executes the Director's crafted prompt    │
+├─────────────────────────────────────────────┤
+│ Layer 4: Critic (LLM)                       │
+│   ADVOCATE + SKEPTIC dual review            │
+├─────────────────────────────────────────────┤
+│ Layer 5: Hooks (shell)                      │
+│   SpecGate, CriticGate, Stop Guard          │
+└─────────────────────────────────────────────┘
+```
 
-**Approaches evaluated** (2026-03-15):
+**Key components**:
+- **Lifecycle inference**: `pdlc_lifecycle_infer(spec_dir)` derives
+  state from artifact presence (Draft→Specified→Planned→Tasked→
+  Implementing→Complete→Archived). No explicit transitions needed.
+- **Director**: LLM reasoning step that reads inferred state +
+  artifacts, produces a dispatch decision (action + mode + rationale
+  + actor prompt). Falls back to deterministic state-to-action
+  mapping when LLM is unavailable.
+- **Dispatch modes**: Same-session (lightweight phases) or spawn
+  (new `claude -p` for heavy implementation). The Director assesses
+  complexity — this is LLM judgment, not a deterministic lookup.
+- **Critic evaluation**: Director evaluates ADVOCATE/SKEPTIC
+  feedback and decides accept, retry (with amended instructions),
+  or escalate (to user, exit code 3).
 
-| Approach | Feasibility | Reliability | Complexity |
-|----------|------------|-------------|------------|
-| Prompt-based meta-skill | High | Medium-High | Low (~50 lines) |
-| Stop hook safety net | Medium | Medium | High (~200 lines) |
-| Hybrid (meta-skill + hook) | High | Highest | Medium (~100 lines) |
-| Shell script orchestration | Low | N/A | N/A (can't do LLM work) |
-| CLAUDE.md instructions | Low | Low | Very Low |
-| Hook-based chaining | Medium | Low-Medium | High |
-
-**Recommended**: Prompt-based meta-skill with optional Stop hook
-safety net.
-
-**PDLC roadmap**: Phase 3 (SDD Primitives v2.0.0) formalizes the
-pipeline. Phase 5 adds DISPATCH.md for multi-agent coordination
-graphs.
+**PDLC roadmap**: Phase 5 adds DISPATCH.md for multi-agent
+coordination graphs and parallel Actor dispatch.
 
 ### Layer 4: Networking
 
@@ -228,15 +238,17 @@ reporting.
 
 Each PDLC evolution phase builds specific layers of this topology:
 
-| Phase | Version | Primary Layers |
-|-------|---------|---------------|
-| 0a (current) | v1.1.1 | Knowledge (formal verification of architecture) |
-| 0 Triage | v1.1.1 | Enforcement (staleness, signals), Observability (maturity audit) |
-| 1 Enforcement Reality | v1.2.0 | Enforcement, Knowledge (freshness, drift detection) |
-| 2 CLI & Visibility | v1.3.0 | Observability (CLI, status, spend tracking) |
-| 3 SDD Primitives | v2.0.0 | Orchestration (pipeline formalization), Knowledge (steering split) |
-| 4 Mode Awareness | v2.1.0 | Scheduling (routing logic), Orchestration (mode-based flow) |
-| 5 Multi-Agent | v3.0.0 | Infrastructure (adapters), Scheduling (model selection), Networking (DISPATCH.md), Orchestration (parallel dispatch) |
+| Phase | Version | Primary Layers | Status |
+|-------|---------|---------------|--------|
+| 0a Formal Verification | v1.1.1 | Knowledge (Alloy architecture verification) | Done |
+| R1 Lifecycle Enforcement | v1.2.0 | Enforcement (lifecycle, placeholders, xref) | Done |
+| R2 Director Orchestration | v1.2.0 | Orchestration (Director-driven outer loop) | Done |
+| R3 Context Freshness | v1.2.0 | Knowledge (freshness checks) | Next |
+| R4 Markdownlint | v1.2.0 | Enforcement (quality gates) | Queued |
+| R5 Architecture Constraints | v1.2.0 | Knowledge (ARCH-* extraction) | Queued |
+| R6-R9 | v1.3.0-2.0.0 | Enforcement, Observability, Knowledge | Queued |
+| R10 CLI & Visibility | v1.3.0 | Observability (CLI, status, spend) | Queued |
+| R11-R12 | v2.1.0-3.0.0 | Scheduling, Infrastructure, Networking | Future |
 
 ## Design Principles
 
