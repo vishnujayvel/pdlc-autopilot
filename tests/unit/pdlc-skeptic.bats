@@ -104,7 +104,7 @@ The system should do something.
 EOF
   run pdlc_skeptic_check_usability "$no_actors"
   [[ "$status" -eq 0 ]]
-  echo "$output" | grep -q "WARN:usability:user stories found but no actor"
+  echo "$output" | grep -q "WARN:usability:user stories found but no actor descriptions (As a/an)"
 }
 
 @test "check_usability: returns INFO for missing spec file" {

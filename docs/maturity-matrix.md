@@ -91,6 +91,6 @@ Items without version targets (rows 19-22) are stable guidance — promote oppor
 
 ## Changelog
 
-- **v1.2.0** — Rows 27-29 promoted from Aspirational to Tested: spec lifecycle states (29 tests), placeholder detection (15 tests), cross-reference consistency (13 tests). 10 enforced, 6 tested, 14 guidance, 9 aspirational.
+- **v1.2.0** — Row 14 promoted from Guidance to Tested: Product Skeptic 5-lens analysis (23 tests). Rows 27-29 promoted from Aspirational to Tested: spec lifecycle states (29 tests), placeholder detection (15 tests), cross-reference consistency (13 tests). 10 enforced, 9 tested, 12 guidance, 8 aspirational.
 - **v1.1.1** — Added row 39: formal architecture verification via Alloy (14 invariant checks, all pass). 10 enforced, 3 tested, 14 guidance, 12 aspirational.
 - **v1.1.1** — Initial published audit. Rows 8-10 promoted from Aspirational to Enforced (staleness, signal cleanup, constitution). 10 enforced, 2 tested, 14 guidance, 12 aspirational.

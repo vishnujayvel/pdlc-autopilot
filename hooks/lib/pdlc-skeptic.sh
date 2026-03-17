@@ -81,7 +81,7 @@ pdlc_skeptic_check_feasibility() {
   fi
 
   local scenario_count
-  scenario_count=$(grep -c "Given.*When.*Then" "$spec_file" 2>/dev/null || echo "0")
+  scenario_count=$(grep -c '\*\*Given\*\*' "$spec_file" 2>/dev/null || echo "0")
   scenario_count="${scenario_count//[[:space:]]/}"
 
   if [[ "$scenario_count" -eq 0 ]]; then
@@ -119,13 +119,13 @@ pdlc_skeptic_check_usability() {
     return 0
   fi
 
-  # Check for actor descriptions ("As a")
+  # Check for actor descriptions ("As a" or "As an")
   local actor_count
-  actor_count=$(grep -c "As a " "$spec_file" 2>/dev/null || echo "0")
+  actor_count=$(grep -cE "As an? " "$spec_file" 2>/dev/null || echo "0")
   actor_count="${actor_count//[[:space:]]/}"
 
   if [[ "$actor_count" -eq 0 ]]; then
-    echo "WARN:usability:user stories found but no actor descriptions (As a)"
+    echo "WARN:usability:user stories found but no actor descriptions (As a/an)"
     return 0
   fi
 

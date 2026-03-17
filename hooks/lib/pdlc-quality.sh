@@ -1,8 +1,8 @@
 #!/bin/bash
 # hooks/lib/pdlc-quality.sh — Unified spec quality report
 #
-# Runs all quality checks (lifecycle, placeholder, cross-reference)
-# and produces a consolidated report.
+# Runs all quality checks (lifecycle, placeholder, cross-reference,
+# lint, semantic, and Product Skeptic) and produces a consolidated report.
 #
 # Sourced by other scripts: source "$(dirname "$0")/lib/pdlc-quality.sh"
 
