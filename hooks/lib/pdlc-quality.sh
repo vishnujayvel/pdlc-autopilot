@@ -79,14 +79,16 @@ pdlc_quality_report() {
   echo "--- Structural Lint ---"
   local lint_output
   lint_output=$(pdlc_lint_check "$spec_dir" 2>&1) || true
-  if [[ -z "$lint_output" ]] || echo "$lint_output" | grep -q "^INFO\|^WARN"; then
+  if [[ -z "$lint_output" ]]; then
+    echo "Status: CLEAN"
+  elif echo "$lint_output" | grep -q "^INFO\|^WARN"; then
     echo "Status: SKIPPED (no lint tool or no artifacts)"
-  elif echo "$lint_output" | grep -qE ":[0-9]+:"; then
+  elif echo "$lint_output" | grep -qE "Lint violations: 0$"; then
+    echo "Status: CLEAN"
+  else
     echo "$lint_output" | head -10
     echo "Status: ISSUES FOUND"
     overall=1
-  else
-    echo "Status: CLEAN"
   fi
   echo ""
 

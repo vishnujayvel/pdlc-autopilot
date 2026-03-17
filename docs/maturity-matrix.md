@@ -45,7 +45,7 @@
 | 27 | Spec lifecycle states | hooks/lib/pdlc-lifecycle.sh | **Tested** | 29 BATS tests | v1.2.0 |
 | 28 | Placeholder detection | hooks/lib/pdlc-placeholder.sh | **Tested** | 15 BATS tests | v1.2.0 |
 | 29 | Cross-reference consistency | hooks/lib/pdlc-xref.sh | **Tested** | 13 BATS tests | v1.2.0 |
-| 30 | Structural lint + semantic validation | hooks/lib/pdlc-lint.sh, pdlc-semantic.sh | **Tested** | 12 BATS tests | v1.2.0 |
+| 30 | Structural lint + semantic validation | hooks/lib/pdlc-lint.sh, hooks/lib/pdlc-semantic.sh | **Tested** | 12 BATS tests | v1.2.0 |
 | 31 | CLI (status/list/inspect/archive) | src/cli.ts (install-only) | Aspirational | — | v1.3.0 |
 | 32 | Mode awareness (pdlc/normal/paused) | — | Aspirational | — | v2.1.0 |
 | 33 | Multi-agent dispatcher | — | Aspirational | — | v3.0.0 |

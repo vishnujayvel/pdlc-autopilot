@@ -1,8 +1,8 @@
 #!/bin/bash
 # hooks/lib/pdlc-semantic.sh — Semantic spec validation
 #
-# LLM-driven validation checking completeness, correctness, coherence.
-# Falls back to deterministic checks (placeholder + xref) when LLM unavailable.
+# Deterministic validation checking completeness and correctness.
+# Coherence (LLM-driven) is a future enhancement — see Dimension 3 note below.
 # Read-only Observer: reports findings, never blocks.
 #
 # Sourced by other scripts: source "$(dirname "$0")/lib/pdlc-semantic.sh"
@@ -29,7 +29,7 @@ PDLC_SEVERITY_MINOR="MINOR"
 # Output: findings as severity:dimension:description lines
 # Returns: 0 always (Observer — never fails)
 pdlc_semantic_validate() {
-  local spec_dir="$1"
+  local spec_dir="${1:-}"
   local findings=""
 
   if [[ ! -d "$spec_dir" ]]; then
@@ -60,19 +60,10 @@ pdlc_semantic_validate() {
     fi
   fi
 
-  # Dimension 3: Coherence — LLM check if available, skip if not
-  if [[ "${PDLC_DIRECTOR_TEST_MODE:-0}" != "1" ]] && command -v claude &>/dev/null; then
-    local spec_file="${spec_dir}/spec.md"
-    local plan_file="${spec_dir}/plan.md"
-    if [[ -f "$spec_file" && -f "$plan_file" ]]; then
-      local prompt="You are a spec quality reviewer. Read these two files and check if the plan's architecture aligns with the spec's entities and requirements. Respond with ONLY 'COHERENT' if aligned, or 'FINDING:severity:description' lines (severity=MAJOR or MINOR) if misaligned. Be concise."
-      local coherence_output
-      coherence_output=$(claude -p "$prompt" --model claude-haiku-4-5-20251001 --max-turns 1 2>/dev/null) || true
-      if echo "$coherence_output" | grep -q "^FINDING:"; then
-        findings="${findings}$(echo "$coherence_output" | grep "^FINDING:" | sed 's/^FINDING://')"$'\n'
-      fi
-    fi
-  fi
+  # Dimension 3: Coherence — future enhancement
+  # NOTE: LLM-based coherence check removed; claude -p cannot read local files
+  # from the prompt alone. Revisit when file content can be injected or when a
+  # deterministic coherence heuristic is available.
 
   # Output findings
   if [[ -n "$findings" ]]; then

@@ -1,7 +1,7 @@
 #!/bin/bash
 # hooks/lib/pdlc-lint.sh — Structural markdown lint wrapper
 #
-# Runs rumdl (or markdownlint-cli2 fallback) against spec artifacts.
+# Runs rumdl (or markdownlint-cli2 / markdownlint fallback) against spec artifacts.
 # Read-only Observer: reports violations, never blocks operations.
 #
 # Sourced by other scripts: source "$(dirname "$0")/lib/pdlc-lint.sh"
@@ -37,7 +37,7 @@ pdlc_lint_available() {
 # Output: violations as file:line:rule:message lines, or empty if clean
 # Returns: 0 always (Observer — never fails)
 pdlc_lint_check() {
-  local spec_dir="$1"
+  local spec_dir="${1:-}"
 
   if [[ ! -d "$spec_dir" ]]; then
     echo "INFO:No spec directory found"

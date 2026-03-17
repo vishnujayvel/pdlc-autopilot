@@ -55,8 +55,8 @@ teardown() {
 }
 
 @test "lint_check: degrades gracefully when no tool installed" {
-  # Override PATH to hide all lint tools
-  PATH="/usr/bin:/bin" run pdlc_lint_check "${FIXTURES_DIR}/clean"
+  # Override PATH to guarantee no lint tool is found
+  PATH="/nonexistent" run pdlc_lint_check "${FIXTURES_DIR}/clean"
   [[ "$status" -eq 0 ]]
 }
 
