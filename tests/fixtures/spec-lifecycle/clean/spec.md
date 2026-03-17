@@ -24,6 +24,11 @@ As a user, I want extended functionality so that I can handle edge cases.
 
 1. **Given** an edge case input, **When** the operation runs, **Then** it handles gracefully
 
+### Edge Cases
+
+- What happens when input is empty? The operation returns an empty result gracefully.
+- What happens when input is malformed? The operation returns an error message.
+
 ## Requirements
 
 ### Functional Requirements
@@ -37,3 +42,8 @@ As a user, I want extended functionality so that I can handle edge cases.
 ### Measurable Outcomes
 
 - **SC-001**: All operations complete in under 1 second
+
+## Assumptions
+
+- The input format is well-documented and stable.
+- The system runs on macOS or Linux.

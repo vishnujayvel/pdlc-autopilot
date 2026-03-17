@@ -29,7 +29,7 @@
 | 11 | Outer loop orchestration (Director-driven) | hooks/pdlc-outer-loop.sh, hooks/lib/pdlc-director.sh | **Tested** | 27 Director + 9 outer-loop tests | v1.2.0 |
 | 12 | HANDOFF.md state persistence | hooks/lib/pdlc-state.sh | **Tested** | pdlc-state.sh | v1.0.0 |
 | 13 | Dual-perspective validation (ADVOCATE + SKEPTIC) | SKILL.md | Guidance | — | — |
-| 14 | Product Skeptic (5-lens analysis) | SKILL.md, ref/product-skeptic.md | Guidance | — | v1.2.0 |
+| 14 | Product Skeptic (5-lens analysis) | hooks/lib/pdlc-skeptic.sh | **Tested** | 23 BATS tests | v1.2.0 |
 | 15 | T-Mode parallel strategies (S1-S5) | SKILL.md, ref/t-mode-strategies.md | Guidance | — | v3.0.0 |
 | 16 | Phase visualization | SKILL.md, ref/phase-viz.md | Guidance | — | v1.3.0 |
 | 17 | Context freshness checks | hooks/lib/pdlc-freshness.sh | **Tested** | 11 BATS tests | v1.2.0 |
@@ -61,8 +61,8 @@
 | Level | Count | Percentage |
 |-------|-------|------------|
 | Enforced | 10 | 26% |
-| Tested | 8 | 21% |
-| Guidance | 13 | 33% |
+| Tested | 9 | 23% |
+| Guidance | 12 | 31% |
 | Aspirational | 8 | 21% |
 | **Total** | **39** | **100%** |
 
