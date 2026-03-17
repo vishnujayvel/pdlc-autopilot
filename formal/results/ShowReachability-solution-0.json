@@ -1,0 +1,378 @@
+{
+  "duration":31,
+  "incremental":true,
+  "instances":[
+    {
+      "messages":[
+        
+      ],
+      "skolems":{
+        "$ShowReachability_s1":{
+          "arity":1,
+          "data":[
+            [
+              "Draft$0"
+            ]
+          ]
+        },
+        "$ShowReachability_s2":{
+          "arity":1,
+          "data":[
+            [
+              "Specified$0"
+            ]
+          ]
+        },
+        "$ShowReachability_s3":{
+          "arity":1,
+          "data":[
+            [
+              "Planned$0"
+            ]
+          ]
+        },
+        "$ShowReachability_s4":{
+          "arity":1,
+          "data":[
+            [
+              "Tasked$0"
+            ]
+          ]
+        },
+        "$ShowReachability_s5":{
+          "arity":1,
+          "data":[
+            [
+              "Implementing$0"
+            ]
+          ]
+        },
+        "$ShowReachability_s6":{
+          "arity":1,
+          "data":[
+            [
+              "Complete$0"
+            ]
+          ]
+        },
+        "$ShowReachability_s7":{
+          "arity":1,
+          "data":[
+            [
+              "Archived$0"
+            ]
+          ]
+        }
+      },
+      "state":0,
+      "values":{
+        "0":{
+          
+        },
+        "1":{
+          
+        },
+        "2":{
+          
+        },
+        "3":{
+          
+        },
+        "4":{
+          
+        },
+        "5":{
+          
+        },
+        "6":{
+          
+        },
+        "Annotation$6":{
+          "content":[
+            
+          ]
+        },
+        "Annotations$0":{
+          
+        },
+        "Archived$0":{
+          
+        },
+        "Artifact$6":{
+          "modifies":[
+            
+          ],
+          "layer":[
+            
+          ]
+        },
+        "Backward$0":{
+          
+        },
+        "Bloat$0":{
+          
+        },
+        "CodeAhead$0":{
+          
+        },
+        "Complete$0":{
+          
+        },
+        "Conflict$0":{
+          
+        },
+        "DISPATCH$0":{
+          
+        },
+        "Draft$0":{
+          
+        },
+        "Drift$0":{
+          
+        },
+        "DriftHealth$0":{
+          
+        },
+        "Engine$0":{
+          
+        },
+        "False$0":{
+          
+        },
+        "Forward$0":{
+          
+        },
+        "Freshness$0":{
+          
+        },
+        "Gate$0":{
+          
+        },
+        "Guard$0":{
+          
+        },
+        "HANDOFF$0":{
+          
+        },
+        "HealthCheck$6":{
+          "isReadOnly":[
+            
+          ],
+          "dimension":[
+            
+          ]
+        },
+        "Hook$5":{
+          "canBlock":[
+            
+          ],
+          "writesState":[
+            
+          ],
+          "category":[
+            
+          ],
+          "externalEffects":[
+            
+          ]
+        },
+        "Hook$6":{
+          "canBlock":[
+            
+          ],
+          "writesState":[
+            
+          ],
+          "category":[
+            
+          ],
+          "externalEffects":[
+            
+          ]
+        },
+        "Implementing$0":{
+          
+        },
+        "Library$0":{
+          
+        },
+        "Mutator$0":{
+          
+        },
+        "Observer$0":{
+          
+        },
+        "Orphaning$0":{
+          
+        },
+        "Planned$0":{
+          
+        },
+        "Reactor$0":{
+          
+        },
+        "Shared$0":{
+          
+        },
+        "Spec$0":{
+          
+        },
+        "SpecAhead$0":{
+          
+        },
+        "SpecEntity$6":{
+          "lifecycle":[
+            
+          ],
+          "scope":[
+            
+          ]
+        },
+        "Specified$0":{
+          
+        },
+        "Steering$0":{
+          
+        },
+        "Tasked$0":{
+          
+        },
+        "True$0":{
+          
+        },
+        "Working$0":{
+          
+        },
+        "open$3/Ord$0":{
+          "Next":[
+            [
+              "Draft$0",
+              "Specified$0"
+            ],
+            [
+              "Specified$0",
+              "Planned$0"
+            ],
+            [
+              "Planned$0",
+              "Tasked$0"
+            ],
+            [
+              "Tasked$0",
+              "Implementing$0"
+            ],
+            [
+              "Implementing$0",
+              "Complete$0"
+            ],
+            [
+              "Complete$0",
+              "Archived$0"
+            ]
+          ],
+          "First":[
+            [
+              "Draft$0"
+            ]
+          ]
+        },
+        "open$4/Ord$0":{
+          "Next":[
+            [
+              "Library$0",
+              "Steering$0"
+            ],
+            [
+              "Steering$0",
+              "Spec$0"
+            ],
+            [
+              "Spec$0",
+              "Engine$0"
+            ]
+          ],
+          "First":[
+            [
+              "Library$0"
+            ]
+          ]
+        },
+        "open$5/Ord$0":{
+          "Next":[
+            [
+              "SpecAhead$0",
+              "CodeAhead$0"
+            ],
+            [
+              "CodeAhead$0",
+              "Conflict$0"
+            ]
+          ],
+          "First":[
+            [
+              "SpecAhead$0"
+            ]
+          ]
+        },
+        "open$6/Ord$0":{
+          "Next":[
+            [
+              "Forward$0",
+              "Backward$0"
+            ],
+            [
+              "Backward$0",
+              "Drift$0"
+            ]
+          ],
+          "First":[
+            [
+              "Forward$0"
+            ]
+          ]
+        },
+        "open$7/Ord$0":{
+          "Next":[
+            [
+              "Freshness$0",
+              "DriftHealth$0"
+            ],
+            [
+              "DriftHealth$0",
+              "Bloat$0"
+            ],
+            [
+              "Bloat$0",
+              "Orphaning$0"
+            ]
+          ],
+          "First":[
+            [
+              "Freshness$0"
+            ]
+          ]
+        },
+        "ordering/Ord$0":{
+          "Next":[
+            [
+              "True$0",
+              "False$0"
+            ]
+          ],
+          "First":[
+            [
+              "True$0"
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "localtime":"2026-03-15T18:13:14.126947",
+  "loopstate":-1,
+  "sigs":{
+    
+  },
+  "timezone":"America/Los_Angeles",
+  "utctime":1773623594126
+}
