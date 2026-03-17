@@ -1,0 +1,153 @@
+// PDLC Autopilot — Component Level
+// Last Updated: 2026-03-17
+
+model {
+  // ═══════════════════════════════════════════════════════════
+  // Level 3: Components (within Library Modules)
+  // ═══════════════════════════════════════════════════════════
+
+  extend pdlc.libraryModules {
+    component stateLib 'pdlc-state.sh' {
+      #core
+      description 'State management — get/set HANDOFF fields, atomic writes, mtime helper, task counting'
+      technology 'Bash'
+    }
+
+    component directorLib 'pdlc-director.sh' {
+      #core
+      description 'Director decision engine — prompt construction, JSON response parsing, dispatch decisions, Critic evaluation'
+      technology 'Bash'
+    }
+
+    component lifecycleLib 'pdlc-lifecycle.sh' {
+      #core
+      description 'Lifecycle state machine — 7 states, valid transitions, artifact-based inference'
+      technology 'Bash'
+    }
+
+    component placeholderLib 'pdlc-placeholder.sh' {
+      #quality
+      description 'Placeholder detection — scans for template markers, NEEDS CLARIFICATION, ACTION REQUIRED'
+      technology 'Bash'
+    }
+
+    component xrefLib 'pdlc-xref.sh' {
+      #quality
+      description 'Cross-reference consistency — FR/US ID coverage between spec and tasks'
+      technology 'Bash'
+    }
+
+    component qualityLib 'pdlc-quality.sh' {
+      #quality
+      description 'Unified quality report — consolidates lifecycle, placeholder, xref, lint, semantic checks'
+      technology 'Bash'
+    }
+
+    component freshnessLib 'pdlc-freshness.sh' {
+      #observer
+      description 'Context freshness — spec-embedded dates, session staleness, drift detection'
+      technology 'Bash'
+    }
+
+    component lintLib 'pdlc-lint.sh' {
+      #quality
+      description 'Structural lint wrapper — rumdl/markdownlint with graceful degradation'
+      technology 'Bash'
+    }
+
+    component semanticLib 'pdlc-semantic.sh' {
+      #quality
+      description 'Semantic validation — completeness, correctness, coherence with severity levels'
+      technology 'Bash'
+    }
+
+    // Component dependencies
+    directorLib -> stateLib 'reads HANDOFF fields'
+    directorLib -> lifecycleLib 'infers lifecycle state'
+    directorLib -> freshnessLib 'checks context freshness'
+
+    lifecycleLib -> stateLib 'reads/writes spec_lifecycle'
+    lifecycleLib -> placeholderLib 'Draft vs Specified distinction'
+
+    qualityLib -> lifecycleLib 'validates lifecycle state'
+    qualityLib -> placeholderLib 'runs placeholder detection'
+    qualityLib -> xrefLib 'runs cross-reference checking'
+    qualityLib -> lintLib 'runs structural lint'
+    qualityLib -> semanticLib 'runs semantic validation'
+
+    freshnessLib -> stateLib 'reads last_session_date'
+    semanticLib -> placeholderLib 'correctness checks'
+    semanticLib -> xrefLib 'completeness checks'
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Level 3: Components (within Hook Scripts)
+  // ═══════════════════════════════════════════════════════════
+
+  // Hook categories follow Alloy-verified behavioral contracts:
+  //   Gate:     canBlock=True,  writesState=False, externalEffects=False
+  //   Guard:    canBlock=True,  writesState=False, externalEffects=False
+  //   Observer: canBlock=False, writesState=False, externalEffects=False
+  //   Mutator:  canBlock=False, writesState=True,  externalEffects=False
+  //   Reactor:  canBlock=False, writesState=False, externalEffects=True
+
+  extend pdlc.hookScripts {
+    // --- Gates (block operations, read-only, no side effects) ---
+
+    component specGate 'SpecGate' {
+      #enforcement
+      description 'Gate: blocks spec generation via Task tool — requires Kiro skills. canBlock=True, writesState=False'
+      technology 'Bash (spec-gate.sh)'
+    }
+
+    component criticGate 'CriticGate' {
+      #enforcement
+      description 'Gate: blocks Actor dispatch without prior Critic review. canBlock=True, writesState=False'
+      technology 'Bash (critic-gate.sh)'
+    }
+
+    // --- Guards (block on thresholds, read-only, no side effects) ---
+
+    component stopGuard 'Stop Guard' {
+      #enforcement
+      description 'Guard: blocks exit when incomplete tasks remain (unless spec is stale). canBlock=True, writesState=False'
+      technology 'Bash (pdlc-stop-check.sh)'
+    }
+
+    // --- Observers (never block, never write, no side effects) ---
+
+    component sessionInit 'Session Init' {
+      #observer
+      description 'Observer: loads HANDOFF.md state into session context on startup. canBlock=False, writesState=False'
+      technology 'Bash (session-init.sh)'
+    }
+
+    // --- Mutators (never block, write state, no external effects) ---
+
+    component compactSave 'Compact Save' {
+      #core
+      description 'Mutator: saves .compact_marker before context compaction. canBlock=False, writesState=True'
+      technology 'Bash (pre-compact-save.sh)'
+    }
+
+    // --- Reactors (never block, no state writes, external side effects) ---
+
+    component compactRestore 'Compact Restore' {
+      #core
+      description 'Reactor: restores state after compaction via stdout injection. canBlock=False, externalEffects=True'
+      technology 'Bash (post-compact-restore.sh)'
+    }
+
+    component autoLint 'Auto-Lint' {
+      #quality
+      description 'Reactor: runs formatter on Write/Edit (prettier/ruff/gofmt/rustfmt). canBlock=False, externalEffects=True'
+      technology 'Bash (post-edit-lint.sh)'
+    }
+
+    component autoTest 'Auto-Test' {
+      #quality
+      description 'Reactor: runs related tests on Write/Edit (vitest/jest/pytest/go/cargo). canBlock=False, externalEffects=True'
+      technology 'Bash (post-edit-test.sh)'
+    }
+  }
+}
