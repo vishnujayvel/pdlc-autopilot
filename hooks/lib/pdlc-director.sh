@@ -21,6 +21,9 @@ DIRECTOR_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if ! declare -f pdlc_lifecycle_infer &>/dev/null; then
   source "${DIRECTOR_LIB_DIR}/pdlc-lifecycle.sh"
 fi
+if ! declare -f pdlc_freshness_report &>/dev/null; then
+  source "${DIRECTOR_LIB_DIR}/pdlc-freshness.sh"
+fi
 
 # Valid Director actions
 PDLC_DIRECTOR_ACTIONS=(specify plan generate-tasks implement review archive)
@@ -80,6 +83,9 @@ You are the PDLC Director. Assess the current state and decide what to do next.
 - Tasks: ${task_total} total, ${task_done} done, ${task_pending} pending
 - Budget: \$${total_cost} spent of \$${max_cost} max (${session_count} sessions)
 - Retry count: ${retry_count}
+
+## Context Freshness
+$(pdlc_freshness_report "$spec_dir" 2>/dev/null || echo "Freshness check unavailable")
 
 ## Dispatch Heuristics (guidance, not rules)
 - Phases before Implementing (specify, plan, generate-tasks) are typically same-session

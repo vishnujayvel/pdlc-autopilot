@@ -32,7 +32,7 @@
 | 14 | Product Skeptic (5-lens analysis) | SKILL.md, ref/product-skeptic.md | Guidance | — | v1.2.0 |
 | 15 | T-Mode parallel strategies (S1-S5) | SKILL.md, ref/t-mode-strategies.md | Guidance | — | v3.0.0 |
 | 16 | Phase visualization | SKILL.md, ref/phase-viz.md | Guidance | — | v1.3.0 |
-| 17 | Context freshness checks | SKILL.md, ref/context-health.md | Guidance | — | v1.2.0 |
+| 17 | Context freshness checks | hooks/lib/pdlc-freshness.sh | **Tested** | 11 BATS tests | v1.2.0 |
 | 18 | Decision logging | SKILL.md, ref/context-health.md | Guidance | — | v2.0.0 |
 | 19 | Three workflow paths (Full/Bug/Iteration) | SKILL.md, ref/lightweight-paths.md | Guidance | — | — |
 | 20 | Product Context (Phase P0) | SKILL.md, ref/product-context-template.md | Guidance | — | — |
@@ -61,8 +61,8 @@
 | Level | Count | Percentage |
 |-------|-------|------------|
 | Enforced | 10 | 26% |
-| Tested | 6 | 15% |
-| Guidance | 14 | 36% |
+| Tested | 7 | 18% |
+| Guidance | 13 | 33% |
 | Aspirational | 9 | 23% |
 | **Total** | **39** | **100%** |
 

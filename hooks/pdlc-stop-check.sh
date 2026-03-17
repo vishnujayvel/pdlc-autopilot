@@ -111,14 +111,9 @@ count_pending_tasks() {
 }
 
 # --- File modification time (cross-platform) ---
-# Returns epoch seconds of the file's last modification time.
+# Delegate to shared pdlc_get_mtime in pdlc-state.sh
 get_mtime() {
-  local file="$1"
-  # macOS uses stat -f %m, Linux uses stat -c %Y
-  if stat -f %m "$file" 2>/dev/null; then
-    return 0
-  fi
-  stat -c %Y "$file" 2>/dev/null
+  pdlc_get_mtime "$1"
 }
 
 # --- Staleness check ---
