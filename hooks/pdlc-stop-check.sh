@@ -61,6 +61,9 @@ set -eo pipefail
 # and can cause non-zero exit, violating the fail-open guarantee.
 trap 'exit 0' ERR
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/lib/pdlc-state.sh"
+
 # Bypass for PDLC self-development (bootstrapping circularity)
 if [[ "${PDLC_DISABLED:-0}" == "1" ]]; then
   exit 0
@@ -111,14 +114,9 @@ count_pending_tasks() {
 }
 
 # --- File modification time (cross-platform) ---
-# Returns epoch seconds of the file's last modification time.
+# Delegate to shared pdlc_get_mtime in pdlc-state.sh
 get_mtime() {
-  local file="$1"
-  # macOS uses stat -f %m, Linux uses stat -c %Y
-  if stat -f %m "$file" 2>/dev/null; then
-    return 0
-  fi
-  stat -c %Y "$file" 2>/dev/null
+  pdlc_get_mtime "$1"
 }
 
 # --- Staleness check ---

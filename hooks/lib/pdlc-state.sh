@@ -168,3 +168,19 @@ pdlc_count_tasks() {
     *) echo "$total" ;;
   esac
 }
+
+# Get file modification time as epoch seconds (cross-platform)
+# Usage: pdlc_get_mtime <file>
+# Returns epoch seconds on stdout, empty string if file missing
+pdlc_get_mtime() {
+  local file="$1"
+  if [[ ! -f "$file" ]]; then
+    echo ""
+    return 0
+  fi
+  # macOS uses stat -f %m, Linux uses stat -c %Y
+  if stat -f %m "$file" 2>/dev/null; then
+    return 0
+  fi
+  stat -c %Y "$file" 2>/dev/null
+}
