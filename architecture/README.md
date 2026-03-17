@@ -37,6 +37,7 @@ npx likec4 mcp architecture/
 ```
 
 Add to `.claude/settings.json`:
+
 ```json
 {
   "mcpServers": {

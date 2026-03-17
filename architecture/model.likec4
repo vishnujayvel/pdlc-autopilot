@@ -49,7 +49,7 @@ model {
 
     container hookScripts 'Hook Scripts' {
       #enforcement
-      description 'Claude Code hooks — gates, guards, observers that enforce process invariants'
+      description 'Claude Code hooks — gates, guards, observers, mutators, reactors that enforce process invariants'
       technology 'Bash (hooks/*.sh)'
     }
 

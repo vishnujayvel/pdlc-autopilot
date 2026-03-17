@@ -84,7 +84,7 @@ session_count: 3" ""
 # ──────────────────────────────────────────────────────────
 
 @test "director_architecture_context: returns info when model exists" {
-  run pdlc_director_architecture_context
+  run pdlc_director_architecture_context "${REPO_DIR}"
   [[ "$status" -eq 0 ]]
   # Should mention containers and components if architecture/ exists in repo
   if [[ -f "${REPO_DIR}/architecture/model.likec4" ]]; then
