@@ -61,6 +61,9 @@ set -eo pipefail
 # and can cause non-zero exit, violating the fail-open guarantee.
 trap 'exit 0' ERR
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/lib/pdlc-state.sh"
+
 # Bypass for PDLC self-development (bootstrapping circularity)
 if [[ "${PDLC_DISABLED:-0}" == "1" ]]; then
   exit 0

@@ -21,7 +21,10 @@ fi
 PDLC_FRESHNESS_THRESHOLD_DAYS="${PDLC_FRESHNESS_THRESHOLD_DAYS:-7}"
 
 # Source directories to compare against for drift detection
-PDLC_SOURCE_DIRS=(hooks/ src/ tests/)
+# Override via env: PDLC_SOURCE_DIRS="hooks/ src/ tests/ lib/"
+if [[ -z "${PDLC_SOURCE_DIRS+x}" ]]; then
+  PDLC_SOURCE_DIRS=(hooks/ src/ tests/)
+fi
 
 # Extract a date from a spec file's header fields
 # Looks for patterns like: **Created**: 2026-03-16 or **Last Updated**: 2026-03-17

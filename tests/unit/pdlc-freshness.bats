@@ -10,6 +10,10 @@ setup() {
   PDLC_HANDOFF="${PDLC_STATE_DIR}/HANDOFF.md"
 }
 
+teardown() {
+  rm -rf "${TEST_WORK_DIR}"
+}
+
 # ──────────────────────────────────────────────────────────
 # pdlc_freshness_extract_date
 # ──────────────────────────────────────────────────────────
