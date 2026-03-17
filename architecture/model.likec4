@@ -83,6 +83,9 @@ model {
     outerLoop -> libraryModules 'sources shared functions'
     outerLoop -> handoff 'reads/writes session state'
     outerLoop -> claudeCode 'launches Actor sessions via claude -p'
+
+    // Explicit outer loop → library component dependencies
+    // (outerLoop sources pdlc-director.sh and pdlc-lifecycle.sh directly)
     hookScripts -> libraryModules 'sources shared functions'
     hookScripts -> handoff 'reads state for gate decisions'
     testSuite -> hookScripts 'tests hook behavior'
