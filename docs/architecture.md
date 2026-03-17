@@ -254,9 +254,9 @@ flowchart LR
 
 Sequence: (1) Requirements ADVOCATE + SKEPTIC + Product Skeptic run in parallel. (2) Gap analysis via `kiro:validate-gap` (non-blocking). (3) Design validation via `kiro:validate-design` (GO/NO-GO). (4) Tasks ADVOCATE + SKEPTIC in parallel.
 
-### Product Skeptic: 4-Lens Analysis
+### Product Skeptic: 5-Lens Analysis
 
-Checks spec alignment against `product-context.md` through four lenses:
+Checks spec alignment against `product-context.md` through five lenses:
 
 | Lens | Question | Red Flags |
 |------|----------|-----------|
@@ -264,6 +264,7 @@ Checks spec alignment against `product-context.md` through four lenses:
 | **Audience Alignment** | Serves target persona? | Enterprise features in a personal tool |
 | **MVP Hydration** | V1 Core scope? | Layer 2/3 features creeping in |
 | **Kill Criteria** | Kill criterion triggered? | Building for a dead product |
+| **Output Contract Consistency** | Output format clear to consumers? | Vague output specs, consumer expectation mismatch |
 
 Verdicts: `APPROVE` (proceed), `SCOPE` (cut bloat, then proceed), `KILL` (block; user can override). Scrutiny scales with tier -- light for Tier 0 Personal, strict for Tier 2 Enterprise.
 

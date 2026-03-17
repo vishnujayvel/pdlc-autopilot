@@ -2,6 +2,8 @@ node_modules/
 dist/
 .DS_Store
 .claude/specs/
+.claude/settings.json
+.claude/worktrees/
 *.tgz
 
 # Playwright MCP screenshots
@@ -10,3 +12,20 @@ dist/
 # Excalidraw logs
 excalidraw.log
 .local/
+
+# PDLC runtime state (keep .gitkeep tracked)
+.pdlc/state/*
+!.pdlc/state/.gitkeep
+
+# direnv (contains developer-local env vars like PDLC_DISABLED)
+.envrc
+
+# Marketing content (not for GitHub)
+marketing/
+
+# Internal development process (Spec Kit governance — not part of PDLC product)
+.claude/commands/speckit.*.md
+.claude/product-context.md
+.specify/
+specs/
+docs/plans/
