@@ -74,8 +74,8 @@ Prioritized implementation order. Each item is a candidate for a Spec Kit featur
 | Order | Rows | Theme | Rationale |
 |-------|------|-------|-----------|
 | **R1** | 27, 28, 29 | Spec lifecycle enforcement | ✅ DONE. Alloy-verified state machine implemented as code. 63 new tests. |
-| **R2** | 11, 27 | Director + lifecycle orchestration | Core product: LLM-driven Director that assesses state, dispatches Actors (same session or spawn), evaluates Critic feedback, adapts strategy. Builds on R1 lifecycle inference. This IS the product. |
-| **R3** | 17 | Context freshness checks | Practical guard against stale-context bugs. Builds on session state (rows 4-5). |
+| **R2** | 11, 27 | Director + lifecycle orchestration | ✅ DONE. LLM-driven Director: infer → decide → dispatch → evaluate. 36 new tests. |
+| **R3** | 17 | Context freshness checks | ✅ DONE. Spec-embedded dates + mtime fallback for staleness detection. 11 new tests. Rework pending: switch from mtime to date fields. |
 | **R4** | 30 | Markdownlint integration | Quick win. Tooling-only, no hook logic. Enables quality gates for R1 output. |
 | **R5** | 25 | Architecture constraint extraction | ARCH-* pattern extracts constraints from specs. Feeds into cross-ref consistency (R1). |
 | **R6** | 14 | Product Skeptic enforcement | Move 5-lens analysis from prompt-only to code-enforced. Higher effort, high value. |
@@ -85,6 +85,7 @@ Prioritized implementation order. Each item is a candidate for a Spec Kit featur
 | **R10** | 18, 37, 38 | Decision logging, steering split, ADR | v2.0.0 scope. Architectural decisions infrastructure. |
 | **R11** | 31, 16, 32 | CLI, phase visualization, mode awareness | v1.3.0-v2.1.0 scope. User-facing tooling. |
 | **R12** | 33, 34, 35, 36 | Multi-agent, adapters, worktrees, adversarial critics | v3.0.0 scope. Major architecture expansion. |
+| **R13** | — | Delta-merge (spec promotion) | OpenSpec-style: promote working spec findings into canonical docs on feature completion. New capability, not in matrix yet. |
 
 Items without version targets (rows 19-22) are stable guidance — promote opportunistically when touched.
 
