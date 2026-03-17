@@ -47,6 +47,33 @@ pdlc_director_validate_action() {
   return 1
 }
 
+# Get architecture context from LikeC4 model (if available)
+# Usage: pdlc_director_architecture_context
+# Output: brief architecture summary or "not available"
+# Returns: 0 always (Observer — never fails)
+pdlc_director_architecture_context() {
+  local arch_dir="architecture"
+
+  # Check if architecture model exists
+  if [[ ! -f "${arch_dir}/model.likec4" ]]; then
+    echo "No architecture model found"
+    return 0
+  fi
+
+  # Count elements in the model
+  local containers components
+  containers=$(grep -c "container " "${arch_dir}/model.likec4" 2>/dev/null || echo "0")
+  containers="${containers//[[:space:]]/}"
+  components=$(grep -c "component " "${arch_dir}/components.likec4" 2>/dev/null || echo "0")
+  components="${components//[[:space:]]/}"
+
+  echo "Architecture model: ${containers} containers, ${components} components"
+  echo "Key containers: Outer Loop, Hook Scripts, Library Modules, Test Suite"
+  echo "Director dependencies: lifecycle, freshness, state"
+
+  return 0
+}
+
 # Build the Director prompt for the LLM reasoning step
 # Usage: pdlc_director_build_prompt <spec_dir> <inferred_state>
 # Output: the constructed prompt string to stdout
@@ -86,6 +113,9 @@ You are the PDLC Director. Assess the current state and decide what to do next.
 
 ## Context Freshness
 $(pdlc_freshness_report "$spec_dir" 2>/dev/null || echo "Freshness check unavailable")
+
+## Architecture Context
+$(pdlc_director_architecture_context 2>/dev/null || echo "Architecture context unavailable")
 
 ## Dispatch Heuristics (guidance, not rules)
 - Phases before Implementing (specify, plan, generate-tasks) are typically same-session

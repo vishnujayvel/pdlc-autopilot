@@ -80,6 +80,30 @@ session_count: 3" ""
 }
 
 # ──────────────────────────────────────────────────────────
+# pdlc_director_architecture_context
+# ──────────────────────────────────────────────────────────
+
+@test "director_architecture_context: returns info when model exists" {
+  run pdlc_director_architecture_context
+  [[ "$status" -eq 0 ]]
+  # Should mention containers and components if architecture/ exists in repo
+  if [[ -f "${REPO_DIR}/architecture/model.likec4" ]]; then
+    echo "$output" | grep -q "containers"
+  else
+    echo "$output" | grep -q "No architecture model"
+  fi
+}
+
+@test "director_build_prompt: includes architecture context" {
+  mkdir -p "${PDLC_STATE_DIR}"
+  pdlc_write_handoff "total_cost_usd: 0.00
+session_count: 0" ""
+  run pdlc_director_build_prompt "${FIXTURES_DIR}/clean" "Tasked"
+  [[ "$status" -eq 0 ]]
+  echo "$output" | grep -qi "architecture"
+}
+
+# ──────────────────────────────────────────────────────────
 # pdlc_director_parse_response
 # ──────────────────────────────────────────────────────────
 
