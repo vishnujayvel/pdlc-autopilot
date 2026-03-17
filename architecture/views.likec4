@@ -1,0 +1,98 @@
+// PDLC Autopilot — C4 Views
+// Last Updated: 2026-03-17
+
+views {
+  // ═══════════════════════════════════════════════════════════
+  // Level 1: System Context View
+  // ═══════════════════════════════════════════════════════════
+
+  view context of pdlc {
+    title 'PDLC Autopilot — System Context'
+    description 'How PDLC Autopilot fits in the development ecosystem'
+
+    include
+      developer,
+      pdlc,
+      claudeCode,
+      gitHub,
+      developer -> pdlc,
+      developer -> gitHub,
+      pdlc -> claudeCode,
+      pdlc -> gitHub,
+      claudeCode -> pdlc
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Level 2: Container View
+  // ═══════════════════════════════════════════════════════════
+
+  view containers of pdlc {
+    title 'PDLC Autopilot — Containers'
+    description 'The major runtime components of PDLC Autopilot'
+
+    include
+      pdlc.outerLoop,
+      pdlc.hookScripts,
+      pdlc.libraryModules,
+      pdlc.testSuite,
+      pdlc.formalVerification,
+      pdlc.handoff,
+      pdlc.architectureModel,
+      claudeCode,
+      pdlc.outerLoop -> pdlc.libraryModules,
+      pdlc.outerLoop -> pdlc.handoff,
+      pdlc.outerLoop -> claudeCode,
+      pdlc.hookScripts -> pdlc.libraryModules,
+      pdlc.hookScripts -> pdlc.handoff,
+      pdlc.testSuite -> pdlc.hookScripts,
+      pdlc.testSuite -> pdlc.libraryModules
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Level 3: Component View — Library Modules
+  // ═══════════════════════════════════════════════════════════
+
+  view libraryComponents of pdlc.libraryModules {
+    title 'Library Modules — Components'
+    description 'Shared shell functions: state, Director, lifecycle, quality checks'
+
+    include
+      pdlc.libraryModules.*,
+      pdlc.libraryModules.directorLib -> pdlc.libraryModules.stateLib,
+      pdlc.libraryModules.directorLib -> pdlc.libraryModules.lifecycleLib,
+      pdlc.libraryModules.directorLib -> pdlc.libraryModules.freshnessLib,
+      pdlc.libraryModules.lifecycleLib -> pdlc.libraryModules.stateLib,
+      pdlc.libraryModules.lifecycleLib -> pdlc.libraryModules.placeholderLib,
+      pdlc.libraryModules.qualityLib -> pdlc.libraryModules.lifecycleLib,
+      pdlc.libraryModules.qualityLib -> pdlc.libraryModules.placeholderLib,
+      pdlc.libraryModules.qualityLib -> pdlc.libraryModules.xrefLib,
+      pdlc.libraryModules.qualityLib -> pdlc.libraryModules.lintLib,
+      pdlc.libraryModules.qualityLib -> pdlc.libraryModules.semanticLib
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Level 3: Component View — Hook Scripts
+  // ═══════════════════════════════════════════════════════════
+
+  view hookComponents of pdlc.hookScripts {
+    title 'Hook Scripts — Components'
+    description 'Enforcement gates, guards, and observers'
+
+    include
+      pdlc.hookScripts.*
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Dynamic View: Director Loop
+  // ═══════════════════════════════════════════════════════════
+
+  dynamic view directorLoop {
+    title 'Director Decision Loop'
+    description 'The 4-step autonomous loop: infer → decide → dispatch → evaluate'
+
+    pdlc.outerLoop -> pdlc.libraryModules.lifecycleLib 'Step 1: Infer lifecycle state from artifacts'
+    pdlc.outerLoop -> pdlc.libraryModules.directorLib 'Step 2: Director decides action + dispatch mode'
+    pdlc.outerLoop -> claudeCode 'Step 3: Dispatch Actor session'
+    pdlc.outerLoop -> pdlc.libraryModules.directorLib 'Step 4: Evaluate Critic feedback (accept/retry/escalate)'
+  }
+}

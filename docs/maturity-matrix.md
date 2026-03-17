@@ -76,8 +76,8 @@ Prioritized implementation order. Each item is a candidate for a Spec Kit featur
 | **R1** | 27, 28, 29 | Spec lifecycle enforcement | ✅ DONE. Alloy-verified state machine implemented as code. 63 new tests. |
 | **R2** | 11, 27 | Director + lifecycle orchestration | ✅ DONE. LLM-driven Director: infer → decide → dispatch → evaluate. 36 new tests. |
 | **R3** | 17 | Context freshness checks | ✅ DONE. Spec-embedded dates + mtime fallback for staleness detection. 11 new tests. Rework pending: switch from mtime to date fields. |
-| **R4** | 30 | Markdownlint integration | Quick win. Tooling-only, no hook logic. Enables quality gates for R1 output. |
-| **R5** | 25 | Architecture constraint extraction | ARCH-* pattern extracts constraints from specs. Feeds into cross-ref consistency (R1). |
+| **R4** | 30 | Structural lint + semantic validation | ✅ DONE. Two-layer quality: rumdl wrapper + LLM semantic checks. 12 new tests. |
+| **R5** | — | C4 architecture model (LikeC4) | Formal C4 model with native MCP server. Replaces original ARCH-* extraction. Director queries architecture for dispatch decisions. |
 | **R6** | 14 | Product Skeptic enforcement | Move 5-lens analysis from prompt-only to code-enforced. Higher effort, high value. |
 | **R7** | 23, 24 | Test strategy + PR review cycle | Phase 0.75 and Phase 5 workflows. Currently guidance-only. |
 | **R8** | 13 | Dual-perspective validation | ADVOCATE + SKEPTIC pattern. Requires Product Skeptic (R6) first. |

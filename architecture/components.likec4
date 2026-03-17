@@ -1,0 +1,123 @@
+// PDLC Autopilot — Component Level
+// Last Updated: 2026-03-17
+
+model {
+  // ═══════════════════════════════════════════════════════════
+  // Level 3: Components (within Library Modules)
+  // ═══════════════════════════════════════════════════════════
+
+  extend pdlc.libraryModules {
+    component stateLib 'pdlc-state.sh' {
+      #core
+      description 'State management — get/set HANDOFF fields, atomic writes, mtime helper, task counting'
+      technology 'Bash'
+    }
+
+    component directorLib 'pdlc-director.sh' {
+      #core
+      description 'Director decision engine — prompt construction, JSON response parsing, dispatch decisions, Critic evaluation'
+      technology 'Bash'
+    }
+
+    component lifecycleLib 'pdlc-lifecycle.sh' {
+      #core
+      description 'Lifecycle state machine — 7 states, valid transitions, artifact-based inference'
+      technology 'Bash'
+    }
+
+    component placeholderLib 'pdlc-placeholder.sh' {
+      #quality
+      description 'Placeholder detection — scans for template markers, NEEDS CLARIFICATION, ACTION REQUIRED'
+      technology 'Bash'
+    }
+
+    component xrefLib 'pdlc-xref.sh' {
+      #quality
+      description 'Cross-reference consistency — FR/US ID coverage between spec and tasks'
+      technology 'Bash'
+    }
+
+    component qualityLib 'pdlc-quality.sh' {
+      #quality
+      description 'Unified quality report — consolidates lifecycle, placeholder, xref, lint, semantic checks'
+      technology 'Bash'
+    }
+
+    component freshnessLib 'pdlc-freshness.sh' {
+      #observer
+      description 'Context freshness — spec-embedded dates, session staleness, drift detection'
+      technology 'Bash'
+    }
+
+    component lintLib 'pdlc-lint.sh' {
+      #quality
+      description 'Structural lint wrapper — rumdl/markdownlint with graceful degradation'
+      technology 'Bash'
+    }
+
+    component semanticLib 'pdlc-semantic.sh' {
+      #quality
+      description 'Semantic validation — completeness, correctness, coherence with severity levels'
+      technology 'Bash'
+    }
+
+    // Component dependencies
+    directorLib -> stateLib 'reads HANDOFF fields'
+    directorLib -> lifecycleLib 'infers lifecycle state'
+    directorLib -> freshnessLib 'checks context freshness'
+
+    lifecycleLib -> stateLib 'reads/writes spec_lifecycle'
+    lifecycleLib -> placeholderLib 'Draft vs Specified distinction'
+
+    qualityLib -> lifecycleLib 'validates lifecycle state'
+    qualityLib -> placeholderLib 'runs placeholder detection'
+    qualityLib -> xrefLib 'runs cross-reference checking'
+    qualityLib -> lintLib 'runs structural lint'
+    qualityLib -> semanticLib 'runs semantic validation'
+
+    freshnessLib -> stateLib 'reads last_session_date'
+    semanticLib -> placeholderLib 'correctness checks'
+    semanticLib -> xrefLib 'completeness checks'
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Level 3: Components (within Hook Scripts)
+  // ═══════════════════════════════════════════════════════════
+
+  extend pdlc.hookScripts {
+    component specGate 'SpecGate' {
+      #enforcement
+      description 'Blocks spec generation via Task tool — requires Kiro skills instead'
+      technology 'Bash (spec-gate.sh)'
+    }
+
+    component criticGate 'CriticGate' {
+      #enforcement
+      description 'Blocks Actor dispatch without prior Critic review'
+      technology 'Bash (critic-gate.sh)'
+    }
+
+    component stopGuard 'Stop Guard' {
+      #enforcement
+      description 'Blocks exit when incomplete tasks remain (unless spec is stale)'
+      technology 'Bash (pdlc-stop-check.sh)'
+    }
+
+    component sessionInit 'Session Init' {
+      #observer
+      description 'Loads HANDOFF.md state into session context on startup'
+      technology 'Bash (session-init.sh)'
+    }
+
+    component compactSave 'Compact Save' {
+      description 'Saves state before context compaction'
+      technology 'Bash (pre-compact-save.sh)'
+    }
+
+    component compactRestore 'Compact Restore' {
+      #observer
+      description 'Restores state after context compaction'
+      technology 'Bash (post-compact-restore.sh)'
+    }
+  }
+}

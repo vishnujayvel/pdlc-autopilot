@@ -1,0 +1,99 @@
+// PDLC Autopilot — C4 Architecture Model
+// Generated: 2026-03-17
+// Last Updated: 2026-03-17
+
+specification {
+  element actor
+  element system
+  element container
+  element component
+  element module
+
+  tag deprecated
+  tag core
+  tag enforcement
+  tag observer
+  tag quality
+}
+
+model {
+  // ═══════════════════════════════════════════════════════════
+  // Level 1: Context
+  // ═══════════════════════════════════════════════════════════
+
+  actor developer 'Developer' {
+    description 'Software engineer using PDLC to build features autonomously'
+  }
+
+  system claudeCode 'Claude Code' {
+    description 'AI coding agent runtime — executes hooks, runs sessions, provides tool access'
+  }
+
+  system gitHub 'Git / GitHub' {
+    description 'Version control, pull requests, code review (CodeRabbit), CI/CD'
+  }
+
+  system pdlc 'PDLC Autopilot' {
+    #core
+    description 'CLI skill that orchestrates autonomous product development lifecycles using Director/Actor/Critic pattern'
+
+    // ═══════════════════════════════════════════════════════════
+    // Level 2: Containers
+    // ═══════════════════════════════════════════════════════════
+
+    container outerLoop 'Outer Loop' {
+      #core
+      description 'Shell script orchestrator — loops Director→Actor→Critic with circuit breakers'
+      technology 'Bash (pdlc-outer-loop.sh)'
+    }
+
+    container hookScripts 'Hook Scripts' {
+      #enforcement
+      description 'Claude Code hooks — gates, guards, observers that enforce process invariants'
+      technology 'Bash (hooks/*.sh)'
+    }
+
+    container libraryModules 'Library Modules' {
+      #core
+      description 'Shared shell functions — state management, lifecycle, quality checks, Director logic'
+      technology 'Bash (hooks/lib/*.sh)'
+    }
+
+    container testSuite 'Test Suite' {
+      description 'BATS-core tests — unit, integration, e2e with stub and live modes'
+      technology 'BATS (tests/)'
+    }
+
+    container formalVerification 'Formal Verification' {
+      description 'Alloy 6.2.0 model — 14 invariant checks on 6 architectural primitives'
+      technology 'Alloy (formal/)'
+    }
+
+    container handoff 'HANDOFF.md' {
+      description 'Single source of truth for cross-session state — flat YAML frontmatter + markdown body'
+      technology 'Markdown (.pdlc/state/HANDOFF.md)'
+    }
+
+    container architectureModel 'Architecture Model' {
+      description 'C4 architecture model — version-controlled DSL files with MCP server for AI queries'
+      technology 'LikeC4 (architecture/)'
+    }
+
+    // Container relationships
+    outerLoop -> libraryModules 'sources shared functions'
+    outerLoop -> handoff 'reads/writes session state'
+    outerLoop -> claudeCode 'launches Actor sessions via claude -p'
+    hookScripts -> libraryModules 'sources shared functions'
+    hookScripts -> handoff 'reads state for gate decisions'
+    testSuite -> hookScripts 'tests hook behavior'
+    testSuite -> libraryModules 'tests library functions'
+    formalVerification -> libraryModules 'verifies architectural invariants'
+  }
+
+  // Context-level relationships
+  developer -> pdlc 'points at feature, reviews escalations'
+  developer -> gitHub 'commits, reviews PRs'
+  pdlc -> claudeCode 'runs within Claude Code as hooks + skills'
+  pdlc -> gitHub 'auto-commits, creates PRs'
+  claudeCode -> pdlc 'triggers hooks on tool use events'
+}
