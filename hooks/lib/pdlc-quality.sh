@@ -14,6 +14,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/pdlc-lifecycle.sh"
 source "${SCRIPT_DIR}/pdlc-placeholder.sh"
 source "${SCRIPT_DIR}/pdlc-xref.sh"
+source "${SCRIPT_DIR}/pdlc-lint.sh"
+source "${SCRIPT_DIR}/pdlc-semantic.sh"
 
 # Run all quality checks and produce unified report
 # Usage: pdlc_quality_report <spec_dir>
@@ -70,6 +72,38 @@ pdlc_quality_report() {
     echo "$xref_output" | grep -v "^Cross-reference gaps:"
     echo "Status: ISSUES FOUND"
     overall=1
+  fi
+  echo ""
+
+  # Section 4: Structural Lint
+  echo "--- Structural Lint ---"
+  local lint_output
+  lint_output=$(pdlc_lint_check "$spec_dir" 2>&1) || true
+  if [[ -z "$lint_output" ]] || echo "$lint_output" | grep -q "^INFO\|^WARN"; then
+    echo "Status: SKIPPED (no lint tool or no artifacts)"
+  elif echo "$lint_output" | grep -qE ":[0-9]+:"; then
+    echo "$lint_output" | head -10
+    echo "Status: ISSUES FOUND"
+    overall=1
+  else
+    echo "Status: CLEAN"
+  fi
+  echo ""
+
+  # Section 5: Semantic Validation
+  echo "--- Semantic Validation ---"
+  local semantic_output
+  semantic_output=$(pdlc_semantic_validate "$spec_dir" 2>&1) || true
+  if echo "$semantic_output" | grep -q "CLEAN"; then
+    echo "Status: CLEAN"
+  elif echo "$semantic_output" | grep -q "INFO"; then
+    echo "Status: SKIPPED"
+  else
+    echo "$semantic_output" | head -10
+    echo "Status: ISSUES FOUND"
+    if echo "$semantic_output" | grep -q "BLOCKER"; then
+      overall=1
+    fi
   fi
   echo ""
 
