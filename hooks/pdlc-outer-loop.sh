@@ -70,10 +70,18 @@ STATE_FILE="${PDLC_HANDOFF}"
 # --- Child process tracking ---
 CHILD_PID=""
 INTERRUPTED=false
+GOT_SIGNAL=false
 SESSION_OUTPUT=""
 
-# --- Signal + EXIT cleanup ---
-# Unified handler for SIGINT, SIGTERM, and EXIT.
+# --- Signal handlers ---
+# Separate handlers for signals vs EXIT to correctly detect interruption
+# even when no child process is running (e.g., between sessions).
+handle_signal() {
+  GOT_SIGNAL=true
+  cleanup
+}
+
+# --- EXIT cleanup ---
 # On signal: full cleanup (kill children, save partial state, exit 130).
 # On normal EXIT: lightweight resource cleanup (temp files only, preserves exit code).
 cleanup() {
@@ -86,20 +94,13 @@ cleanup() {
     return 0
   fi
 
-  # Detect if called from a signal (SIGINT/SIGTERM) vs normal EXIT
-  # If CHILD_PID is set and running, we were interrupted mid-session
-  local is_signal=false
-  if [[ -n "${CHILD_PID}" ]] && kill -0 "${CHILD_PID}" 2>/dev/null; then
-    is_signal=true
-  fi
-
   # Always clean up temp files
   if [[ -n "${SESSION_OUTPUT}" ]] && [[ -f "${SESSION_OUTPUT}" ]]; then
     rm -f "${SESSION_OUTPUT}"
   fi
 
-  # On normal EXIT, just clean temp files and return (preserve exit code)
-  if [[ "$is_signal" == "false" ]]; then
+  # On normal EXIT (no signal received), just clean temp files and return
+  if [[ "$GOT_SIGNAL" == "false" ]]; then
     return 0
   fi
 
@@ -112,9 +113,11 @@ cleanup() {
   echo "=========================================="
 
   # Kill child claude session if still running
-  echo "  Terminating claude session (PID ${CHILD_PID})..."
-  kill "${CHILD_PID}" 2>/dev/null || true
-  wait "${CHILD_PID}" 2>/dev/null || true
+  if [[ -n "${CHILD_PID}" ]] && kill -0 "${CHILD_PID}" 2>/dev/null; then
+    echo "  Terminating claude session (PID ${CHILD_PID})..."
+    kill "${CHILD_PID}" 2>/dev/null || true
+    wait "${CHILD_PID}" 2>/dev/null || true
+  fi
 
   # Save partial state to HANDOFF.md
   if [[ -f "${STATE_FILE}" ]]; then
@@ -129,7 +132,8 @@ cleanup() {
   exit 130
 }
 
-trap cleanup SIGINT SIGTERM EXIT
+trap handle_signal SIGINT SIGTERM
+trap cleanup EXIT
 
 # --- Validation ---
 if [[ -z "${SPEC_DIR}" ]]; then
@@ -297,6 +301,11 @@ while [[ "${SESSION_COUNT}" -lt "${MAX_SESSIONS}" ]]; do
   else
     # Accept — reset retry counter
     pdlc_set_field "retry_count" "0"
+    # If review was accepted for a Complete spec, mark as DONE
+    if [[ "${DIRECTOR_ACTION}" == "review" && "${LIFECYCLE_STATE}" == "Complete" ]]; then
+      pdlc_set_field "phase" "DONE"
+      echo "  Review accepted for Complete spec — phase set to DONE"
+    fi
   fi
 
   # --- Circuit breaker: max cost ---

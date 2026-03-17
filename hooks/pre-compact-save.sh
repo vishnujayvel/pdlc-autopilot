@@ -41,9 +41,11 @@
 #
 # =============================================================================
 
-set -euo pipefail
+set -eo pipefail
 
 # Safety: always exit 0 (hook must never block compaction)
+# Note: -u (nounset) deliberately omitted — it bypasses the ERR trap
+# and can cause non-zero exit, violating the fail-open guarantee.
 trap 'exit 0' ERR
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

@@ -8,7 +8,7 @@ PDLC Autopilot is a CLI skill for Claude Code that orchestrates autonomous produ
 
 ### Shell Scripts (hooks/)
 - All hook scripts MUST exit 0, even on error. Use `trap 'exit 0' ERR` (or `trap '...; exit 0' ERR` if output is needed).
-- Use `set -euo pipefail` at the top of every script.
+- Use `set -eo pipefail` at the top of hook scripts that have ERR traps (`-u` / nounset bypasses the ERR trap and breaks fail-open). Use `set -euo pipefail` in library scripts without ERR traps.
 - Atomic writes: write to `.tmp` then `mv` to final path. Never write directly to state files.
 - HANDOFF.md uses flat YAML frontmatter (no nested objects). Parse with awk, not yq.
 - `pdlc_get_field` / `pdlc_set_field` in `hooks/lib/pdlc-state.sh` are the canonical state accessors. Do not reimplement frontmatter parsing inline.
@@ -41,8 +41,8 @@ PDLC Autopilot is a CLI skill for Claude Code that orchestrates autonomous produ
 - `.pdlc/state/*` is gitignored so progress detection (`git diff --stat HEAD`) correctly ignores bookkeeping files.
 
 ### External Governance (Spec Kit)
-- `.specify/` — Spec Kit infrastructure (templates, scripts, specs, constitution). Tracked in git.
-- `.claude/commands/speckit.*.md` — Spec Kit slash commands. Tracked in git.
+- `.specify/` — Spec Kit infrastructure (templates, scripts, specs, constitution). Gitignored (developer-local).
+- `.claude/commands/speckit.*.md` — Spec Kit slash commands. Gitignored (developer-local).
 - `.specify/memory/constitution.md` — Authoritative principles (26 tenets). Source of truth for trade-off resolution.
 - `.envrc` — Contains `PDLC_DISABLED=1` for self-development. Gitignored (developer-local).
 - **Ralph** (`.specify/extensions/ralph/`, `.claude/commands/speckit.ralph.*`) — Spec Kit's autonomous implementation loop. This is tooling for *building* pdlc-autopilot, NOT part of the PDLC product. Never mix Ralph code with product code (`hooks/`, `src/`).

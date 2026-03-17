@@ -27,8 +27,9 @@ pdlc_get_field() {
   # Guard: if no closing --- exists, awk stops at EOF (safe — no bleed into body)
   local frontmatter
   frontmatter=$(awk '
-    BEGIN { in_fm=0; count=0 }
-    /^---[[:space:]]*$/ { count++; if (count==1) { in_fm=1; next } else { exit } }
+    BEGIN { in_fm=0 }
+    NR==1 && /^---[[:space:]]*$/ { in_fm=1; next }
+    in_fm && /^---[[:space:]]*$/ { exit }
     in_fm { print }
   ' "${PDLC_HANDOFF}")
   if [[ -z "${frontmatter}" ]]; then
@@ -47,7 +48,7 @@ pdlc_write_handoff() {
   local yaml_content="$1"
   local markdown_body="${2:-}"
   pdlc_ensure_state_dir
-  local tmp="${PDLC_HANDOFF}.tmp"
+  local tmp="${PDLC_HANDOFF}.tmp.$$"
   {
     echo "---"
     echo "${yaml_content}"
@@ -82,7 +83,7 @@ pdlc_set_field() {
     return 0
   fi
 
-  local tmp="${PDLC_HANDOFF}.tmp"
+  local tmp="${PDLC_HANDOFF}.tmp.$$"
   local found=0
   local in_fm=0
   local fm_count=0

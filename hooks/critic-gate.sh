@@ -43,9 +43,11 @@
 #
 # =============================================================================
 
-set -euo pipefail
+set -eo pipefail
 
 # Safety: always allow on error (hook must never block Claude)
+# Note: -u (nounset) deliberately omitted — it bypasses the ERR trap
+# and can cause non-zero exit, violating the fail-open guarantee.
 trap 'echo "{\"decision\": \"allow\"}"; exit 0' ERR
 
 # Bypass for PDLC self-development (bootstrapping circularity)
@@ -81,8 +83,9 @@ if [[ ! -f "${PDLC_HANDOFF}" ]]; then
   exit 0
 fi
 FRONTMATTER=$(awk '
-  BEGIN { in_fm=0; count=0 }
-  /^---[[:space:]]*$/ { count++; if (count==1) { in_fm=1; next } else { exit } }
+  BEGIN { in_fm=0 }
+  NR==1 && /^---[[:space:]]*$/ { in_fm=1; next }
+  in_fm && /^---[[:space:]]*$/ { exit }
   in_fm { print }
 ' "${PDLC_HANDOFF}")
 

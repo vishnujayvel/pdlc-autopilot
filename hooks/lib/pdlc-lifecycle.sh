@@ -130,19 +130,20 @@ pdlc_lifecycle_infer() {
     done_tasks=$(pdlc_count_tasks "$tasks_file" "done")
     pending_tasks=$(pdlc_count_tasks "$tasks_file" "pending")
 
-    if [[ $total_tasks -gt 0 && $pending_tasks -eq 0 ]]; then
+    # Guard: empty tasks.md (no checklist items) — fall through to Planned/Specified/Draft
+    if [[ $total_tasks -eq 0 ]]; then
+      : # fall through — treat as if tasks.md doesn't exist
+    elif [[ $pending_tasks -eq 0 ]]; then
       echo "Complete"
       return 0
-    fi
-
-    if [[ $done_tasks -gt 0 && $pending_tasks -gt 0 ]]; then
+    elif [[ $done_tasks -gt 0 ]]; then
       echo "Implementing"
       return 0
+    else
+      # tasks.md exists with tasks but none done
+      echo "Tasked"
+      return 0
     fi
-
-    # tasks.md exists but no tasks done
-    echo "Tasked"
-    return 0
   fi
 
   # Check plan.md

@@ -26,7 +26,7 @@
 | 8 | Stop hook staleness awareness | hooks/pdlc-stop-check.sh | **Enforced** | pdlc-stop-check.sh | v1.1.1 |
 | 9 | Resource governance (signal cleanup) | hooks/pdlc-outer-loop.sh | **Enforced** | pdlc-outer-loop.sh | v1.1.1 |
 | 10 | Constitution (architectural tenets) | .specify/memory/constitution.md | **Enforced** | Spec Kit | v1.1.1 |
-| 11 | Outer loop orchestration (Director-driven) | hooks/pdlc-outer-loop.sh, hooks/lib/pdlc-director.sh | **Tested** | 24 Director + 9 outer-loop tests | v1.2.0 |
+| 11 | Outer loop orchestration (Director-driven) | hooks/pdlc-outer-loop.sh, hooks/lib/pdlc-director.sh | **Tested** | 27 Director + 9 outer-loop tests | v1.2.0 |
 | 12 | HANDOFF.md state persistence | hooks/lib/pdlc-state.sh | **Tested** | pdlc-state.sh | v1.0.0 |
 | 13 | Dual-perspective validation (ADVOCATE + SKEPTIC) | SKILL.md | Guidance | — | — |
 | 14 | Product Skeptic (5-lens analysis) | SKILL.md, ref/product-skeptic.md | Guidance | — | v1.2.0 |

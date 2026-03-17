@@ -23,7 +23,7 @@ responsibility and well-defined interfaces to adjacent layers.
 
 ## Kubernetes Mapping (Detailed)
 
-```
+```text
 Kubernetes                    PDLC Equivalent                        Status
 ───────────────────────────────────────────────────────────────────────────────
 Pod                           Agent session (ephemeral)               Working
@@ -143,7 +143,7 @@ is state files. In multi-agent systems, this is coordination
 protocols.
 
 **Current state**: HANDOFF.md (flat YAML frontmatter + markdown body)
-is the single-agent state passing mechanism. Read by `session-init.sh`
+is the single-agent state-passing mechanism. Read by `session-init.sh`
 at session start, written by `pre-compact-save.sh` before compaction,
 updated by the outer loop between sessions.
 

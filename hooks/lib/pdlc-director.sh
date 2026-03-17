@@ -105,10 +105,18 @@ pdlc_director_parse_response() {
 
   if [[ -n "$raw_output" ]] && command -v jq &>/dev/null; then
     # Try parsing as JSON directly — single jq call
-    local parsed
-    parsed=$(echo "$raw_output" | jq -r '[.action // "", .mode // "", .rationale // "", .actor_prompt // ""] | join("\t")' 2>/dev/null) || true
-    if [[ -n "$parsed" ]]; then
-      IFS=$'\t' read -r action mode rationale actor_prompt <<< "$parsed"
+    # Use @base64 encoding to safely handle embedded newlines in rationale/actor_prompt
+    local action_b64 mode_b64 rationale_b64 actor_prompt_b64
+    action_b64=$(echo "$raw_output" | jq -r '(.action // "") | @base64' 2>/dev/null) || true
+    mode_b64=$(echo "$raw_output" | jq -r '(.mode // "") | @base64' 2>/dev/null) || true
+    rationale_b64=$(echo "$raw_output" | jq -r '(.rationale // "") | @base64' 2>/dev/null) || true
+    actor_prompt_b64=$(echo "$raw_output" | jq -r '(.actor_prompt // "") | @base64' 2>/dev/null) || true
+
+    if [[ -n "$action_b64" ]]; then
+      action=$(echo "$action_b64" | base64 -d 2>/dev/null) || true
+      mode=$(echo "$mode_b64" | base64 -d 2>/dev/null) || true
+      rationale=$(echo "$rationale_b64" | base64 -d 2>/dev/null) || true
+      actor_prompt=$(echo "$actor_prompt_b64" | base64 -d 2>/dev/null) || true
     fi
 
     # If direct parse failed, try extracting JSON from within text
@@ -116,9 +124,16 @@ pdlc_director_parse_response() {
       local json_block
       json_block=$(echo "$raw_output" | grep -o '{[^}]*}' | head -1) || true
       if [[ -n "$json_block" ]]; then
-        parsed=$(echo "$json_block" | jq -r '[.action // "", .mode // "", .rationale // "", .actor_prompt // ""] | join("\t")' 2>/dev/null) || true
-        if [[ -n "$parsed" ]]; then
-          IFS=$'\t' read -r action mode rationale actor_prompt <<< "$parsed"
+        action_b64=$(echo "$json_block" | jq -r '(.action // "") | @base64' 2>/dev/null) || true
+        mode_b64=$(echo "$json_block" | jq -r '(.mode // "") | @base64' 2>/dev/null) || true
+        rationale_b64=$(echo "$json_block" | jq -r '(.rationale // "") | @base64' 2>/dev/null) || true
+        actor_prompt_b64=$(echo "$json_block" | jq -r '(.actor_prompt // "") | @base64' 2>/dev/null) || true
+
+        if [[ -n "$action_b64" ]]; then
+          action=$(echo "$action_b64" | base64 -d 2>/dev/null) || true
+          mode=$(echo "$mode_b64" | base64 -d 2>/dev/null) || true
+          rationale=$(echo "$rationale_b64" | base64 -d 2>/dev/null) || true
+          actor_prompt=$(echo "$actor_prompt_b64" | base64 -d 2>/dev/null) || true
         fi
       fi
     fi

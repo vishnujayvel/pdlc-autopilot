@@ -55,7 +55,7 @@ A satisfiable result means the architecture has a flaw that needs fixing.
 
 **14/14 checks passed** — no counterexamples found. Architecture validated.
 
-```
+```text
 00. check NoGateSideEffects              UNSAT
 01. check ObserversNeverBlock            UNSAT
 02. check ReactorsNoStateWrites          UNSAT
@@ -77,7 +77,7 @@ See `results/verification-summary.md` for full analysis and go/no-go recommendat
 
 ## File Structure
 
-```
+```text
 formal/
 ├── pdlc-primitives.als       # Alloy model (all 6 primitives, single file)
 ├── results/                  # Alloy Analyzer output

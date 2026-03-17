@@ -56,7 +56,9 @@
 #
 # =============================================================================
 
-set -euo pipefail
+set -eo pipefail
+# Note: -u (nounset) deliberately omitted — it bypasses the ERR trap
+# and can cause non-zero exit, violating the fail-open guarantee.
 trap 'exit 0' ERR
 
 # Bypass for PDLC self-development (bootstrapping circularity)

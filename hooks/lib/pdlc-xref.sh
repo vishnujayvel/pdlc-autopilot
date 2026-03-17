@@ -101,6 +101,10 @@ pdlc_xref_check() {
   if [[ $gap_count -gt 0 ]]; then
     echo "$gaps" | sed '/^$/d'
     echo "Cross-reference gaps: $gap_count" >&2
+    # PDLC_DISABLED=1: still check (report gaps) but always return 0 (non-blocking)
+    if [[ "${PDLC_DISABLED:-0}" == "1" ]]; then
+      return 0
+    fi
     return 1
   else
     echo "All cross-references resolve" >&2

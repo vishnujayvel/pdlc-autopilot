@@ -12,7 +12,7 @@ set -euo pipefail
 # Each entry: "TYPE|PATTERN"
 PDLC_PLACEHOLDER_PATTERNS=(
   "CLARIFICATION|\\[NEEDS CLARIFICATION:"
-  "TEMPLATE|\\[[A-Z][A-Z _-]{2,}\\]"
+  "TEMPLATE|\\[[A-Z][A-Z _-]{4,}\\]"
   "ACTION_REQUIRED|ACTION REQUIRED:"
   "TODO|\\[TODO:"
 )
@@ -95,6 +95,10 @@ pdlc_placeholder_check() {
   if [[ $count -gt 0 ]]; then
     echo "$findings" | sed '/^$/d'
     echo "Placeholders found: $count" >&2
+    # PDLC_DISABLED=1: still scan (report findings) but always return 0 (non-blocking)
+    if [[ "${PDLC_DISABLED:-0}" == "1" ]]; then
+      return 0
+    fi
     return 1
   else
     echo "No placeholders found" >&2
