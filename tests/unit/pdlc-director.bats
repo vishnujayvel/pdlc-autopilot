@@ -103,6 +103,26 @@ session_count: 0" ""
   echo "$output" | grep -qi "architecture"
 }
 
+@test "director_build_prompt: includes test strategy section" {
+  mkdir -p "${PDLC_STATE_DIR}"
+  pdlc_write_handoff "total_cost_usd: 0.00
+session_count: 0" ""
+  run pdlc_director_build_prompt "${FIXTURES_DIR}/clean" "Implementing"
+  [[ "$status" -eq 0 ]]
+  echo "$output" | grep -q "Test Strategy"
+  echo "$output" | grep -q "User stories:"
+}
+
+@test "director_build_prompt: test strategy shows spec metrics" {
+  mkdir -p "${PDLC_STATE_DIR}"
+  pdlc_write_handoff "total_cost_usd: 0.00
+session_count: 0" ""
+  run pdlc_director_build_prompt "${FIXTURES_DIR}/clean" "Implementing"
+  [[ "$status" -eq 0 ]]
+  echo "$output" | grep -q "Acceptance scenarios: 2"
+  echo "$output" | grep -q "Requirements: 3"
+}
+
 # ──────────────────────────────────────────────────────────
 # pdlc_director_parse_response
 # ──────────────────────────────────────────────────────────
