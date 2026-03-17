@@ -1,0 +1,58 @@
+#!/bin/bash
+# tests/stubs/claude — Fake claude CLI for outer loop testing
+#
+# Simulates `claude -p` by:
+# 1. Reading HANDOFF.md from .pdlc/state/
+# 2. Advancing the phase (INIT→ACTOR, ACTOR→DONE after N calls)
+# 3. Outputting JSON with fake cost data
+#
+# Env vars:
+#   STUB_COST     — per-session cost to report (default: 1.50)
+#   STUB_SESSIONS_TO_DONE — number of sessions before setting phase=DONE (default: 2)
+
+STUB_COST="${STUB_COST:-1.50}"
+STUB_SESSIONS_TO_DONE="${STUB_SESSIONS_TO_DONE:-2}"
+STUB_COUNTER_FILE="${STUB_COUNTER_FILE:-.pdlc/state/.stub_counter}"
+
+# Parse args silently (the real claude would consume these)
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -p) shift ;; # prompt mode
+    --output-format) shift; shift ;;
+    --max-turns) shift; shift ;;
+    --max-budget-usd) shift; shift ;;
+    --allowedTools) shift; shift ;;
+    --append-system-prompt) shift; shift ;;
+    *) shift ;;
+  esac
+done
+
+# Track how many times we've been called
+count=0
+if [[ -f "$STUB_COUNTER_FILE" ]]; then
+  count=$(cat "$STUB_COUNTER_FILE")
+fi
+count=$((count + 1))
+echo "$count" > "$STUB_COUNTER_FILE"
+
+# Source state library to update HANDOFF.md
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [[ -f "hooks/lib/pdlc-state.sh" ]]; then
+  source "hooks/lib/pdlc-state.sh"
+elif [[ -n "${PDLC_HOOKS_DIR:-}" ]]; then
+  source "${PDLC_HOOKS_DIR}/lib/pdlc-state.sh"
+else
+  echo "WARN: pdlc-state.sh not found; state advancement skipped" >&2
+fi
+
+# Advance state
+if [[ "$count" -ge "$STUB_SESSIONS_TO_DONE" ]]; then
+  pdlc_set_field "phase" "DONE" 2>/dev/null || true
+else
+  pdlc_set_field "phase" "ACTOR" 2>/dev/null || true
+fi
+
+# Output JSON matching claude -p --output-format json
+cat <<EOF
+{"result":"ok","usage":{"total_cost_usd":${STUB_COST}}}
+EOF
