@@ -89,9 +89,11 @@ pdlc_test_strategy() {
   fi
 
   # ── Coverage target ─────────────────────────────────────
-  local coverage_target="100% of acceptance scenarios"
+  local coverage_target
   if [[ "$acceptance_scenario_count" -gt 0 ]]; then
     coverage_target="${acceptance_scenario_count} acceptance scenarios, ${edge_case_count} edge cases"
+  else
+    coverage_target="define acceptance scenarios first"
   fi
 
   # ── Build output ────────────────────────────────────────
