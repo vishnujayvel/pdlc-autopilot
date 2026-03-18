@@ -27,6 +27,9 @@ fi
 if ! declare -f pdlc_test_strategy &>/dev/null; then
   source "${DIRECTOR_LIB_DIR}/pdlc-test-strategy.sh"
 fi
+if ! declare -f pdlc_session_restore &>/dev/null; then
+  source "${DIRECTOR_LIB_DIR}/pdlc-session.sh"
+fi
 
 # Valid Director actions
 PDLC_DIRECTOR_ACTIONS=(specify plan generate-tasks implement review archive)
@@ -130,6 +133,9 @@ $(pdlc_director_architecture_context "${DIRECTOR_LIB_DIR}/../.." 2>/dev/null || 
 
 ## Test Strategy
 $(pdlc_test_strategy "$spec_dir" 2>/dev/null || echo "Test strategy unavailable")
+
+## Previous Session Context
+$(pdlc_session_restore 2>/dev/null || echo "No previous session checkpoint")
 
 ## Dispatch Heuristics (guidance, not rules)
 - Phases before Implementing (specify, plan, generate-tasks) are typically same-session

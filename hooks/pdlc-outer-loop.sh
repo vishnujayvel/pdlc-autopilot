@@ -55,6 +55,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "${SCRIPT_DIR}/lib/pdlc-state.sh"
 source "${SCRIPT_DIR}/lib/pdlc-director.sh"
+source "${SCRIPT_DIR}/lib/pdlc-session.sh"
 
 # --- Configuration ---
 SPEC_DIR="${PDLC_SPEC_DIR:-}"
@@ -196,6 +197,13 @@ None yet.
 None."
 fi
 
+# --- Restore previous session checkpoint (REQ-SP-005) ---
+SESSION_CONTEXT=$(pdlc_session_restore)
+if [[ -n "${SESSION_CONTEXT}" ]]; then
+  echo "Restored previous session checkpoint:"
+  echo "${SESSION_CONTEXT}"
+fi
+
 # --- Session loop (resume from HANDOFF.md if restarting) ---
 SESSION_COUNT=$(pdlc_get_field "session_count")
 SESSION_COUNT="${SESSION_COUNT:-0}"
@@ -307,6 +315,23 @@ while [[ "${SESSION_COUNT}" -lt "${MAX_SESSIONS}" ]]; do
       echo "  Review accepted for Complete spec — phase set to DONE"
     fi
   fi
+
+  # --- Save session checkpoint (REQ-SP-003) ---
+  # Determine actor result from git diff (changes vs no changes)
+  local actor_result="no changes"
+  if [[ "${GIT_AVAILABLE}" == "true" ]]; then
+    local diff_stat
+    diff_stat=$(git diff --stat HEAD 2>/dev/null || echo "")
+    if [[ -n "${diff_stat}" ]]; then
+      local files_changed
+      files_changed=$(echo "${diff_stat}" | tail -1 | grep -oE '[0-9]+ file' | grep -oE '[0-9]+' || echo "0")
+      actor_result="success (${files_changed} files changed)"
+    fi
+  fi
+  pdlc_session_save "${SESSION_COUNT}" "${LIFECYCLE_STATE}" \
+    "${DIRECTOR_ACTION}|${DIRECTOR_MODE}|${DIRECTOR_RATIONALE}" \
+    "${actor_result}" \
+    "${CRITIC_VERDICT}"
 
   # --- Circuit breaker: max cost ---
   if (( $(echo "${TOTAL_COST} > ${MAX_COST_USD}" | bc -l 2>/dev/null || echo 0) )); then
