@@ -254,8 +254,11 @@ pdlc_director_decide() {
 }
 
 # Evaluate Critic feedback and decide accept/retry/escalate
+# When pdlc_critic_consensus is available (dual-critic library loaded),
+# uses structured consensus for nuanced verdicts (accept-with-caveats).
+# Otherwise falls back to simple PASS/FAIL logic from HANDOFF.md fields.
 # Usage: pdlc_director_evaluate_critics <batch_num> <retry_count>
-# Output: "accept", "retry", or "escalate"
+# Output: "accept", "accept-with-caveats", "retry", or "escalate"
 pdlc_director_evaluate_critics() {
   local batch_num="$1"
   local retry_count="${2:-0}"
@@ -271,6 +274,19 @@ pdlc_director_evaluate_critics() {
     echo "accept"
     return 0
   fi
+
+  # Structured path: use dual-critic consensus when available
+  if declare -f pdlc_critic_consensus &>/dev/null; then
+    # Normalize PASS_WARN to WARN for consensus function
+    local norm_advocate="$advocate_status"
+    local norm_skeptic="$skeptic_status"
+    [[ "$norm_advocate" == "PASS_WARN" ]] && norm_advocate="WARN"
+    [[ "$norm_skeptic" == "PASS_WARN" ]] && norm_skeptic="WARN"
+    pdlc_critic_consensus "$norm_advocate" "$norm_skeptic" "$retry_count"
+    return 0
+  fi
+
+  # Fallback: simple PASS/FAIL logic (backward compatible)
 
   # Both PASS or PASS_WARN → accept
   if [[ "$advocate_status" =~ ^PASS ]] && [[ "$skeptic_status" =~ ^PASS ]]; then
