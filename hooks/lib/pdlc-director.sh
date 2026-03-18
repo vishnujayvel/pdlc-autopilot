@@ -12,7 +12,7 @@
 # Sourced by pdlc-outer-loop.sh:
 #   source "$(dirname "$0")/lib/pdlc-director.sh"
 #
-# Depends on: pdlc-state.sh, pdlc-lifecycle.sh
+# Depends on: pdlc-state.sh, pdlc-lifecycle.sh, pdlc-test-strategy.sh
 
 set -euo pipefail
 
@@ -23,6 +23,9 @@ if ! declare -f pdlc_lifecycle_infer &>/dev/null; then
 fi
 if ! declare -f pdlc_freshness_report &>/dev/null; then
   source "${DIRECTOR_LIB_DIR}/pdlc-freshness.sh"
+fi
+if ! declare -f pdlc_test_strategy &>/dev/null; then
+  source "${DIRECTOR_LIB_DIR}/pdlc-test-strategy.sh"
 fi
 
 # Valid Director actions
@@ -124,6 +127,9 @@ $(pdlc_freshness_report "$spec_dir" 2>/dev/null || echo "Freshness check unavail
 
 ## Architecture Context
 $(pdlc_director_architecture_context "${DIRECTOR_LIB_DIR}/../.." 2>/dev/null || echo "Architecture context unavailable")
+
+## Test Strategy
+$(pdlc_test_strategy "$spec_dir" 2>/dev/null || echo "Test strategy unavailable")
 
 ## Dispatch Heuristics (guidance, not rules)
 - Phases before Implementing (specify, plan, generate-tasks) are typically same-session

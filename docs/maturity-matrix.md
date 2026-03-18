@@ -38,8 +38,8 @@
 | 20 | Product Context (Phase P0) | SKILL.md, ref/product-context-template.md | Guidance | — | — |
 | 21 | Task batching by file ownership | SKILL.md | Guidance | — | — |
 | 22 | Max 2 fix cycles per batch | SKILL.md | Guidance | — | — |
-| 23 | Test Strategy Research (Phase 0.75) | SKILL.md, ref/test-strategy.md | Guidance | — | v1.2.0 |
-| 24 | PR Review Cycle (Phase 5) | SKILL.md, ref/pr-review-cycle.md | Guidance | — | v1.2.0 |
+| 23 | Test Strategy Research (Phase 0.75) | hooks/lib/pdlc-test-strategy.sh | **Tested** | BATS tests | v1.3.0 |
+| 24 | PR Review Cycle (Phase 5) | hooks/lib/pdlc-review.sh | **Tested** | BATS tests | v1.3.0 |
 | 25 | Architecture constraint extraction (ARCH-*) | SKILL.md | Guidance | — | v1.2.0 |
 | 26 | Session persistence (progress.md / validation-criteria.md) | SKILL.md, ref/session-persistence.md | Guidance | — | — |
 | 27 | Spec lifecycle states | hooks/lib/pdlc-lifecycle.sh | **Tested** | 29 BATS tests | v1.2.0 |
@@ -61,8 +61,8 @@
 | Level | Count | Percentage |
 |-------|-------|------------|
 | Enforced | 10 | 26% |
-| Tested | 9 | 23% |
-| Guidance | 12 | 31% |
+| Tested | 11 | 28% |
+| Guidance | 10 | 26% |
 | Aspirational | 8 | 21% |
 | **Total** | **39** | **100%** |
 
@@ -79,7 +79,7 @@ Prioritized implementation order. Each item is a candidate for a Spec Kit featur
 | **R4** | 30 | Structural lint + semantic validation | ✅ DONE. Two-layer quality: rumdl wrapper + LLM semantic checks. 12 new tests. |
 | **R5** | — | C4 architecture model (LikeC4) | Formal C4 model with native MCP server. Replaces original ARCH-* extraction. Director queries architecture for dispatch decisions. |
 | **R6** | 14 | Product Skeptic enforcement | Move 5-lens analysis from prompt-only to code-enforced. Higher effort, high value. |
-| **R7** | 23, 24 | Test strategy + PR review cycle | Phase 0.75 and Phase 5 workflows. Currently guidance-only. |
+| **R7** | 23, 24 | Test strategy + PR review cycle | DONE. Test strategy recommendation + PR review summary as code. Director integration for implement dispatch. |
 | **R8** | 13 | Dual-perspective validation | ADVOCATE + SKEPTIC pattern. Requires Product Skeptic (R6) first. |
 | **R9** | 26 | Session persistence hardening | progress.md / validation-criteria.md. Currently guidance-only. |
 | **R10** | 18, 37, 38 | Decision logging, steering split, ADR | v2.0.0 scope. Architectural decisions infrastructure. |
@@ -91,6 +91,7 @@ Items without version targets (rows 19-22) are stable guidance — promote oppor
 
 ## Changelog
 
+- **v1.3.0** — Rows 23-24 promoted from Guidance to Tested: test strategy recommendation (pdlc-test-strategy.sh) and PR review summary (pdlc-review.sh). Director prompt includes test strategy for implement dispatches. 10 enforced, 11 tested, 10 guidance, 8 aspirational.
 - **v1.2.0** — Row 14 promoted from Guidance to Tested: Product Skeptic 5-lens analysis (23 tests). Rows 27-29 promoted from Aspirational to Tested: spec lifecycle states (29 tests), placeholder detection (15 tests), cross-reference consistency (13 tests). 10 enforced, 9 tested, 12 guidance, 8 aspirational.
 - **v1.1.1** — Added row 39: formal architecture verification via Alloy (14 invariant checks, all pass). 10 enforced, 3 tested, 14 guidance, 12 aspirational.
 - **v1.1.1** — Initial published audit. Rows 8-10 promoted from Aspirational to Enforced (staleness, signal cleanup, constitution). 10 enforced, 2 tested, 14 guidance, 12 aspirational.
