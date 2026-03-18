@@ -35,13 +35,16 @@ pdlc_test_strategy() {
   # ── Extract spec metrics ────────────────────────────────
   local user_story_count acceptance_scenario_count requirement_count edge_case_count
 
-  user_story_count=$(grep -c "### .*User Story" "$spec_file" 2>/dev/null || echo "0")
+  user_story_count=$(grep -c "### .*User Story" "$spec_file" 2>/dev/null) || true
+  user_story_count="${user_story_count:-0}"
   user_story_count="${user_story_count//[[:space:]]/}"
 
-  acceptance_scenario_count=$(grep -c '\*\*Given\*\*' "$spec_file" 2>/dev/null || echo "0")
+  acceptance_scenario_count=$(grep -c '\*\*Given\*\*' "$spec_file" 2>/dev/null) || true
+  acceptance_scenario_count="${acceptance_scenario_count:-0}"
   acceptance_scenario_count="${acceptance_scenario_count//[[:space:]]/}"
 
-  requirement_count=$(grep -c '\*\*FR-' "$spec_file" 2>/dev/null || echo "0")
+  requirement_count=$(grep -c '\*\*FR-' "$spec_file" 2>/dev/null) || true
+  requirement_count="${requirement_count:-0}"
   requirement_count="${requirement_count//[[:space:]]/}"
 
   edge_case_count=$(awk '
