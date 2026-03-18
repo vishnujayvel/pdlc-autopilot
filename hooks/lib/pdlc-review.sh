@@ -80,13 +80,13 @@ pdlc_review_summary() {
     # Extract per-section status
     local lifecycle_status placeholder_status xref_status lint_status semantic_status skeptic_status overall_status
 
-    lifecycle_status=$(echo "$quality_output" | awk '/--- Lifecycle/,/^$/' | grep "Status:" | head -1 | awk '{print $2}') || true
-    placeholder_status=$(echo "$quality_output" | awk '/--- Placeholder/,/^$/' | grep "Status:" | head -1 | awk '{print $2}') || true
-    xref_status=$(echo "$quality_output" | awk '/--- Cross-Reference/,/^$/' | grep "Status:" | head -1 | awk '{print $2}') || true
-    lint_status=$(echo "$quality_output" | awk '/--- Structural Lint/,/^$/' | grep "Status:" | head -1 | awk '{print $2}') || true
-    semantic_status=$(echo "$quality_output" | awk '/--- Semantic/,/^$/' | grep "Status:" | head -1 | awk '{print $2}') || true
-    skeptic_status=$(echo "$quality_output" | awk '/--- Product Skeptic/,/^$/' | grep "Status:" | head -1 | awk '{print $2}') || true
-    overall_status=$(echo "$quality_output" | grep "^Result:" | awk '{print $2}') || true
+    lifecycle_status=$(echo "$quality_output" | awk '/--- Lifecycle/,/^$/' | grep "Status:" | head -1 | awk '{$1=""; print substr($0,2)}') || true
+    placeholder_status=$(echo "$quality_output" | awk '/--- Placeholder/,/^$/' | grep "Status:" | head -1 | awk '{$1=""; print substr($0,2)}') || true
+    xref_status=$(echo "$quality_output" | awk '/--- Cross-Reference/,/^$/' | grep "Status:" | head -1 | awk '{$1=""; print substr($0,2)}') || true
+    lint_status=$(echo "$quality_output" | awk '/--- Structural Lint/,/^$/' | grep "Status:" | head -1 | awk '{$1=""; print substr($0,2)}') || true
+    semantic_status=$(echo "$quality_output" | awk '/--- Semantic/,/^$/' | grep "Status:" | head -1 | awk '{$1=""; print substr($0,2)}') || true
+    skeptic_status=$(echo "$quality_output" | awk '/--- Product Skeptic/,/^$/' | grep "Status:" | head -1 | awk '{$1=""; print substr($0,2)}') || true
+    overall_status=$(echo "$quality_output" | grep "^Result:" | awk '{$1=""; print substr($0,2)}') || true
 
     echo "| Check | Status |"
     echo "|-------|--------|"

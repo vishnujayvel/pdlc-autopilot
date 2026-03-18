@@ -10,8 +10,6 @@
 
 set -euo pipefail
 
-TEST_STRATEGY_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # Analyze spec and plan artifacts to produce a test strategy recommendation
 # Usage: pdlc_test_strategy <spec_dir>
 # Output: structured recommendation as markdown
@@ -68,7 +66,6 @@ pdlc_test_strategy() {
   fi
 
   # ── Determine recommended test types ────────────────────
-  local recommend_unit=1
   local recommend_integration=0
   local recommend_e2e=0
 
