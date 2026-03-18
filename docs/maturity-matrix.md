@@ -28,7 +28,7 @@
 | 10 | Constitution (architectural tenets) | .specify/memory/constitution.md | **Enforced** | Spec Kit | v1.1.1 |
 | 11 | Outer loop orchestration (Director-driven) | hooks/pdlc-outer-loop.sh, hooks/lib/pdlc-director.sh | **Tested** | 27 Director + 9 outer-loop tests | v1.2.0 |
 | 12 | HANDOFF.md state persistence | hooks/lib/pdlc-state.sh | **Tested** | pdlc-state.sh | v1.0.0 |
-| 13 | Dual-perspective validation (ADVOCATE + SKEPTIC) | SKILL.md | Guidance | — | — |
+| 13 | Dual-perspective validation (ADVOCATE + SKEPTIC) | hooks/lib/pdlc-critic.sh | **Tested** | BATS tests | v1.4.0 |
 | 14 | Product Skeptic (5-lens analysis) | hooks/lib/pdlc-skeptic.sh | **Tested** | 23 BATS tests | v1.2.0 |
 | 15 | T-Mode parallel strategies (S1-S5) | SKILL.md, ref/t-mode-strategies.md | Guidance | — | v3.0.0 |
 | 16 | Phase visualization | SKILL.md, ref/phase-viz.md | Guidance | — | v1.3.0 |
@@ -61,8 +61,8 @@
 | Level | Count | Percentage |
 |-------|-------|------------|
 | Enforced | 10 | 26% |
-| Tested | 11 | 28% |
-| Guidance | 10 | 26% |
+| Tested | 12 | 31% |
+| Guidance | 9 | 23% |
 | Aspirational | 8 | 21% |
 | **Total** | **39** | **100%** |
 
@@ -80,7 +80,7 @@ Prioritized implementation order. Each item is a candidate for a Spec Kit featur
 | **R5** | — | C4 architecture model (LikeC4) | Formal C4 model with native MCP server. Replaces original ARCH-* extraction. Director queries architecture for dispatch decisions. |
 | **R6** | 14 | Product Skeptic enforcement | Move 5-lens analysis from prompt-only to code-enforced. Higher effort, high value. |
 | **R7** | 23, 24 | Test strategy + PR review cycle | DONE. Test strategy recommendation + PR review summary as code. Director integration for implement dispatch. |
-| **R8** | 13 | Dual-perspective validation | ADVOCATE + SKEPTIC pattern. Requires Product Skeptic (R6) first. |
+| **R8** | 13 | Dual-perspective validation | ✅ DONE. ADVOCATE + SKEPTIC dual-critic library with consensus logic. Director integration with fallback. |
 | **R9** | 26 | Session persistence hardening | progress.md / validation-criteria.md. Currently guidance-only. |
 | **R10** | 18, 37, 38 | Decision logging, steering split, ADR | v2.0.0 scope. Architectural decisions infrastructure. |
 | **R11** | 31, 16, 32 | CLI, phase visualization, mode awareness | v1.3.0-v2.1.0 scope. User-facing tooling. |
@@ -91,6 +91,7 @@ Items without version targets (rows 19-22) are stable guidance — promote oppor
 
 ## Changelog
 
+- **v1.4.0** — Row 13 promoted from Guidance to Tested: dual-perspective validation (ADVOCATE + SKEPTIC) with consensus logic (pdlc-critic.sh). Director integration with structured consensus fallback. 10 enforced, 12 tested, 9 guidance, 8 aspirational.
 - **v1.3.0** — Rows 23-24 promoted from Guidance to Tested: test strategy recommendation (pdlc-test-strategy.sh) and PR review summary (pdlc-review.sh). Director prompt includes test strategy for implement dispatches. 10 enforced, 11 tested, 10 guidance, 8 aspirational.
 - **v1.2.0** — Row 14 promoted from Guidance to Tested: Product Skeptic 5-lens analysis (23 tests). Rows 27-29 promoted from Aspirational to Tested: spec lifecycle states (29 tests), placeholder detection (15 tests), cross-reference consistency (13 tests). 10 enforced, 9 tested, 12 guidance, 8 aspirational.
 - **v1.1.1** — Added row 39: formal architecture verification via Alloy (14 invariant checks, all pass). 10 enforced, 3 tested, 14 guidance, 12 aspirational.
