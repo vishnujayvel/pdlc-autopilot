@@ -281,7 +281,7 @@ EOF
 }
 
 @test "consensus: respects custom PDLC_MAX_RETRIES" {
-  PDLC_MAX_RETRIES=1
+  export PDLC_MAX_RETRIES=1
   run pdlc_critic_consensus "FAIL" "FAIL" "1"
   [[ "$status" -eq 0 ]]
   [[ "$output" == "escalate" ]]
@@ -349,7 +349,7 @@ EOF
 }
 
 @test "report: passes retry_count to consensus" {
-  PDLC_MAX_RETRIES=1
+  export PDLC_MAX_RETRIES=1
   run pdlc_critic_report "${FIXTURES_DIR}/xref-gaps" "1"
   [[ "$status" -eq 0 ]]
   # xref-gaps causes ADVOCATE FAIL, retry_count=1 >= limit=1, so escalate

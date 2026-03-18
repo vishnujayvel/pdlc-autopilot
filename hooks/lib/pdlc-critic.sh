@@ -91,8 +91,7 @@ pdlc_critic_advocate() {
   total_checks=$((total_checks + 1))
   if [[ -d "$spec_dir" ]]; then
     local placeholder_output
-    local placeholder_rc=0
-    placeholder_output=$(PDLC_DISABLED=1 pdlc_placeholder_check "$spec_dir" 2>/dev/null) || placeholder_rc=$?
+    placeholder_output=$(PDLC_DISABLED=1 pdlc_placeholder_check "$spec_dir" 2>/dev/null) || true
     if [[ -n "$placeholder_output" ]] && echo "$placeholder_output" | grep -q ":TEMPLATE:\|:TODO:\|:CLARIFICATION:\|:ACTION_REQUIRED:"; then
       local ph_count
       ph_count=$(echo "$placeholder_output" | grep -c ":" 2>/dev/null || echo "0")
