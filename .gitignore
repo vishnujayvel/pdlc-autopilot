@@ -23,9 +23,11 @@ excalidraw.log
 # Marketing content (not for GitHub)
 marketing/
 
-# Internal development process (Spec Kit governance — not part of PDLC product)
+# Internal development process (Spec Kit + Loki — not part of PDLC product)
 .claude/commands/speckit.*.md
 .claude/product-context.md
 .specify/
 specs/
 docs/plans/
+openspec/
+.loki/
