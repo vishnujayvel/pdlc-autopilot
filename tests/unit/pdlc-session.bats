@@ -12,6 +12,10 @@ setup() {
   source "${HOOKS_DIR}/lib/pdlc-session.sh"
 }
 
+teardown() {
+  rm -rf "${TEST_WORK_DIR}"
+}
+
 # ──────────────────────────────────────────────────────────
 # REQ-SP-004: pdlc_session_save
 # ──────────────────────────────────────────────────────────
@@ -23,7 +27,7 @@ spec_dir: .claude/specs/feat" "## Current Batch Context
 
 Starting session."
 
-  pdlc_session_save ".claude/specs/feat" "3" "Implementing" \
+  pdlc_session_save "3" "Implementing" \
     "implement|spawn|Heavy work" "success (3 files changed)" "accept"
 
   grep -q "### Session Checkpoint" "${PDLC_HANDOFF}"
@@ -33,7 +37,7 @@ Starting session."
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "5" "Implementing" \
+  pdlc_session_save "5" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   grep -q "Iteration: 5" "${PDLC_HANDOFF}"
@@ -43,7 +47,7 @@ batch: 1" "## Context"
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Tasked" \
+  pdlc_session_save "1" "Tasked" \
     "implement|same-session|Start" "pending" "accept"
 
   grep -q "Lifecycle: Tasked" "${PDLC_HANDOFF}"
@@ -57,7 +61,7 @@ batch: 1" "## Context"
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "2" "Implementing" \
+  pdlc_session_save "2" "Implementing" \
     "implement|spawn|Heavy implementation work" "success" "accept"
 
   grep -q "Director: implement|spawn|Heavy implementation work" "${PDLC_HANDOFF}"
@@ -73,7 +77,7 @@ batch: 1
 batch_1_advocate: PASS
 batch_1_skeptic: PASS_WARN" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   grep -q "Quality: advocate=PASS, skeptic=PASS_WARN" "${PDLC_HANDOFF}"
@@ -83,7 +87,7 @@ batch_1_skeptic: PASS_WARN" "## Context"
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   grep -q "Quality: N/A" "${PDLC_HANDOFF}"
@@ -97,7 +101,7 @@ batch: 1" "## Context"
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success (3 files changed)" "accept"
 
   grep -q "Actor: success (3 files changed)" "${PDLC_HANDOFF}"
@@ -107,7 +111,7 @@ batch: 1" "## Context"
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "retry"
 
   grep -q "Critic: retry" "${PDLC_HANDOFF}"
@@ -117,7 +121,7 @@ batch: 1" "## Context"
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   grep -qE "Timestamp: [0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z" "${PDLC_HANDOFF}"
@@ -132,7 +136,7 @@ batch: 1" "## Context"
 batch: 1
 spec_dir: .claude/specs/feat" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   run pdlc_get_field "phase"
@@ -153,7 +157,7 @@ Starting session.
 
 Used TDD approach."
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   grep -q "## Current Batch Context" "${PDLC_HANDOFF}"
@@ -166,7 +170,7 @@ Used TDD approach."
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   local tmp_count
@@ -178,10 +182,10 @@ batch: 1" "## Context"
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
-  pdlc_session_save ".claude/specs/feat" "2" "Implementing" \
+  pdlc_session_save "2" "Implementing" \
     "implement|spawn|More work" "success" "accept"
 
   # Should have exactly one checkpoint section
@@ -195,7 +199,7 @@ batch: 1" "## Context"
 }
 
 @test "session_save: no-op if HANDOFF.md does not exist" {
-  run pdlc_session_save ".claude/specs/feat" "1" "Implementing" \
+  run pdlc_session_save "1" "Implementing" \
     "implement|spawn|Work" "success" "accept"
 
   [[ "$status" -eq 0 ]]
@@ -322,7 +326,7 @@ batch: 1" "## Context
 
 Starting work."
 
-  pdlc_session_save ".claude/specs/feat" "4" "Implementing" \
+  pdlc_session_save "4" "Implementing" \
     "implement|spawn|TDD cycle" "success (2 files changed)" "accept"
 
   run pdlc_session_restore
@@ -338,11 +342,11 @@ Starting work."
   pdlc_write_handoff "phase: ACTOR
 batch: 1" "## Context"
 
-  pdlc_session_save ".claude/specs/feat" "1" "Tasked" \
+  pdlc_session_save "1" "Tasked" \
     "implement|spawn|First" "success" "accept"
-  pdlc_session_save ".claude/specs/feat" "2" "Implementing" \
+  pdlc_session_save "2" "Implementing" \
     "implement|spawn|Second" "success" "accept"
-  pdlc_session_save ".claude/specs/feat" "3" "Implementing" \
+  pdlc_session_save "3" "Implementing" \
     "implement|spawn|Third" "success" "retry"
 
   run pdlc_session_restore

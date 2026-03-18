@@ -317,9 +317,20 @@ while [[ "${SESSION_COUNT}" -lt "${MAX_SESSIONS}" ]]; do
   fi
 
   # --- Save session checkpoint (REQ-SP-003) ---
-  pdlc_session_save "${SPEC_DIR}" "${SESSION_COUNT}" "${LIFECYCLE_STATE}" \
+  # Determine actor result from git diff (changes vs no changes)
+  local actor_result="no changes"
+  if [[ "${GIT_AVAILABLE}" == "true" ]]; then
+    local diff_stat
+    diff_stat=$(git diff --stat HEAD 2>/dev/null || echo "")
+    if [[ -n "${diff_stat}" ]]; then
+      local files_changed
+      files_changed=$(echo "${diff_stat}" | tail -1 | grep -oE '[0-9]+ file' | grep -oE '[0-9]+' || echo "0")
+      actor_result="success (${files_changed} files changed)"
+    fi
+  fi
+  pdlc_session_save "${SESSION_COUNT}" "${LIFECYCLE_STATE}" \
     "${DIRECTOR_ACTION}|${DIRECTOR_MODE}|${DIRECTOR_RATIONALE}" \
-    "session_cost=${SESSION_COST}" \
+    "${actor_result}" \
     "${CRITIC_VERDICT}"
 
   # --- Circuit breaker: max cost ---

@@ -25,23 +25,21 @@ fi
 # with the current iteration's state. Uses pdlc_write_handoff for atomic
 # tmp+mv writes.
 #
-# Usage: pdlc_session_save <spec_dir> <iteration> <lifecycle_state> \
+# Usage: pdlc_session_save <iteration> <lifecycle_state> \
 #            <director_decision> <actor_result> <critic_verdict>
 #
 # Arguments:
-#   spec_dir          — path to the spec directory
 #   iteration         — current iteration number (integer)
 #   lifecycle_state   — inferred lifecycle state (e.g., Implementing)
 #   director_decision — "action|mode|rationale" string
 #   actor_result      — summary of Actor outcome
 #   critic_verdict    — accept, retry, or escalate
 pdlc_session_save() {
-  local spec_dir="$1"
-  local iteration="$2"
-  local lifecycle_state="$3"
-  local director_decision="$4"
-  local actor_result="$5"
-  local critic_verdict="$6"
+  local iteration="$1"
+  local lifecycle_state="$2"
+  local director_decision="$3"
+  local actor_result="$4"
+  local critic_verdict="$5"
 
   if [[ ! -f "${PDLC_HANDOFF}" ]]; then
     return 0
