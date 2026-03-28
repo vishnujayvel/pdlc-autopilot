@@ -1,0 +1,345 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" fill="none">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        .scene {
+          width: 800px; height: 420px; background: #0d1117;
+          font-family: monospace; position: relative; overflow: hidden;
+          border: 1px solid #21262d; border-radius: 8px;
+        }
+
+        /* Title */
+        .title {
+          position: absolute; top: 12px; left: 0; right: 0;
+          text-align: center; font-size: 11px; letter-spacing: 3px;
+          color: #484f58; text-transform: uppercase;
+        }
+
+        /* Nodes */
+        .node {
+          position: absolute; border-radius: 6px; text-align: center;
+          font-size: 11px; font-weight: 700; display: flex;
+          align-items: center; justify-content: center;
+          opacity: 0;
+        }
+        .node-label { color: inherit; }
+
+        /* Spec node */
+        .spec {
+          left: 20px; top: 70px; width: 90px; height: 36px;
+          background: #1a2332; border: 1px solid #1f3a5f; color: #58a6ff;
+          animation: fadeSlideRight 0.8s 0.5s forwards;
+        }
+
+        /* Director node */
+        .director {
+          left: 200px; top: 58px; width: 120px; height: 52px;
+          background: #1a2e1a; border: 2px solid #3fb950; color: #7ee787;
+          animation: fadeIn 0.6s 1.5s forwards, pulseGreen 2s 2s infinite;
+        }
+
+        /* Flow: Spec -> Director */
+        .flow-spec {
+          position: absolute; left: 112px; top: 84px;
+          width: 86px; height: 2px; background: #21262d;
+          animation: fadeIn 0.3s 1.2s forwards; opacity: 0;
+        }
+        .flow-spec-dot {
+          position: absolute; left: 112px; top: 81px;
+          width: 8px; height: 8px; border-radius: 50%;
+          background: #58a6ff; opacity: 0;
+          animation: flowRight 1s 1.3s forwards;
+        }
+
+        /* Worktrees */
+        .worktree {
+          width: 130px; height: 130px; background: #161b22;
+          border: 1px dashed #30363d; border-radius: 8px;
+          opacity: 0; display: flex; flex-direction: column;
+          align-items: center; padding-top: 8px;
+        }
+        .wt-label {
+          font-size: 9px; color: #484f58; letter-spacing: 1px;
+          text-transform: uppercase; margin-bottom: 6px;
+        }
+        .wt1 { left: 80px; top: 160px; animation: dropIn 0.5s 2.5s forwards; }
+        .wt2 { left: 280px; top: 160px; animation: dropIn 0.5s 2.8s forwards; }
+        .wt3 { left: 480px; top: 160px; animation: dropIn 0.5s 3.1s forwards; }
+
+        /* Branch lines from director */
+        .branch {
+          position: absolute; height: 2px; background: #21262d;
+          opacity: 0;
+        }
+        .branch1 {
+          left: 200px; top: 110px; width: 2px; height: 50px;
+          animation: growDown 0.4s 2.3s forwards;
+        }
+        .branch2 {
+          left: 260px; top: 110px; width: 2px; height: 50px;
+          animation: growDown 0.4s 2.5s forwards;
+        }
+        .branch3 {
+          left: 320px; top: 110px; width: 80px; height: 2px;
+          animation: fadeIn 0.3s 2.3s forwards;
+        }
+
+        /* Actors inside worktrees */
+        .actor {
+          width: 100px; height: 28px; border-radius: 4px;
+          background: #1a2332; border: 1px solid #58a6ff; color: #58a6ff;
+          font-size: 10px; display: flex; align-items: center;
+          justify-content: center; opacity: 0; margin-top: 4px;
+        }
+        .actor1 { animation: fadeIn 0.4s 3.5s forwards, working 1.5s 3.5s 3; }
+        .actor2 { animation: fadeIn 0.4s 3.8s forwards, working 1.5s 3.8s 3; }
+        .actor3 { animation: fadeIn 0.4s 4.1s forwards, working 1.5s 4.1s 3; }
+
+        /* Code lines appearing */
+        .codeline {
+          width: 80px; height: 3px; border-radius: 2px;
+          margin: 3px auto; opacity: 0;
+        }
+        .cl1 { background: #7ee787; animation: fadeIn 0.2s 4.5s forwards; }
+        .cl2 { background: #58a6ff; width: 60px; animation: fadeIn 0.2s 5s forwards; }
+        .cl3 { background: #7ee787; width: 70px; animation: fadeIn 0.2s 5.5s forwards; }
+
+        /* Check marks after actors complete */
+        .check {
+          font-size: 14px; color: #3fb950; opacity: 0; margin-top: 4px;
+        }
+        .ck1 { animation: popIn 0.3s 7.5s forwards; }
+        .ck2 { animation: popIn 0.3s 7.8s forwards; }
+        .ck3 { animation: popIn 0.3s 8.1s forwards; }
+
+        /* Critics */
+        .critic-zone {
+          position: absolute; right: 30px; top: 55px;
+          width: 160px; height: 130px; display: flex;
+          flex-direction: column; gap: 8px; align-items: center;
+          opacity: 0; animation: fadeIn 0.5s 8.5s forwards;
+        }
+        .critic-title {
+          font-size: 9px; color: #484f58; letter-spacing: 1.5px;
+          text-transform: uppercase;
+        }
+        .advocate {
+          width: 140px; height: 36px; border-radius: 4px;
+          background: #1a2e1a; border: 1px solid #3fb950; color: #3fb950;
+          font-size: 10px; display: flex; align-items: center;
+          justify-content: center; opacity: 0;
+          animation: fadeIn 0.4s 9s forwards, pulseGreenSoft 1s 9s 3;
+        }
+        .skeptic {
+          width: 140px; height: 36px; border-radius: 4px;
+          background: #2a1a1a; border: 1px solid #f0883e; color: #f0883e;
+          font-size: 10px; display: flex; align-items: center;
+          justify-content: center; opacity: 0;
+          animation: fadeIn 0.4s 9.3s forwards, pulseOrangeSoft 1s 9.3s 3;
+        }
+
+        /* Verdict badges */
+        .verdict {
+          font-size: 10px; font-weight: 700; opacity: 0;
+          padding: 2px 10px; border-radius: 3px;
+        }
+        .v-pass {
+          background: #23863622; color: #3fb950; border: 1px solid #238636;
+          animation: popIn 0.3s 12s forwards;
+        }
+        .v-warn {
+          background: #9e6a0322; color: #f0883e; border: 1px solid #9e6a03;
+          animation: popIn 0.3s 12.3s forwards;
+        }
+
+        /* Consensus */
+        .consensus {
+          position: absolute; right: 55px; top: 200px;
+          font-size: 11px; font-weight: 700; color: #7ee787;
+          text-transform: uppercase; letter-spacing: 2px;
+          opacity: 0; animation: popIn 0.5s 13s forwards;
+        }
+
+        /* Merge flow */
+        .merge-bar {
+          position: absolute; bottom: 30px; left: 50px; right: 50px;
+          height: 36px; background: #161b22; border: 1px solid #30363d;
+          border-radius: 6px; display: flex; align-items: center;
+          justify-content: center; opacity: 0;
+          animation: fadeIn 0.5s 14s forwards;
+        }
+        .merge-text {
+          font-size: 11px; color: #8b949e; letter-spacing: 1px;
+        }
+        .merge-text b { color: #7ee787; }
+
+        /* Merge arrows */
+        .merge-arrow {
+          position: absolute; width: 2px; background: #3fb950; opacity: 0;
+        }
+        .ma1 {
+          left: 145px; top: 295px; height: 60px;
+          animation: growDown 0.4s 14.5s forwards;
+        }
+        .ma2 {
+          left: 345px; top: 295px; height: 60px;
+          animation: growDown 0.4s 14.8s forwards;
+        }
+        .ma3 {
+          left: 545px; top: 295px; height: 60px;
+          animation: growDown 0.4s 15.1s forwards;
+        }
+
+        /* Loop indicator */
+        .loop-badge {
+          position: absolute; bottom: 8px; right: 20px;
+          font-size: 9px; color: #484f58; letter-spacing: 1px;
+          opacity: 0; animation: fadeIn 0.5s 16s forwards;
+        }
+
+        /* Full scene restart */
+        .scene {
+          animation: sceneLoop 20s infinite;
+        }
+
+        /* Keyframes */
+        @keyframes fadeIn {
+          to { opacity: 1; }
+        }
+        @keyframes fadeSlideRight {
+          from { opacity: 0; transform: translateX(-20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes flowRight {
+          0% { opacity: 1; transform: translateX(0); }
+          100% { opacity: 0; transform: translateX(80px); }
+        }
+        @keyframes dropIn {
+          from { opacity: 0; transform: translateY(-15px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes growDown {
+          from { opacity: 0; height: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes popIn {
+          0% { opacity: 0; transform: scale(0.5); }
+          70% { transform: scale(1.1); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulseGreen {
+          0%, 100% { box-shadow: 0 0 0 0 #3fb95044; }
+          50% { box-shadow: 0 0 12px 4px #3fb95033; }
+        }
+        @keyframes pulseGreenSoft {
+          0%, 100% { box-shadow: none; }
+          50% { box-shadow: 0 0 8px 2px #3fb95022; }
+        }
+        @keyframes pulseOrangeSoft {
+          0%, 100% { box-shadow: none; }
+          50% { box-shadow: 0 0 8px 2px #f0883e22; }
+        }
+        @keyframes working {
+          0%, 100% { border-color: #58a6ff; }
+          50% { border-color: #79c0ff; box-shadow: 0 0 6px #58a6ff33; }
+        }
+        @keyframes sceneLoop {
+          0%, 4% { opacity: 1; }
+          92% { opacity: 1; }
+          97% { opacity: 0; }
+          100% { opacity: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          * { animation: none !important; opacity: 1 !important; }
+        }
+        @media (prefers-color-scheme: light) {
+          .scene { background: #ffffff; border-color: #d0d7de; }
+          .title, .wt-label, .critic-title, .loop-badge { color: #656d76; }
+          .director { background: #dafbe1; border-color: #1a7f37; color: #1a7f37; }
+          .spec { background: #ddf4ff; border-color: #0969da; color: #0969da; }
+          .worktree { background: #f6f8fa; border-color: #d0d7de; }
+          .merge-bar { background: #f6f8fa; border-color: #d0d7de; }
+          .merge-text { color: #656d76; }
+          .merge-text b { color: #1a7f37; }
+        }
+      </style>
+
+      <div class="scene">
+        <div class="title">Agent Orchestration Pattern</div>
+
+        <!-- Spec -->
+        <div class="node spec"><span class="node-label">SPEC</span></div>
+
+        <!-- Flow line -->
+        <div class="flow-spec"></div>
+        <div class="flow-spec-dot"></div>
+
+        <!-- Director -->
+        <div class="node director"><span class="node-label">DIRECTOR</span></div>
+
+        <!-- Branch lines -->
+        <div class="branch branch1"></div>
+        <div class="branch branch2"></div>
+
+        <!-- Worktree 1 -->
+        <div class="node worktree wt1">
+          <div class="wt-label">worktree/feat-1</div>
+          <div class="actor actor1">ACTOR</div>
+          <div class="codeline cl1"></div>
+          <div class="codeline cl2"></div>
+          <div class="codeline cl3"></div>
+          <div class="check ck1">&#10003;</div>
+        </div>
+
+        <!-- Worktree 2 -->
+        <div class="node worktree wt2">
+          <div class="wt-label">worktree/feat-2</div>
+          <div class="actor actor2">ACTOR</div>
+          <div class="codeline cl1"></div>
+          <div class="codeline cl2"></div>
+          <div class="codeline cl3"></div>
+          <div class="check ck2">&#10003;</div>
+        </div>
+
+        <!-- Worktree 3 -->
+        <div class="node worktree wt3">
+          <div class="wt-label">worktree/feat-3</div>
+          <div class="actor actor3">ACTOR</div>
+          <div class="codeline cl1"></div>
+          <div class="codeline cl2"></div>
+          <div class="codeline cl3"></div>
+          <div class="check ck3">&#10003;</div>
+        </div>
+
+        <!-- Critics -->
+        <div class="critic-zone">
+          <div class="critic-title">Dual Review</div>
+          <div class="advocate">ADVOCATE &#8212; can it work?</div>
+          <div class="skeptic">SKEPTIC &#8212; what could fail?</div>
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <div class="verdict v-pass">PASS</div>
+            <div class="verdict v-warn">PASS_WARN</div>
+          </div>
+        </div>
+
+        <!-- Consensus -->
+        <div class="consensus">&#10003; Consensus</div>
+
+        <!-- Merge arrows -->
+        <div class="merge-arrow ma1"></div>
+        <div class="merge-arrow ma2"></div>
+        <div class="merge-arrow ma3"></div>
+
+        <!-- Merge bar -->
+        <div class="merge-bar">
+          <div class="merge-text"><b>git merge --squash</b> &#8594; main</div>
+        </div>
+
+        <!-- Loop indicator -->
+        <div class="loop-badge">&#8635; loop until pipeline clean</div>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
